@@ -1,0 +1,63 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+			"^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+	        "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
+		}
+	},
+	"pages": [
+		{
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "数智LAB"
+			}
+		},
+		{
+			"path": "pages/interview/interview",
+			"style": {
+				"navigationBarTitleText": "报名"
+			}
+		},
+		{
+			"path": "pages/registration/registration",
+			"style": {
+				"navigationBarTitleText": "面试"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"backgroundColor": "#F2F2F2",
+		"color": "#000",
+		"selectedColor": "#3988FF",
+		"fontSize": "20px",
+		"list": [
+		  {
+			"pagePath": "pages/home/home",
+			"text": "首页",
+			"iconPath": "static/icons/home-icon-false.png",
+			"selectedIconPath": "static/icons/home-icon-false.png"
+		  },
+		  {
+			"pagePath": "pages/registration/registration",
+			"text": "报名",
+			"iconPath": "static/icons/registration-icon-false.png",
+			"selectedIconPath": "static/icons/registration-icon-true.png"
+		  },
+		  {
+			"pagePath": "pages/interview/interview",
+			"text": "面试",
+			"iconPath": "static/icons/interview-icon-false.png",
+			"selectedIconPath": "static/icons/interview-icon-true.png"
+		  }
+		
+		]
+	  }
+}

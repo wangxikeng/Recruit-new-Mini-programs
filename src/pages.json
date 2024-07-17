@@ -17,13 +17,13 @@
 		{
 			"path": "pages/interview/interview",
 			"style": {
-				"navigationBarTitleText": "报名"
+				"navigationBarTitleText": "面试"
 			}
 		},
 		{
 			"path": "pages/registration/registration",
 			"style": {
-				"navigationBarTitleText": "面试"
+				"navigationBarTitleText": "报名"
 			}
 		}
 	],

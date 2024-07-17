@@ -1,6 +1,6 @@
-import { useUserStore } from "../store/modules/user";
+import { useUserStore } from "@/stores/modules/user";
 import { __BASE_URL__, __API_TIMEOUT__ } from "@/content";
-import { Data } from "../type/baseType";
+import { Data } from "../types/baseType";
 
 //添加拦截器
 const httpInterceptor = {

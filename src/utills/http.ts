@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/modules/user";
-import { __BASE_URL__, __API_TIMEOUT__ } from "@/content";
+import { __BASE_URL__, __API_TIMEOUT__ } from "@/constant";
 import { Data } from "../types/baseType";
 
 //添加拦截器

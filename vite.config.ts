@@ -13,4 +13,11 @@ export default defineConfig({
     },
   },
   plugins: [uni()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "@/static/css/uview.theme.scss";',
+      },
+    },
+  },
 });

@@ -29,7 +29,7 @@
         <view class="square"></view>
         <view class="line"></view>
         <view class="arrow">
-          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
+          <up-icon name="arrow-down" color="#9773FF" size="16" bold="true"></up-icon>
         </view>
 
         <view class="content_box content_box_3">
@@ -93,83 +93,83 @@ const current = ref(1)
 //   margin-top: 24px;
 // }
 ::v-deep .u-subsection {
-  height: 64px !important;
+  height: 128rpx !important;
 }
 ::v-deep .u-subsection__item {
   border: none !important;
 }
 ::v-deep .u-subsection__bar {
-  margin-top: 24px;
-  width: 72px !important;
-  margin-left: 3px;
+  margin-top: 48rpx;
+  width: 144rpx !important;
+  margin-left: 4rpx;
 }
 ::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__bar--first.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__bar--last.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__item__text {
-  font-size: 16px !important;
+  font-size: 32rpx !important;
   font-weight: 500;
   color: #1a1a1a;
 }
 ::v-deep .u-subsection__item {
-  width: 78px;
-  height: 32px;
-  margin-top: 24px;
+  width: 156rpx;
+  height: 64rpx;
+  margin-top: 48rpx;
 }
 .content {
-  margin-top: 40px;
+  margin-top: 80rpx;
 }
 .content_box {
-  width: 127px;
-  height: 83px;
+  width: 254rpx;
+  height: 166rpx;
   margin: auto;
-  border-radius: 10px;
+  border-radius: 20rpx;
   background-color: #aeb4c2;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16rpx;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 32rpx;
 }
 .content_box_2 {
   background-color: #7f52ff;
-  transform: translate(0, -8px);
+  transform: translate(0, -16rpx);
 }
 .content_box_3,
 .content_box_4 {
   background-color: #9773ff;
-  transform: translate(0, -8px);
+  transform: translate(0, -16rpx);
 }
 .content_box_4 {
-  transform: translate(0, -15px);
+  transform: translate(0, -30rpx);
 }
 .icon_box_2,
 .icon_box_3 {
-  transform: translate(0, -8px);
+  transform: translate(0, -16rpx);
 }
 .square {
-  width: 8px;
-  height: 8px;
+  width: 16rpx;
+  height: 16rpx;
   background-color: #9773ff;
   margin: auto;
   transform: rotate(45deg);
 }
 .line {
-  height: 52px;
-  width: 2px;
+  height: 104rpx;
+  width: 6rpx;
   background-color: #9773ff;
   margin: auto;
 }
 ::v-deep .u-icon__icon.data-v-1c933a9a {
   margin: auto;
-  transform: translate(0, -7px);
+  transform: translate(0, -14rpx);
 }
 </style>

@@ -1,0 +1,175 @@
+<template>
+  <view class="wholepage">
+    <view class="nav">
+      <up-subsection
+        activeColor="#7f52ff"
+        :list="list"
+        mode="subsection"
+        :current="0"
+      ></up-subsection>
+    </view>
+    <view class="content">
+      <view class="content_box">
+        <view class="content_desc_1">面试</view>
+        <view class="content_desc_2">(已完成)</view>
+      </view>
+      <view class="icon_box">
+        <view class="square"></view>
+        <view class="line"></view>
+        <view class="arrow">
+          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
+        </view>
+      </view>
+
+      <view class="content_box content_box_2">
+        <view class="content_desc_1">一轮考核</view>
+        <view class="content_desc_2">(进行中)</view>
+      </view>
+      <view class="icon_box icon_box_2">
+        <view class="square"></view>
+        <view class="line"></view>
+        <view class="arrow">
+          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
+        </view>
+
+        <view class="content_box content_box_3">
+          <view class="content_desc_1">二轮考核</view>
+          <view class="content_desc_2">(未开始)</view>
+        </view>
+        <view class="icon_box icon_box_3">
+          <view class="square"></view>
+          <view class="line"></view>
+          <view class="arrow">
+            <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
+          </view>
+        </view>
+
+        <view class="content_box content_box_4">
+          <view class="content_desc_1">三轮</view>
+          <view class="content_desc_2">(未开始)</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+const list = ref(['UI', '前端', '后台', '安卓', '深度学习'])
+const current = ref(1)
+</script>
+<style lang="scss" scoped>
+.wholepage {
+  background-color: #f8f7ff;
+  height: 100vh;
+}
+// ::v-deep .u-subsection {
+//   height: 64px !important;
+// }
+// ::v-deep .u-subsection__item {
+//   border: none !important;
+// }
+// ::v-deep .u-subsection__bar {
+//   margin-top: 24px;
+//   width: 88px !important;
+//   margin-left: 20px;
+// }
+// ::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
+//   border-radius: 25px;
+// }
+// ::v-deep .u-subsection__bar--first.data-v-7b2e14a2 {
+//   border-radius: 25px;
+// }
+// ::v-deep .u-subsection__bar--last.data-v-7b2e14a2 {
+//   border-radius: 25px;
+// }
+// ::v-deep .u-subsection__item__text {
+//   font-size: 16px !important;
+//   font-weight: 500;
+//   color: #1a1a1a;
+// }
+// ::v-deep .u-subsection__item {
+//   width: 88px;
+//   height: 32px;
+//   margin-top: 24px;
+// }
+::v-deep .u-subsection {
+  height: 64px !important;
+}
+::v-deep .u-subsection__item {
+  border: none !important;
+}
+::v-deep .u-subsection__bar {
+  margin-top: 24px;
+  width: 72px !important;
+  margin-left: 3px;
+}
+::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
+  border-radius: 25px;
+}
+::v-deep .u-subsection__bar--first.data-v-7b2e14a2 {
+  border-radius: 25px;
+}
+::v-deep .u-subsection__bar--last.data-v-7b2e14a2 {
+  border-radius: 25px;
+}
+::v-deep .u-subsection__item__text {
+  font-size: 16px !important;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+::v-deep .u-subsection__item {
+  width: 78px;
+  height: 32px;
+  margin-top: 24px;
+}
+.content {
+  margin-top: 40px;
+}
+.content_box {
+  width: 127px;
+  height: 83px;
+  margin: auto;
+  border-radius: 10px;
+  background-color: #aeb4c2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 16px;
+}
+.content_box_2 {
+  background-color: #7f52ff;
+  transform: translate(0, -8px);
+}
+.content_box_3,
+.content_box_4 {
+  background-color: #9773ff;
+  transform: translate(0, -8px);
+}
+.content_box_4 {
+  transform: translate(0, -15px);
+}
+.icon_box_2,
+.icon_box_3 {
+  transform: translate(0, -8px);
+}
+.square {
+  width: 8px;
+  height: 8px;
+  background-color: #9773ff;
+  margin: auto;
+  transform: rotate(45deg);
+}
+.line {
+  height: 52px;
+  width: 2px;
+  background-color: #9773ff;
+  margin: auto;
+}
+::v-deep .u-icon__icon.data-v-1c933a9a {
+  margin: auto;
+  transform: translate(0, -7px);
+}
+</style>

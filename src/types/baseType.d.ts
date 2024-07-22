@@ -1,5 +1,5 @@
-export interface Data<T> {
+export interface IData<T> {
   code: string;
   msg: string;
-  result: T;
+  data: T;
 }

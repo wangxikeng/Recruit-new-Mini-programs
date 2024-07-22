@@ -17,13 +17,25 @@
     {
       "path": "pages/interview/interview",
       "style": {
-        "navigationBarTitleText": "面试"
+        "navigationBarTitleText": "数智LAB"
       }
     },
     {
       "path": "pages/registration/registration",
       "style": {
-        "navigationBarTitleText": "报名"
+        "navigationBarTitleText": "数智LAB"
+      }
+    },
+    {
+      "path": "pages/procedure/procedure",
+      "style": {
+        "navigationBarTitleText": "数智LAB"
+      }
+    },
+    {
+      "path": "pages/reservation/reservation",
+      "style": {
+        "navigationBarTitleText": "数智LAB"
       }
     },
     {

@@ -26,20 +26,16 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <!-- <button class="btn">09 : 10-09 : 20</button>
           <button class="btn">09 : 10-09 : 20</button>
           <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button> -->
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
         </view>
       </view>
     </view>
@@ -47,13 +43,13 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <up-button text="09:10-09:20"></up-button>
-          <up-button text="09:10-09:20"></up-button>
+          <button class="btn">09 : 10-09 : 20</button>
+          <button class="btn">09 : 10-09 : 20</button>
         </view>
       </view>
     </view>
@@ -62,17 +58,19 @@
     </view>
 
     <up-popup :show="show" mode="center" overlay="false">
-      <view class="pop_desc">
-        <text class="sure_desc">请确认你选择预约的时间是否为</text>
-        <text class="sure_time">2024年6月4日09 : 10-09 : 20</text>
-        <text class="sure_desc">确认后不可更改</text>
-      </view>
-      <view class="pop_btn">
-        <view class="btn_1">
-          <up-button text="取消" @click="pop_cancel"></up-button>
+      <view class="pop">
+        <view class="pop_desc">
+          <text class="sure_desc">请确认你选择预约的时间是否为</text>
+          <text class="sure_time">2024年6月4日09 : 10-09 : 20</text>
+          <text class="sure_desc">确认后不可更改</text>
         </view>
-        <view class="btn_2">
-          <up-button text="确认" @click="pop_sure"></up-button>
+        <view class="pop_btn">
+          <view class="btn_1">
+            <up-button text="取消" @click="pop_cancel"></up-button>
+          </view>
+          <view class="btn_2">
+            <up-button text="确认" @click="pop_sure"></up-button>
+          </view>
         </view>
       </view>
     </up-popup>
@@ -100,152 +98,158 @@ const pop_sure = () => {
 }
 .logo_img {
   width: 100%;
-  height: 120px;
+  height: 240rpx;
 }
 .logo_warning_img {
-  width: 253px;
-  height: 53px;
-  margin-left: 120px;
-  transform: translate(0, -90px);
+  width: 506rpx;
+  height: 106rpx;
+  margin-left: 240rpx;
+  transform: translate(0, -180rpx);
 }
 .logo_warning {
-  font-size: 12px;
+  font-size: 24rpx;
   color: #f7f9ff;
   font-weight: 400;
-  margin-left: 163px;
-  transform: translate(0, -132px);
+  margin-left: 326rpx;
+  transform: translate(0, -264rpx);
 }
 .nav_box {
   background-color: #f7f9ff;
-  height: 50px;
+  height: 100rpx;
   width: 100%;
-  transform: translate(0, -95px);
-  border-radius: 64px;
+  transform: translate(0, -190rpx);
+  border-radius: 128rpx;
 }
 .nav {
-  transform: translate(0, -135px);
+  transform: translate(0, -270rpx);
 }
 ::v-deep .u-subsection {
-  height: 64px !important;
+  height: 128rpx !important;
 }
 ::v-deep .u-subsection__item {
   border: none !important;
 }
 ::v-deep .u-subsection__bar {
-  margin-top: 24px;
-  width: 72px !important;
-  margin-left: 3px;
+  margin-top: 48rpx;
+  width: 134rpx !important;
+  margin-left: 10rpx;
 }
 ::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__bar--first.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__bar--last.data-v-7b2e14a2 {
-  border-radius: 25px;
+  border-radius: 50rpx;
 }
 ::v-deep .u-subsection__item__text {
-  font-size: 16px !important;
+  font-size: 32rpx !important;
   font-weight: 500;
   color: #1a1a1a;
 }
 ::v-deep .u-subsection__item {
-  width: 78px;
-  height: 32px;
-  margin-top: 24px;
+  width: 156rpx;
+  height: 64rpx;
+  margin-top: 48rpx;
 }
 .res_time_box_1 {
-  width: 353px;
-  height: 229px;
+  width: 706rpx;
+  height: 458rpx;
   margin: auto;
-  border: 2px solid #b79eff8c;
-  border-radius: 12px;
-  transform: translate(0, -90px);
+  border: 4rpx solid #b79eff8c;
+  border-radius: 24rpx;
+  transform: translate(0, -180rpx);
 }
 .res_time_box_2 {
-  height: 180px;
-  margin-top: 48px;
+  height: 360rpx;
+  margin-top: 96rpx;
 }
 .day {
-  width: 115px;
-  height: 35px;
+  width: 230rpx;
+  height: 70rpx;
   background-color: #b79eff;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 16rpx;
+  font-size: 24rpx;
   font-weight: 600;
   color: #ffffff;
-  transform: translate(20px, -20px);
+  transform: translate(40rpx, -40rpx);
 }
 .time_cloumn {
   display: flex;
-  gap: 10px;
+  gap: 20rpx;
 }
 .time_cloumn_1 {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20rpx;
 }
-::v-deep .u-button.data-v-461e713c {
-  width: 136px;
-  height: 33px;
-  margin-left: 24px;
+// ::v-deep .u-button.data-v-461e713c
+.btn {
+  width: 272rpx;
+  height: 66rpx;
+  margin-left: 48rpx;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 28rpx;
   font-weight: 500;
   // color: #ffffff;
-  border: 1px solid #7f52ff;
+  border: 2rpx solid #7f52ff;
   background-color: #ffffff;
 }
 
 ::v-deep .make_sure .u-button.data-v-461e713c {
-  width: 288px;
-  height: 48px;
+  width: 576rpx;
+  height: 96rpx;
   color: #ffffff;
   font-weight: 600;
   font-size: 15px;
   background-color: #7f52ff;
   border-radius: 16px;
   margin: auto;
-  transform: translate(0, -64px);
+  transform: translate(0, -128rpx);
 }
 .pop_desc {
   display: flex;
   flex-direction: column;
   gap: 7px;
-  margin-left: 54px;
-  padding-top: 32px;
+  margin-left: 108rpx;
+  padding-top: 64rpx;
 }
 .sure_time {
   font-size: 18px;
   color: #7f52ff;
 }
+.pop {
+  border-radius: 24px;
+}
 .pop_btn {
   display: flex;
-  gap: 32px;
-  margin-left: 24px;
-  margin-top: 24px;
+  gap: 64rpx;
+  margin-left: 48rpx;
+  margin-top: 48rpx;
 }
 ::v-deep .pop_btn .u-button--info.data-v-461e713c {
-  width: 90px;
-  height: 36px;
+  width: 180rpx;
+  height: 72rpx;
   border: 2px solid #7f52ff;
+  margin-left: 48rpx;
 }
 ::v-deep .u-popup__content.data-v-74921bef {
-  width: 353px;
-  height: 200px;
+  width: 706rpx;
+  height: 400rpx;
   box-shadow: 0 4px 20.4px 0 #00000040;
   font-size: 16px;
+  border-radius: 24rpx;
 }
 ::v-deep .pop_btn .u-button.data-v-461e713c {
   border-radius: 16px;
 }
 ::v-deep .btn_2 .u-button {
   background-color: #7f52ff;
-  transform: translate(24px, 0);
+  transform: translate(48rpx, 0);
   color: #ffffff;
 }
 ::v-deep .btn_2 .u-button--square.data-v-461e713c {

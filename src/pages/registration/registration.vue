@@ -94,6 +94,13 @@
           <up-icon name="close" v-if="file_btn"></up-icon>
         </view>
       </view>
+      <up-overlay
+        :show="show"
+        @click="show = false"
+        duration="0"
+        :opacity="0.2"
+        :z-index="999"
+      ></up-overlay>
       <view class="filebutton" v-if="file_btn">
         <view class="save_btn" @click="save_suc">
           <up-button type="primary" text="保存"></up-button>
@@ -132,11 +139,10 @@
       </view>
     </view>
   </view>
-  <view class="blur_page" v-if="submit_pop || submit_pop_1"></view>
-  <view class="blur_page_1" v-if="save_pop"></view>
 </template>
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+const show = ref(false)
 //复选框
 const checkboxValue1 = reactive([])
 const checkboxValue2 = reactive([])
@@ -199,10 +205,12 @@ const file_btn = ref(true)
 const change_part = ref(false)
 const savesuccess = () => {
   submit_pop.value = true
+  show.value = true
   setTimeout(function () {
     submit_pop.value = false
     // file_btn.value = false
     // change_part.value = true
+    show.value = false
   }, 2000)
 }
 const save_suc = () => {
@@ -213,10 +221,12 @@ const save_suc = () => {
 const submit_pop_1 = ref(false)
 const submitsuccess = () => {
   submit_pop_1.value = true
+  show.value = true
   setTimeout(function () {
     submit_pop_1.value = false
     file_btn.value = false
     change_part.value = true
+    show.value = false
   }, 2000)
 }
 const submit_suc = () => {
@@ -226,6 +236,7 @@ const submit_suc = () => {
 //修改弹窗
 const save_pop = ref(false)
 const changedet = () => {
+  show.value = true
   save_pop.value = true
 }
 const sure_btn = () => {
@@ -234,6 +245,7 @@ const sure_btn = () => {
 }
 const cancel_btn = () => {
   save_pop.value = false
+  show.value = false
 }
 </script>
 
@@ -249,216 +261,218 @@ const cancel_btn = () => {
   display: flex;
 }
 .basic_icon {
-  width: 24px;
-  height: 24px;
-  margin-left: 144px;
-  margin-top: 30px;
+  width: 48rpx;
+  height: 48rpx;
+  margin-left: 288rpx;
+  margin-top: 55rpx;
 }
 .basic_desc {
-  margin-left: 12px;
-  margin-top: 32px;
-  width: 72px;
-  height: 22px;
+  margin-left: 16rpx;
+  margin-top: 64rpx;
+  width: 144rpx;
+  height: 44rpx;
   font-weight: bold;
 }
 .input_all {
   // margin: auto;
-  margin-left: 54px;
-  margin-top: 24px;
-  width: 268px;
-  height: 244px;
+  margin-left: 108rpx;
+  margin-top: 48rpx;
+  width: 536rpx;
+  height: 428rpx;
 }
 .input {
   box-shadow: 0 0 4px #b2cafccf;
-  width: 268px;
-  margin-bottom: 16px;
-  border-radius: 8px;
+  width: 536rpx;
+  margin-bottom: 32rpx;
+  border-radius: 16rpx;
 }
 .last_input {
-  margin-bottom: 24px;
+  margin-bottom: 24rpx;
 }
 .input::placeholder {
-  margin-top: 13.5px !important;
-  margin-left: 20px;
-  height: 17px;
-  width: 28px;
+  margin-top: 27rpx !important;
+  margin-left: 40rpx;
+  height: 34rpx;
+  width: 46rpx;
 }
 
 //考核方向
 .direction {
-  margin-bottom: 24px;
+  margin-bottom: 48rpx;
 }
 .upcheckboxgroup {
-  height: 54px;
-  width: 246px;
-  margin: auto;
+  height: 108rpx;
+  width: 536rpx;
+  margin-left: 140rpx;
   // background: linear-gradient(to bottom, #4f81fe, #c971e7db);
 }
 ::v-deep .u-checkbox-group {
   display: flex;
-  gap: 3px;
+  gap: 6rpx;
 }
 ::v-deep .direction_box .u-checkbox:last-child {
-  margin-left: 13px;
+  margin-left: 28rpx;
 }
 ::v-deep .u-checkbox-row {
   // width: 28px;
-  height: 17px;
+  height: 34rpx;
 }
 ::v-deep .u-checkbox__icon-wrap--circle {
-  width: 14px;
-  height: 14px;
+  width: 28rpx;
+  height: 28rpx;
 }
 
 //其他信息
 .otherdetail {
-  margin-top: 24px;
+  margin-top: 48rpx;
 }
 .career_plan {
-  margin-top: 24px;
-  font-size: 14px;
-  margin-left: 52px;
-  margin-bottom: 16px;
+  margin-top: 48rpx;
+  font-size: 28rpx;
+  margin-left: 104rpx;
+  margin-bottom: 32rpx;
   font-weight: 600;
-  width: 98px;
-  height: 17px;
+  // width: 96rpx;
+  height: 34rpx;
 }
 
 //自我介绍
 ::v-deep .u-textarea__field {
-  height: 200px !important;
+  height: 400rpx !important;
   width: 80% !important;
-  font-size: 12px;
-  padding: 8px;
-  letter-spacing: 2px;
+  font-size: 24rpx;
+  padding: 16rpx;
+  letter-spacing: 4rpx;
 }
 ::v-deep .u-textarea--radius.data-v-31706dd7 {
-  border-radius: 10px;
-  font-size: 14px;
+  border-radius: 20rpx;
+  font-size: 28rpx;
 }
 ::v-deep .u-textarea__field.data-v-31706dd7 {
-  font-size: 14px;
-  letter-spacing: 2px;
-  word-spacing: 2px;
+  font-size: 28rpx;
+  letter-spacing: 4rpx;
+  word-spacing: 4rpx;
   line-height: 1.5;
 }
 .text {
-  width: 291px;
-  height: 106px;
+  width: 582rpx;
+  height: 212rpx;
   margin: auto;
-  font-size: 12px;
+  font-size: 24rpx;
 }
 
 //上传作品或简历
 .works {
-  width: 154px;
-  height: 17px;
-  margin-top: 154px;
+  width: 308rpx;
+  height: 34rpx;
+  margin-top: 308rpx;
 }
 .filechoose {
   display: flex;
-  gap: 12px;
-  margin-left: 52px;
+  gap: 24rpx;
+  margin-left: 104rpx;
   align-items: center;
 }
 .filechoose_btn {
-  width: 72px;
-  height: 24px;
-  margin-top: 16px;
+  width: 144rpx;
+  height: 48rpx;
+  margin-top: 32rpx;
 }
 ::v-deep .filechoose_btn .u-button--square.data-v-461e713c {
-  width: 72px;
-  height: 24px;
-  border-radius: 8px;
+  width: 144rpx;
+  height: 48rpx;
+  border-radius: 16rpx;
 }
 ::v-deep .u-square {
-  width: 72px !important;
-  height: 24px;
+  width: 144rpx !important;
+  height: 48rpx;
 }
 .file-desc {
-  font-size: 12px;
-  margin-top: 16px;
+  font-size: 24rpx;
+  margin-top: 32rpx;
   display: flex;
-  gap: 12px;
+  gap: 24rpx;
   align-items: center;
 }
 .filebutton {
-  margin-top: 64px;
+  margin-top: 128rpx;
   display: flex;
-  gap: 20px;
+  gap: 40rpx;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+  margin-left: 48rpx;
 }
 .file-name {
-  font-size: 14px;
+  font-size: 28rpx;
   font-weight: 500;
   color: #7f52ff;
 }
 .save_btn {
-  margin-left: 35px;
-  margin-bottom: 64px;
+  margin-left: 70rpx;
+  margin-bottom: 128rpx;
 }
 .submit_btn {
-  margin-right: 35px;
-  margin-bottom: 64px;
+  margin-right: 70rpx;
+  margin-bottom: 128rpx;
 }
 ::v-deep .save_btn .u-button {
-  width: 144px;
-  height: 35px;
-  border-radius: 24px;
+  width: 288rpx;
+  height: 70rpx;
+  border-radius: 48rpx;
   background-color: #fff;
   color: #7f52ff;
 }
 ::v-deep .submit_btn .u-button {
-  width: 144px;
-  height: 35px;
-  border-radius: 24px;
+  width: 288rpx;
+  height: 70rpx;
+  border-radius: 48rpx;
 }
 //保存弹窗
 .submit_pop {
-  width: 250px;
-  height: 200px;
+  width: 500rpx;
+  height: 400rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  border-radius: 10px;
+  gap: 32rpx;
+  border-radius: 20rpx;
   box-shadow: 0px 4px 20.4px 0px #00000040;
   position: fixed;
-  top: 154px;
-  left: 64px;
+  top: 308rpx;
+  left: 128rpx;
   background-color: #ffffff;
   z-index: 999;
 }
 .submit_desc {
-  font-size: 16px;
+  font-size: 32rpx;
   font-weight: 500;
 }
 
 //修改信息
 .change_detail {
   color: #7f52ff;
-  font-size: 12px;
+  font-size: 24rpx;
   font-weight: 500;
-  margin-left: 235px;
-  margin-top: 24px;
+  margin-left: 470rpx;
+  margin-top: 48rpx;
 }
 
 //确认弹窗
 .save_pop {
-  width: 320px;
-  height: 179px;
+  width: 640rpx;
+  height: 358rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  border-radius: 10px;
+  gap: 32rpx;
+  border-radius: 20rpx;
   box-shadow: 0px 4px 20.4px 0px #00000040;
   position: fixed;
-  top: 154px;
-  left: 36px;
+  top: 308rpx;
+  left: 56rpx;
   background-color: #ffffff;
   z-index: 999;
 }
@@ -471,9 +485,9 @@ const cancel_btn = () => {
 .save_decs {
   font-size: 14px;
   font-weight: 400;
-  margin-top: 24px;
+  margin-top: 48rpx;
   // margin: auto;
-  padding-bottom: 24px;
+  padding-bottom: 48rpx;
   color: #1a1a1a;
 }
 ::v-deep .cancel_btn .u-button {
@@ -483,34 +497,17 @@ const cancel_btn = () => {
 
 ::v-deep .pop_btn .u-button--square.data-v-461e713c {
   border-radius: 8px;
-  height: 32px;
-  width: 72.52px;
+  height: 64rpx;
+  width: 145rpx;
 }
 
 //底下留白
 .footer_1 {
-  height: 64px;
+  height: 128rpx;
   width: 100%;
 }
 .footer_2 {
-  height: 48px;
+  height: 96rpx;
   width: 100%;
-}
-
-.blur_page {
-  width: 100%;
-  height: 179vh;
-  background-color: rgba(0, 0, 0, 0.8);
-  opacity: 0.3;
-  position: absolute;
-  top: 0%;
-}
-.blur_page_1 {
-  width: 100%;
-  height: 166vh;
-  background-color: rgba(0, 0, 0, 0.8);
-  opacity: 0.3;
-  position: absolute;
-  top: 0%;
 }
 </style>

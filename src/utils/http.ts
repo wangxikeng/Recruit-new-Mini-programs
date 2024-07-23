@@ -10,8 +10,14 @@ const httpInterceptor = {
       option.url = __BASE_URL__ + option.url
     }
     option.timeout = __API_TIMEOUT__
-    const memberStore = useUserStore()
+    const userStore = useUserStore()
     // 取 token ，然后附在请求头上
+    if (userStore.uerInfo?.token) {
+      option.header = {
+        ...option.header,
+        token: userStore.uerInfo.token
+      }
+    }
   }
 }
 uni.addInterceptor('request', httpInterceptor)

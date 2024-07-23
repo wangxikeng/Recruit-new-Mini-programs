@@ -1,12 +1,12 @@
-<script setup lang="ts">
+ <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const toSignin = () => {
-  // console.log(111);
-  wx.navigateTo({
-    url: '/pages/interview/components/interview_signin'
+const toSignIn = () => {
+  uni.navigateTo({
+    url: '/pages/signIn/interview_signIn'
   })
 }
-</script>
+
+</script> 
 
 <template>
   <view class="whole_interview_box">
@@ -23,7 +23,7 @@ const toSignin = () => {
         <text>预约面试后记得面试签到进入排队哦~</text>
       </view>
     </view>
-    <!-- 下面按钮选择部分-->
+    <!-- 下面按钮选择部分 -->
     <view class="select">
       <view class="select_boxes">
         <view class="select_box1">
@@ -31,9 +31,9 @@ const toSignin = () => {
             src="../../static/interview/interview_interview appointment_icon.png"
             mode="scaleToFill"
           />
-          <text>面试预约</text>
+          <text >面试预约</text>
         </view>
-        <view class="select_box2" @click="toSignin">
+        <view class="select_box2" @click="toSignIn">
           <image src="../../static/interview/interview_sign-in_icon.png" mode="scaleToFill" />
           <text>面试签到</text>
         </view>
@@ -47,22 +47,24 @@ const toSignin = () => {
       </view>
     </view>
   </view>
-</template>
+</template> 
+
+
 
 <style lang="scss" scoped>
 // 大盒子
 .whole_interview_box {
-  width: 393px;
-  height: 694px;
 
+  width: 786rpx;
+  height: 1388rpx;
   background-color: rgba(248, 247, 255, 1);
 }
 
 //温馨提示
 .remind {
   width: 100%;
-  height: 240px;
-  // background-color: pink;
+  height: 480rpx;
+
 }
 
 //   温馨提示盒子公共部分
@@ -70,46 +72,53 @@ const toSignin = () => {
 .remind_box2,
 .remind_box3 {
   position: absolute;
-  border-radius: 15px;
+  border-radius: 30rpx;
+
   background-color: rgba(127, 82, 255, 0.7);
   text-align: center;
-  line-height: 31px;
+  line-height: 62rpx;
+
 }
 
 .remind_box1 {
-  top: 36px;
-  left: 109px;
-  width: 208px;
-  height: 35px;
+
+  top: 72rpx;
+  left: 218rpx;
+  width: 416rpx;
+  height: 70rpx;
 }
 
 .remind_box2 {
-  top: 101px;
-  left: 49px;
-  width: 128px;
-  height: 32px;
+
+  top: 202rpx;
+  left: 98rpx;
+  width: 256rpx;
+  height: 64rpx;
 }
 
 .remind_box3 {
-  top: 167px;
-  left: 127px;
-  width: 236px;
-  height: 35px;
+
+  top: 334rpx;
+  left: 225rpx;
+  width: 472rpx;
+  height: 70rpx;
 }
 
 //温馨提示文字
 .remind text {
-  font-size: 12px;
+
+  font-size: 24rpx;
   color: white;
 }
 
 //   选择框
 .select {
   position: relative;
-  width: 393px;
-  height: 454px;
-  margin-top: -8px;
-  border-radius: 34px 34px 0 0;
+
+  width: 751rpx;
+  height: 908rpx;
+  margin-top: -16rpx;
+  border-radius: 68rpx 68rpx 0 0;
   background: linear-gradient(to bottom, rgb(215, 185, 245, 0.5), rgb(229, 196, 230, 0.1));
   text-align: center;
   overflow: hidden;
@@ -120,20 +129,21 @@ const toSignin = () => {
 .select_box2,
 .select_box3 {
   position: relative;
-  margin-bottom: 23px;
+  margin-bottom: 46rpx;
+
 }
 
 .select_boxes {
-  margin-top: 62px;
-  margin-left: -3px;
+  margin-top: 124rpx;
+  margin-left: -6rpx;
 }
 
 //按扭框图片
 .select_box1 image,
 .select_box2 image,
 .select_box3 image {
-  width: 211px;
-  height: 82px;
+  width: 422rpx;
+  height: 164rpx;
 }
 
 //按钮框字体
@@ -141,25 +151,29 @@ const toSignin = () => {
 .select_box2 text,
 .select_box3 text {
   position: absolute;
-  line-height: 63px;
+  line-height: 126rpx;
   font-weight: bold;
-  font-size: 18px;
-  left: 184px;
+  font-size: 36rpx;
+  left: 368rpx;
 }
 
 .select_box1 text {
   color: rgb(79, 129, 254);
 
-  top: 9px;
+  top: 18rpx;
 }
 
 .select_box2 text {
   color: rgb(137, 45, 207);
-  top: 11px;
+  top: 22rpx;
 }
 
 .select_box3 text {
   color: rgb(217, 0, 221);
-  top: 10px;
+  top: 20rpx;
 }
-</style>
+</style> 
+
+
+
+

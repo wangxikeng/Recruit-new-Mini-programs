@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
     import { ref, reactive } from "vue";
     //公告弹框数据
@@ -26,7 +25,7 @@
 </script>
 
 <template>
- 
+  <button @click="test">dianji</button>
   <view class="home">
       <!-- 背景图 -->
       <view class="home_title">
@@ -79,7 +78,35 @@
                   dc不成熟离开农村回复vu送货单v好的v能否落实点击v分配违法还给我i数据发送报警分配你老公俄日价格
               </view>
 
+        <!-- 内容 -->
+        <view class="home_studio_content_box">
+          <!-- <up-textarea  :customStyle="{height:'200px',fontSize:'14px',lineHeight:'14px'}" v-model="studio_introduction" autoHeight="true" maxlength=-1></up-textarea> -->
+          翻译工具哦无法vu哦呜电视机顶盒浓雾害得我积分CEO我i积分v我的居屋IP飞机外婆欸JFK巫婆二v哦微软的v海内外i今
         </view>
+      </view>
+      <!-- 方向介绍 -->
+      <view class="home_direction">
+        <view class="direction-box">
+          <!-- 图标 -->
+          <image src="../../static/layouthome/direction_introduce.png" alt=""></image>
+          <text class="home_direction_introduce">方向介绍</text>
+        </view>
+        <!-- 五个方向tag标签 -->
+        <view class="direction_tags">
+          <up-subsection
+            :list="list"
+            :current="1"
+            mode="button"
+            inactiveColor="black"
+            bgColor="rgba(248, 247, 255, 1)"
+            activeColor="#fff"
+          ></up-subsection>
+        </view>
+        <!-- 方向介绍文本框 -->
+        <view class="direction_details">
+          dc不成熟离开农村回复vu送货单v好的v能否落实点击v分配违法还给我i数据发送报警分配你老公俄日价格
+        </view>
+      </view>
     </view>
   </view>
 </template>
@@ -98,6 +125,10 @@
     height:368rpx ;
   }
 
+//公告弹框   取不到
+:v-deep(.u-modal__button-group__wrapper__text.data-v-12b77a26) {
+  color: black;
+}
 
 
   //公告
@@ -112,7 +143,12 @@
     border-radius: 16rpx 0rpx 0rpx 0rpx;
     opacity: 0rpx;
 
-  }
+//公告具体内容-公告
+.home_accouncement_details text:first-child {
+  margin-left: 8px;
+  color: rgba(127, 82, 255, 1);
+  font-weight: bold;
+}
 
   //公告图内的内容-大盒子
   .home_announcement_details{
@@ -213,12 +249,49 @@
     
 }
 
+//公告具体内容-查看
+.home_accouncement_view {
+  float: right;
+  margin-right: 25px;
+  font-size: 12px;
+  margin-top: 4px;
+  color: rgba(127, 82, 255, 1);
+}
 
 //
 .home_direction{
   width: 100%;
 }
 
+//工作室介绍-图标
+.home_studio_title image {
+  width: 24px;
+  height: 24px;
+  margin-left: 34px;
+  margin-top: 56px;
+  vertical-align: -6px;
+}
+
+//工作室介绍-图标后面的字
+.home_studio_introduce {
+  height: 24px;
+  font-weight: bold;
+  margin-left: 12px;
+  font-size: 18px;
+}
+
+//  工作室介绍-介绍内容
+.home_studio_content_box {
+  padding: 15px;
+  width: 301px;
+  min-height: 200px;
+  height: auto !important;
+  margin: 16px auto;
+
+  border-radius: 8px;
+  box-shadow: 0 0 7px 0 rgba(189, 207, 243, 0.81);
+  // background-color: pink;
+}
 
 //方向介绍-图标
 .direction-box image{
@@ -228,7 +301,6 @@
       margin-top: 38rpx;
       vertical-align: -12rpx;
 }
-
 
 //方向介绍-图标后面的字
 .home_direction_introduce{
@@ -282,6 +354,9 @@
     box-shadow: 0 0 14rpx 0 rgba(189, 207, 243, 0.81);
 }
 
+  border-radius: 8px;
+  box-shadow: 0 0 7px 0 rgba(189, 207, 243, 0.81);
+}
 
 // 方向字体
 ::v-deep .u-subsection__item__text.data-v-7b2e14a2{
@@ -294,8 +369,6 @@
     width: 600rpx !important;
     height: 520rpx;
 }
-
-
 
 // 修改公告弹框分隔线
 ::v-deep .u-line.data-v-bbd9963c {
@@ -317,16 +390,12 @@
   height: 80rpx;
 }
 
-
-
 // 修改公告内容居中
-::v-deep .u-modal.data-v-12b77a26{
+::v-deep .u-modal.data-v-12b77a26 {
   text-align: center;
 }
-
 
 ::v-deep .u-modal__button-group__wrapper__text.data-v-12b77a26 {
   color: white !important;
 }
-
 </style>

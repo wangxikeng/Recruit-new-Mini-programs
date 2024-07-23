@@ -33,6 +33,7 @@ const test = async () => {
 }
 </script>
 <template>
+  <button @tap="test2">点击获取</button>
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">

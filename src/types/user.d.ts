@@ -1,6 +1,7 @@
 /**
  * 用户信息
  */
+
 export interface IUser {
   /**
    * 账号

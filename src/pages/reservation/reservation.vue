@@ -26,16 +26,26 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view v-for="time in timeList1" :key="time.id">
+            <button
+              class="btn"
+              @click="choosetime = time.id"
+              :class="{ activeBtn: time.id === choosetime }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view v-for="time in timeList2" :key="time.id">
+            <button
+              class="btn"
+              @click="choosetime = time.id"
+              :class="{ activeBtn: time.id === choosetime }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
       </view>
     </view>
@@ -43,13 +53,26 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view v-for="time in timeList3" :key="time.id">
+            <button
+              class="btn"
+              @click="choosetime = time.id"
+              :class="{ activeBtn: time.id === choosetime }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view v-for="time in timeList4" :key="time.id">
+            <button
+              class="btn"
+              @click="choosetime = time.id"
+              :class="{ activeBtn: time.id === choosetime }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
       </view>
     </view>
@@ -91,6 +114,68 @@ const pop_cancel = () => {
 const pop_sure = () => {
   show.value = false
 }
+const choosetime = ref(0)
+
+const timeList1 = ref([
+  {
+    id: 1,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 2,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 3,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 4,
+    time: '09 : 10-09 : 20'
+  }
+])
+const timeList2 = ref([
+  {
+    id: 5,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 6,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 7,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 8,
+    time: '09 : 10-09 : 20'
+  }
+])
+const timeList3 = ref([
+  {
+    id: 9,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 10,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 11,
+    time: '09 : 10-09 : 20'
+  }
+])
+const timeList4 = ref([
+  {
+    id: 12,
+    time: '09 : 10-09 : 20'
+  },
+  {
+    id: 13,
+    time: '09 : 10-09 : 20'
+  }
+])
 </script>
 <style lang="scss" scoped>
 .wholepage {
@@ -253,6 +338,10 @@ const pop_sure = () => {
   color: #ffffff;
 }
 ::v-deep .btn_2 .u-button--square.data-v-461e713c {
+  color: #fff;
+}
+.activeBtn {
+  background-color: #7f52ff;
   color: #fff;
 }
 </style>

@@ -1,13 +1,15 @@
 import type { IData } from '@/types/baseType'
+import type { IUser } from '@/types/user'
 import { http } from '@/utils/http'
 
-// 登录
+
+
 export const logIn = () => {
-  return http<IData<String>>({
+  return http<IData<IUser>>({
     url: '/user/login/user',
     method: 'POST',
     data: {
-      username: '3123004529',
+      account: '3123004529',
       password: '123456'
     }
   })

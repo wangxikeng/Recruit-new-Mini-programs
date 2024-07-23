@@ -1,8 +1,21 @@
  <script setup lang="ts">
 import { ref, reactive } from 'vue'
+// 面试预约跳转
+const toReservation = () => {
+  uni.navigateTo({
+    url: '/pages/reservation/reservation'
+  })
+}
+// 面试签到跳转
 const toSignIn = () => {
   uni.navigateTo({
     url: '/pages/signIn/interview_signIn'
+  })
+}
+// 面试进度跳转
+const toProcedure = () => {
+  uni.navigateTo({
+    url: '/pages/procedure/procedure'
   })
 }
 
@@ -26,7 +39,7 @@ const toSignIn = () => {
     <!-- 下面按钮选择部分 -->
     <view class="select">
       <view class="select_boxes">
-        <view class="select_box1">
+        <view class="select_box1" @click="toReservation">
           <image
             src="../../static/interview/interview_interview appointment_icon.png"
             mode="scaleToFill"
@@ -37,7 +50,7 @@ const toSignIn = () => {
           <image src="../../static/interview/interview_sign-in_icon.png" mode="scaleToFill" />
           <text>面试签到</text>
         </view>
-        <view class="select_box3">
+        <view class="select_box3" @click=toProcedure>
           <image
             src="../../static/interview/interview_interview progress_icon.png"
             mode="scaleToFill"

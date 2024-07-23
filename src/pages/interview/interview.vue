@@ -50,7 +50,11 @@ const toProcedure = () => {
           <image src="../../static/interview/interview_sign-in_icon.png" mode="scaleToFill" />
           <text>面试签到</text>
         </view>
+<<<<<<< HEAD
         <view class="select_box3" @click="toProcedure">
+=======
+        <view class="select_box3" @click=toProcedure>
+>>>>>>> ad796dc (fix: 更改了首页公告弹框、面试页面试预约面试进度跳转)
           <image
             src="../../static/interview/interview_interview progress_icon.png"
             mode="scaleToFill"

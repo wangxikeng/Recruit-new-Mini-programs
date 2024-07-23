@@ -29,80 +29,78 @@ onLoad(async () => {
   store.setUserToken(res.data.token)
 })
 </script>
-
 <template>
   <view class="home">
-    <!-- 背景图 -->
-    <view class="home_title">
-      <image src="../../static/layouthome/background.png" alt=""></image>
-    </view>
-    <!-- 公告 -->
-    <view class="home_accouncement">
-      <image src="../../static/layouthome/announcement.png" />
-      <!-- 公告图内：公告 分割线 内容 查看> -->
-      <view class="home_accouncement_details">
-        <text>公告</text>
-        <text class="home_accouncement_line"></text>
-        <text class="home_accouncement_content">{{ accouncementContent }}</text>
-        <text class="home_accouncement_view" @click="showAccouncement">查看 ></text>
+      <!-- 背景图 -->
+      <view class="home_title">
+          <image src="../../static/layoutHome/background.png" alt=""></image>
       </view>
-    </view>
-    <!-- 公告弹框 -->
-    <up-modal
-      :show="show"
-      title="公告"
-      :content="content"
-      @confirm="confirm"
-      class="popup"
-    ></up-modal>
-    <!-- 工作室介绍和方向介绍-大盒子 -->
-    <view class="home_content">
-      <!-- 工作室介绍 -->
-      <view class="home_studio">
-        <!-- 图标 -->
-        <view class="home_studio_title">
-          <image src="../../static/layouthome/studio_introduction.png" alt=""></image>
-          <text class="home_studio_introduce">工作室介绍</text>
+      <!-- 公告 -->
+       <view class="home_announcement">
+          <image src="../../static/layoutHome/announcement.png" />
+            <!-- 公告图内：公告 分割线 内容 查看> -->
+          <view class="home_announcement_details">
+                  <text>公告</text>
+                  <text class="home_announcement_line"></text>
+                  <text class="home_announcement_content">{{ announcementContent }}</text>
+                  <text class="home_announcement_view" @click="showAnnouncement">查看 ></text>
+          </view> 
+       </view>
+       <!-- 公告弹框 -->
+       <up-popup :show="show" mode="center">
+          <view class="announcement-detail-box">
+              <text>公告</text>
+              <view class="announcement-detail">
+                  的红草地哦五年的催我呢哦非常才能我额的会从撒旦v第v排位赛你擦脸的女和覅偶得更惧怕死亡册为
+              </view>
+          </view>
+          <up-button @click="show = false" text="确认"></up-button>
+       </up-popup>
+        <!-- 工作室介绍和方向介绍-大盒子 -->
+      <view class="home_content">
+        <!-- 工作室介绍 -->
+        <view class="home_studio">
+            <!-- 图标 -->
+             <view class="home_studio_title">
+                  <image src="../../static/layoutHome/studio_introduction.png" alt=""></image>
+                  <text class="home_studio_introduce">工作室介绍</text>
+             </view>
+          
+             <!-- 内容 -->
+              <view class="home_studio_content_box">
+                  翻译工具哦无法vu哦呜电视机顶盒浓雾害得我积分CEO我i积分v我的居屋IP飞机外婆欸JFK巫婆二v哦微软的v海内外i今
+              </view>
         </view>
+        <!-- 方向介绍 -->
+        <view class="home_direction">
+            <view class="direction-box">
+                <!-- 图标 -->
+                <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
+                <text class="home_direction_introduce">方向介绍</text>
 
-        <!-- 内容 -->
-        <view class="home_studio_content_box">
-          <!-- <up-textarea  :customStyle="{height:'200px',fontSize:'14px',lineHeight:'14px'}" v-model="studio_introduction" autoHeight="true" maxlength=-1></up-textarea> -->
-          翻译工具哦无法vu哦呜电视机顶盒浓雾害得我积分CEO我i积分v我的居屋IP飞机外婆欸JFK巫婆二v哦微软的v海内外i今
+            </view >
+            <!-- 五个方向tag标签 -->
+             <view class="direction_tags">
+                <up-subsection
+              activeColor="#7f52ff"
+              :list="list"
+              mode="subsection"
+              :current="0"
+            ></up-subsection>
+             </view>
+             <!-- 方向介绍文本框 -->
+              <view class="direction_details">
+                  dc不成熟离开农村回复vu送货单v好的v能否落实点击v分配违法还给我i数据发送报警分配你老公俄日价格
+              </view>
+
         </view>
-      </view>
-      <!-- 方向介绍 -->
-      <view class="home_direction">
-        <view class="direction-box">
-          <!-- 图标 -->
-          <image src="../../static/layouthome/direction_introduce.png" alt=""></image>
-          <text class="home_direction_introduce">方向介绍</text>
-        </view>
-        <!-- 五个方向tag标签 -->
-        <view class="direction_tags">
-          <up-subsection
-            :list="list"
-            :current="1"
-            mode="button"
-            inactiveColor="black"
-            bgColor="rgba(248, 247, 255, 1)"
-            activeColor="#fff"
-          ></up-subsection>
-        </view>
-        <!-- 方向介绍文本框 -->
-        <view class="direction_details">
-          dc不成熟离开农村回复vu送货单v好的v能否落实点击v分配违法还给我i数据发送报警分配你老公俄日价格
-        </view>
-      </view>
     </view>
   </view>
 </template>
 
 <style lang="scss" scoped>
-//父盒子
-// 为了border-radius设置的
-.home {
-  // overflow: hidden;
+
+.home{
   width: 100%;
 }
 
@@ -112,8 +110,49 @@ onLoad(async () => {
     height:368rpx ;
   }
 
+// 公告弹框
+.announcement-detail-box{
+  padding: 42rpx 60rpx;
+  // text-align: center;
+font-size: 28rpx;
+color: rgba(26, 26, 26, 1);
+margin-bottom: 85rpx;
+}
+
+.announcement-detail-box text{
+  display: block;
+  transform: translate(214rpx, -3rpx);
+}
+
+.announcement-detail{
+  transform: translate(14rpx,18rpx);
+  line-height: 47rpx;
+}
+
+::v-deep .u-button.data-v-461e713c{
+  width: 440rpx !important;
+  border-radius: 100rpx !important;
+  background-color: rgba(127, 82, 255, 1) !important;
+}
+
+::v-deep .u-button.data-v-461e713c {
+  height: 70rpx !important;
+}
+
+::v-deep .u-button__text.data-v-461e713c{
+  color: #fff;
+}
+
+//整个弹框宽度
+::v-deep .u-popup__content.data-v-74921bef{
+  width: 600rpx;
+  border-radius: 20rpx;
+}
 
 
+::v-deep .u-safe-area-inset-bottom {
+  padding-bottom: 76rpx !important;
+}
   //公告
   .home_announcement image{
     //gap opacity有啥用？
@@ -121,7 +160,7 @@ onLoad(async () => {
     width: 706rpx;
     height: 112rpx;
     top: 318rpx;
-    left: 36rpx;
+    left: 24rpx;
     // gap: 0px;
     border-radius: 16rpx 0rpx 0rpx 0rpx;
     opacity: 0rpx;
@@ -132,7 +171,7 @@ onLoad(async () => {
   .home_announcement_details{
     position: absolute;
     top: 356rpx;
-    left: -20rpx;
+    left: -25rpx;
     // width: 320px;
     width: 100%;
     height: 70rpx;
@@ -221,7 +260,7 @@ onLoad(async () => {
     min-height: 400rpx;
     height:auto !important;
     margin: 32rpx auto;
- 
+  line-height: 48rpx;
     border-radius: 16rpx;
     box-shadow: 0 0 14rpx 0 rgba(189, 207, 243, 0.81);
     
@@ -253,30 +292,61 @@ onLoad(async () => {
 
 //方向介绍-五个方向tag标签
 .direction_tags{
-  width: 662rpx;
+  width: 663rpx;
     display: flex;
     justify-content: space-between;
-    margin: 40rpx auto;
+    margin: -4rpx auto;
     color: black;
     // background-color: rgba(248, 247, 255, 1);
 }
 
 
+// 导航样式改变
 
 
-//修改五个方向的按钮样式
-::v-deep .u-subsection__bar.data-v-7b2e14a2{
-  width: 140rpx !important;
-    height: 64rpx !important;
-    background-color: rgb(127, 82, 255);
-    margin-left: -4rpx;
-    margin-top: -2rpx;
+::v-deep .u-subsection.data-v-7b2e14a2{
+  width: 102% !important;
 }
 
-//修改方向按钮圆角度
-::v-deep .u-subsection--button__bar.data-v-7b2e14a2 {
-    border-radius: 100rpx !important;
+::v-deep .u-subsection {
+  height: 128rpx !important;
 }
+::v-deep .u-subsection__item {
+  border: none !important;
+}
+::v-deep .u-subsection__bar {
+  width: 136rpx !important;
+  margin-top: 48rpx;
+  margin-left: 0rpx;
+
+}
+::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
+  border-radius: 50rpx;
+}
+::v-deep .u-subsection__bar--first.data-v-7b2e14a2 {
+  border-radius: 50rpx;
+}
+::v-deep .u-subsection__bar--last.data-v-7b2e14a2 {
+  border-radius: 50rpx;
+}
+::v-deep .u-subsection__item__text {
+  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 31rpx !important;
+
+}
+::v-deep .u-subsection__item {
+  width: 156rpx;
+  height: 64rpx;
+  margin-top: 48rpx;
+}
+
+
+::v-deep .u-subsection.data-v-7b2e14a2{
+  margin-left: -25rpx;
+}
+
+
 
 // 修改方向大盒子
 ::v-deep .u-subsection--button.data-v-7b2e14a2 {
@@ -290,51 +360,10 @@ onLoad(async () => {
     min-height: 400rpx;
     height:auto !important;
     margin: 42rpx auto;
- 
+  line-height: 48rpx;
     border-radius: 16rpx;
     box-shadow: 0 0 14rpx 0 rgba(189, 207, 243, 0.81);
 }
 
-
-// 方向字体
-::v-deep .u-subsection__item__text.data-v-7b2e14a2{
-  font-size: 30rpx !important;
-}
-
-// 公告弹框
-::v-deep .u-modal.data-v-12b77a26 {
-    
-    width: 600rpx !important;
-    height: 520rpx;
-}
-
-// 修改公告弹框分隔线
-::v-deep .u-line.data-v-bbd9963c {
-  border-bottom-style: none !important;
-}
-
-// 修改按钮宽度
-::v-deep .u-modal__button-group.data-v-12b77a26{
-  width: 400rpx;
-  margin-left: 106rpx;
-    margin-top: 194rpx;
-    margin-bottom: 62rpx;
-    border-radius: 100rpx;
-    background-color: rgba(127, 82, 255, 1);
-}
-
-//按钮高度
-::v-deep .u-modal__button-group__wrapper.data-v-12b77a26{
-  height: 80rpx;
-}
-
-// 修改公告内容居中
-::v-deep .u-modal.data-v-12b77a26 {
-  text-align: center;
-}
-
-::v-deep .u-modal__button-group__wrapper__text.data-v-12b77a26 {
-  color: white !important;
-}
 
 </style>

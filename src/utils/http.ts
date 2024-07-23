@@ -24,7 +24,7 @@ export const http = <T>(Option: UniApp.RequestOptions) => {
       ...Option,
       //请求成功
       success(res) {
-        if (res.statusCode >= 200 && res.statusCode < 200) {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data as IData<T>)
         } else {
           uni.showToast({

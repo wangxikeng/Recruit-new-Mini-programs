@@ -15,41 +15,96 @@
     </view>
     <view class="nav_box"> </view>
     <view class="nav">
-      <up-subsection
+      <!-- <up-subsection
         activeColor="#7f52ff"
         :list="list"
         mode="subsection"
         :current="0"
-      ></up-subsection>
+      ></up-subsection> -->
+      <view
+        v-for="item in userDirectionStore.list"
+        :key="item.id"
+        class="direction"
+        @click="directionTimeList"
+        ref="directionBtn"
+      >
+        <view
+          class="navDirection"
+          @click="userDirectionStore.chooseDirection = item.id"
+          :class="{ activeDirection: item.id === userDirectionStore.chooseDirection }"
+        >
+          {{ item.name }}
+        </view>
+      </view>
+      <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
     </view>
     <view class="res_time_box_1">
-      <view class="day">2024年6月4日</view>
+      <view class="day">{{ userDirectionStore.formattedDate }}</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view
+            v-for="time in userDirectionStore.timeList1"
+            :key="time.id"
+            @click="userDirectionStore.getTime(time.id)"
+          >
+            <button
+              class="btn"
+              @click="userDirectionStore.idChoose = time.id"
+              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view
+            v-for="time in userDirectionStore.timeList2"
+            :key="time.id"
+            @click="userDirectionStore.getTime(time.id)"
+          >
+            <button
+              class="btn"
+              @click="userDirectionStore.idChoose = time.id"
+              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
       </view>
     </view>
     <view class="res_time_box_1 res_time_box_2">
-      <view class="day">2024年6月4日</view>
+      <view class="day">{{ userDirectionStore.formattedDate }}</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view
+            v-for="time in userDirectionStore.timeList3"
+            :key="time.id"
+            @click="userDirectionStore.getTime(time.id)"
+          >
+            <button
+              class="btn"
+              @click="userDirectionStore.idChoose = time.id"
+              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <button class="btn">09 : 10-09 : 20</button>
-          <button class="btn">09 : 10-09 : 20</button>
+          <view
+            v-for="time in userDirectionStore.timeList4"
+            :key="time.id"
+            @click="userDirectionStore.getTime(time.id)"
+          >
+            <button
+              class="btn"
+              @click="userDirectionStore.idChoose = time.id"
+              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+            >
+              {{ time.time }}
+            </button>
+          </view>
         </view>
       </view>
     </view>
@@ -61,7 +116,7 @@
       <view class="pop">
         <view class="pop_desc">
           <text class="sure_desc">请确认你选择预约的时间是否为</text>
-          <text class="sure_time">2024年6月4日09 : 10-09 : 20</text>
+          <text class="sure_time">{{ userDirectionStore.timeChoose }}</text>
           <text class="sure_desc">确认后不可更改</text>
         </view>
         <view class="pop_btn">
@@ -78,8 +133,16 @@
 </template>
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const list = ref(['UI', '前端', '后台', '安卓', '深度学习'])
-const current = ref(1)
+import { onLoad } from '@dcloudio/uni-app'
+import type { IResponse, IPreTime, IDirection } from '@/types/reservation'
+
+import { useUserDetailStore } from '@/stores/modules/registration'
+import { useDirectionStore } from '@/stores/modules/reservation'
+import dayjs from 'dayjs'
+import { getTimeListAll, getTargets, saveTargets, getDirectionTime } from '@/api/reservation'
+
+const userDetailStore = useUserDetailStore()
+const userDirectionStore = useDirectionStore()
 // 创建响应式数据
 const show = ref(false)
 const pop_up = () => {
@@ -90,6 +153,23 @@ const pop_cancel = () => {
 }
 const pop_sure = () => {
   show.value = false
+  saveTargets(userDirectionStore.idChoose)
+}
+
+onLoad(async () => {
+  userDirectionStore.getDirectionName()
+  console.log(userDirectionStore.list)
+  for (const item of userDetailStore.directionNum) {
+    userDirectionStore.chooseDirection = item + 1
+    const resTime = await getTimeListAll(item)
+    userDirectionStore.getTimeList(resTime.data, item)
+    userDirectionStore.getYearMD(resTime.data[0].timeStart)
+    return
+  }
+})
+
+const directionTimeList = async () => {
+  userDirectionStore.directionTimeListAll()
 }
 </script>
 <style lang="scss" scoped>
@@ -122,6 +202,10 @@ const pop_sure = () => {
 }
 .nav {
   transform: translate(0, -270rpx);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24rpx;
 }
 ::v-deep .u-subsection {
   height: 128rpx !important;
@@ -133,6 +217,8 @@ const pop_sure = () => {
   margin-top: 48rpx;
   width: 134rpx !important;
   margin-left: 10rpx;
+  // transform: translateX(0) !important;
+  // display: none;
 }
 ::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
   border-radius: 50rpx;
@@ -159,7 +245,7 @@ const pop_sure = () => {
   margin: auto;
   border: 4rpx solid #b79eff8c;
   border-radius: 24rpx;
-  transform: translate(0, -180rpx);
+  transform: translate(0, -200rpx);
 }
 .res_time_box_2 {
   height: 360rpx;
@@ -254,5 +340,33 @@ const pop_sure = () => {
 }
 ::v-deep .btn_2 .u-button--square.data-v-461e713c {
   color: #fff;
+}
+.activeBtn {
+  background-color: #7f52ff;
+  color: #fff;
+}
+.navDirection {
+  width: 144rpx;
+  height: 70rpx;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 16px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  outline: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navDirection:focus {
+  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
+}
+.activeDirection {
+  background-color: #7f52ff;
+  color: #ffffff !important;
+  border-radius: 24px;
+  font-weight: 700;
 }
 </style>

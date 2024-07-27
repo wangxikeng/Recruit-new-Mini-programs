@@ -39,7 +39,7 @@
       }
     },
     {
-      "path": "pages/interview/components/interview_signin",
+      "path": "pages/signIn/interview_signIn",
       "style": {
         "navigationBarTitleText": "数智LAB"
       }

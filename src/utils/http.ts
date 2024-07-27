@@ -10,8 +10,14 @@ const httpInterceptor = {
       option.url = __BASE_URL__ + option.url
     }
     option.timeout = __API_TIMEOUT__
-    const memberStore = useUserStore()
-    // 取 token ，然后附在请求头上
+    const token = uni.getStorageSync('token')
+    // 取 token ，然后附在请求头上t
+    if (token) {
+      option.header = {
+        ...option.header,
+        token: token
+      }
+    }
   }
 }
 uni.addInterceptor('request', httpInterceptor)
@@ -24,7 +30,7 @@ export const http = <T>(Option: UniApp.RequestOptions) => {
       ...Option,
       //请求成功
       success(res) {
-        if (res.statusCode >= 200 && res.statusCode < 200) {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data as IData<T>)
         } else {
           uni.showToast({

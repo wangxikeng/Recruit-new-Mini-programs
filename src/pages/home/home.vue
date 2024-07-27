@@ -1,6 +1,9 @@
 <script setup lang="ts">
+<<<<<<< HEAD
 import { logIn } from '@/api/login'
+import { useUserStore } from '@/stores/modules/user'
 import { onLoad } from '@dcloudio/uni-app'
+import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 //公告弹框数据
 const accouncementContent = ref('招新咨询群群号：12345678')
@@ -8,12 +11,9 @@ const show = ref(false)
 const content = ref('')
 const showAccouncement = () => {
   show.value = true
-  content.value = accouncementContent.value
 }
-const confirm = () => {
-  show.value = false
-}
-// 方向数据
+
+// 五个方向数据
 const list = reactive([
   { name: 'UI' },
   { name: '前端' },
@@ -23,18 +23,14 @@ const list = reactive([
 ])
 let current = ref(1)
 
-// onLoad(async () => {
-//   const res = await logIn()
-//   console.log(res.data)
-// })
-const test = async () => {
+onLoad(async () => {
   const res = await logIn()
-  console.log(res.data)
-}
+  uerInfo.value = res.data
+  store.setUserToken(res.data.token)
+})
 </script>
 
 <template>
-  <button @click="test">dianji</button>
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">
@@ -105,9 +101,10 @@ const test = async () => {
 <style lang="scss" scoped>
 //父盒子
 // 为了border-radius设置的
-// .home{
-//   overflow: hidden;
-// }
+.home {
+  // overflow: hidden;
+  width: 100%;
+}
 
 // 背景图
 .home_title image {
@@ -245,10 +242,6 @@ const test = async () => {
   color: black;
   // background-color: rgba(248, 247, 255, 1);
 }
-
-// ::v-deep .u-subsection__item.data-v-7b2e14a2 {
-//   background-color: rgba(248, 247, 255, 1);
-// }
 
 //修改五个方向的按钮样式
 ::v-deep .u-subsection__bar.data-v-7b2e14a2 {

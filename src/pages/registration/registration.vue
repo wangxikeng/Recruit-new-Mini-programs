@@ -1,5 +1,8 @@
 <template>
-  <view class="wholepage" ref="blurpage">
+  <view
+    class="wholepage"
+    ref="blurpage"
+  >
     <!-- 基本信息 -->
     <view class="basic_detail">
       <image
@@ -37,7 +40,11 @@
       <view class="basic_desc">考核方向</view>
     </view>
     <view class="upcheckboxgroup direction_box">
-      <up-checkbox-group shape="circle" v-model="checkboxValue1" @change="checkboxChange1">
+      <up-checkbox-group
+        shape="circle"
+        v-model="checkboxValue1"
+        @change="checkboxChange"
+      >
         <up-checkbox
           :customStyle="{ marginBottom: '8px', marginRight: '25px' }"
           v-for="(item, index) in checkboxList1"
@@ -53,12 +60,20 @@
 
     <!-- 其他信息 -->
     <view class="basic_detail otherdetail">
-      <image src="../../static/apply/apply_massage@3x.png" mode="scaleToFill" class="basic_icon" />
+      <image
+        src="../../static/apply/apply_massage@3x.png"
+        mode="scaleToFill"
+        class="basic_icon"
+      />
       <view class="basic_desc">其他信息</view>
     </view>
     <view class="career_plan">你的职业规划是</view>
     <view class="upcheckboxgroup">
-      <up-checkbox-group shape="circle" v-model="checkboxValue2" @change="checkboxChange2">
+      <up-checkbox-group
+        shape="circle"
+        v-model="checkboxValue1"
+        @change="checkboxChange"
+      >
         <up-checkbox
           :customStyle="{ marginBottom: '8px', marginRight: '25px' }"
           v-for="(item, index) in checkboxList2"
@@ -86,23 +101,35 @@
     <view class="career_plan works">上传作品或简历（可选）</view>
     <view>
       <view class="filechoose">
-        <!-- <view class="filechoose_btn" v-if="file_btn">
-          <up-button type="primary" text="选择文件" size="small"></up-button>
-        </view> -->
-        <up-upload
-          :fileList="fileList"
-          @afterRead="afterRead"
-          @delete="deletePic"
-          name="1"
-          multiple
-          :maxCount="1"
+        <view
+          class="filechoose_btn"
+          v-if="file_btn"
         >
-          选择文件
-        </up-upload>
-        <view class="file-desc" v-if="false">未选择文件</view>
-        <view class="file-desc" v-else>
-          <view class="file-name">try.html</view>
-          <up-icon name="close" v-if="file_btn"></up-icon>
+          <up-button
+            type="primary"
+            text="选择文件"
+            size="small"
+            @click="Upload"
+          ></up-button>
+        </view>
+
+        <view
+          class="file-desc"
+          v-if="false"
+        >未选择文件</view>
+        <view
+          class="file-desc"
+          v-else
+        >
+          <view :class=file_btn?classArr[0]:classArr[1] v-if="isShowFile">{{ uploadFileName }}
+              <up-icon
+              name="close"
+             
+              @click="DeleteFile"
+              customStyle="margin-left:5rpx"
+          ></up-icon>
+          </view>
+          
         </view>
       </view>
       <up-overlay
@@ -112,46 +139,98 @@
         :opacity="0.2"
         :z-index="999"
       ></up-overlay>
-      <view class="filebutton" v-if="file_btn">
-        <view class="save_btn" @click="save_suc">
-          <up-button type="primary" text="保存"></up-button>
+      <view
+        class="filebutton"
+        v-if="file_btn"
+      >
+        <view
+          class="save_btn"
+          @click="save_suc"
+        >
+          <up-button
+            type="primary"
+            text="保存"
+          ></up-button>
         </view>
-        <view class="submit_btn" @click="submit_suc">
-          <up-button type="primary" text="提交"></up-button>
+        <view
+          class="submit_btn"
+          @click="submit_suc"
+        >
+          <up-button
+            type="primary"
+            text="提交"
+          ></up-button>
         </view>
         <view class="footer_1"></view>
       </view>
     </view>
 
-    <view class="submit_pop" v-if="submit_pop">
-      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+    <view
+      class="submit_pop"
+      v-if="submit_pop"
+    >
+      <up-icon
+        name="checkmark-circle-fill"
+        size="100px"
+        color="#9773FFE5"
+      ></up-icon>
       <view class="submit_desc">保存成功</view>
     </view>
-    <view class="submit_pop" v-if="submit_pop_1">
-      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+    <view
+      class="submit_pop"
+      v-if="submit_pop_1"
+    >
+      <up-icon
+        name="checkmark-circle-fill"
+        size="100px"
+        color="#9773FFE5"
+      ></up-icon>
       <view class="submit_desc">提交成功</view>
     </view>
-    <view class="change_part" v-if="change_part" @click="changedet">
+    <view
+      class="change_part"
+      v-if="change_part"
+      @click="changedet"
+    >
       <view class="change_detail">信息错误？点击重新提交</view>
       <view class="footer_2"></view>
     </view>
 
-    <view class="save_pop" v-if="save_pop">
+    <view
+      class="save_pop"
+      v-if="save_pop"
+    >
       <view class="save_pop">
         <view class="save_decs">是否确认重新填写信息</view>
         <view class="pop_btn">
-          <view class="sure_btn" @click="sure_btn">
-            <up-button type="primary" text="确认" size="small"></up-button>
+          <view
+            class="sure_btn"
+            @click="sure_btn"
+          >
+            <up-button
+              type="primary"
+              text="确认"
+              size="small"
+            ></up-button>
           </view>
-          <view class="cancel_btn" @click="cancel_btn">
-            <up-button type="primary" text="取消" size="small"></up-button>
+          <view
+            class="cancel_btn"
+            @click="cancel_btn"
+          >
+            <up-button
+              type="primary"
+              text="取消"
+              size="small"
+            ></up-button>
           </view>
         </view>
       </view>
     </view>
   </view>
 </template>
+
 <script setup lang="ts">
+
 import { ref, reactive } from 'vue'
 import { saveDetail, getDetail, fileUpload, fileGet, fileDelete } from '@/api/resgistration'
 import type { IRequest } from '@/types/userdetail'
@@ -370,7 +449,94 @@ const cancel_btn = () => {
   save_pop.value = false
   show.value = false
 }
+
+//文件部分
+import { uploadMyFile } from '@/api/uploadFile'
+import { deleteMyFile } from '@/api/deleteFile';
+import { showMyFile } from '@/api/showFiles';
+import { onLoad } from '@dcloudio/uni-app'
+
+// 是否显示文件名
+const isShowFile=ref(false)
+// 上传文件名字
+const uploadFileName=ref('')
+
+const Upload=()=>{
+      wx.chooseMessageFile({
+        type:'all',
+        count: 1, 
+        success:async function (res) {
+          // 保存上传文件名
+
+          uploadFileName.value= res.tempFiles[0].name;
+          
+          // 发送上传文件请求
+          const response:any=await uploadMyFile(res.tempFiles[0].path,uploadFileName.value)
+          const res_format=JSON.parse(response)
+          
+          //根据响应码提示用户
+          if(res_format.code==200){
+            uni.showToast({
+              title:'上传成功',
+              icon:'success'
+            })
+            // 显示文件名
+            isShowFile.value=true
+          }
+          else if(res_format.code==402){
+            uni.showToast({
+              title:'已上传过该文件',
+              icon:'error'
+            })
+          }
+          else{
+            uni.showToast({
+              title:'上传失败',
+              icon:'error'
+            })
+            isShowFile.value=false
+            
+          }
+        }
+      })
+}
+// 动态显示文件名的位置
+const classArr=['file-name','file-name-inactive']
+   
+//删除文件
+const DeleteFile=async()=>{
+    // 发送删除文件请求
+   const res:any=await deleteMyFile(uploadFileName.value)
+    // 根据响应码判断是否删除成功
+    if(res.code==200){
+        uni.showToast({
+          title:'删除成功',
+          icon:'success'
+        })
+       uploadFileName.value=''
+        isShowFile.value=false
+
+    }
+    
+}
+
+// 获取文件显示
+onLoad(async()=>{
+    const res=await showMyFile()
+    if(res.data.length>0){
+        uploadFileName.value=res.data[res.data.length-1].fileName
+        isShowFile.value=true
+    }
+    else{
+      isShowFile.value=false
+      
+    }
+})
+
 </script>
+
+
+
 
 <style lang="scss" scoped>
 //设置整页颜色
@@ -515,7 +681,9 @@ const cancel_btn = () => {
   margin-top: 32rpx;
   display: flex;
   gap: 24rpx;
-  align-items: center;
+ 
+   
+
 }
 .filebutton {
   margin-top: 128rpx;
@@ -530,7 +698,23 @@ const cancel_btn = () => {
   font-size: 28rpx;
   font-weight: 500;
   color: #7f52ff;
+  transform: translate(-169rpx, 66rpx);
+  
 }
+::v-deep .file-name.data-v-5727c6f2{
+  align-items: center;
+  display: flex;
+  white-space: nowrap;
+}
+.file-name-inactive{
+  font-size: 28rpx;
+  font-weight: 500;
+  display: flex;
+  color: #7f52ff;
+  transform: translate(5rpx, -21rpx);
+}
+
+
 .save_btn {
   margin-left: 70rpx;
   margin-bottom: 128rpx;

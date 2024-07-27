@@ -259,6 +259,7 @@ const directionTimeClick = async () => {
   line-height: 92rpx;
 }
 
+
 // 签到按钮
 .signIn-active {
   position: absolute;
@@ -289,6 +290,8 @@ const directionTimeClick = async () => {
   border-radius: 32rpx;
   line-height: 92rpx;
 }
+
+
 
 //弹窗
 // 弹窗高度
@@ -326,6 +329,11 @@ const directionTimeClick = async () => {
   color: black;
 }
 
+// 确定按钮盒子
+::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
+.u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
+  background-color: rgba(127, 82, 255, 1);
+}
 // 确定按钮盒子
 ::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
 .u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {

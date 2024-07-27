@@ -7,7 +7,8 @@ export const useUserStore = defineStore(
   'user',
   () => {
     // 用户信息
-    const uerInfo = ref<IUser>()
+    const userInfo = ref<IUser>()
+
 
     const setUserToken = (token: string) => {
       uni.setStorageSync('token', token)
@@ -15,7 +16,6 @@ export const useUserStore = defineStore(
 
     // 记得 return
     return {
-      uerInfo,
       setUserToken
     }
   },

@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+const list = ref(['UI', '前端', '后台', '安卓', '深度学习'])
+const current = ref(1)
+
+// 进度数组
+const progressArr:string[]=['未开始','进行中','已完成']
+</script>
+
+
 <template>
   <view class="wholepage">
     <view class="nav">

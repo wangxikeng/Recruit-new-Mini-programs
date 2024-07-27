@@ -9,6 +9,12 @@
   },
   "pages": [
     {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "数智LAB"
+      }
+    },
+    {
       "path": "pages/home/home",
       "style": {
         "navigationBarTitleText": "数智LAB"
@@ -44,6 +50,7 @@
         "navigationBarTitleText": "数智LAB"
       }
     }
+   
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",

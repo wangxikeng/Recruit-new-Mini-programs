@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { logIn } from '@/api/login'
+import { useUserStore } from '@/stores/modules/user'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref, reactive } from 'vue'
 //公告弹框数据
@@ -8,10 +9,6 @@ const show = ref(false)
 const content = ref('')
 const showAccouncement = () => {
   show.value = true
-  content.value = accouncementContent.value
-}
-const confirm = () => {
-  show.value = false
 }
 // 方向数据
 const list = reactive([
@@ -21,19 +18,15 @@ const list = reactive([
   { name: '安卓' },
   { name: '深度学习' }
 ])
-let current = ref(1)
+let current = ref(0)
 
-// onLoad(async () => {
-//   const res = await logIn()
-//   console.log(res.data)
-// })
-const test = async () => {
+onLoad(async () => {
   const res = await logIn()
-  console.log(res.data)
-}
+  uerInfo.value = res.data
+  store.setUserToken(res.data.token)
+})
 </script>
 <template>
-  <button @tap="test2">点击获取</button>
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">

@@ -8,7 +8,7 @@ export const logIn = () => {
     url: '/user/login/user',
     method: 'POST',
     data: {
-      account: '3123004529',
+      account: '3223004304',
       password: '123456'
     }
   })

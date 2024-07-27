@@ -1,4 +1,4 @@
- <script setup lang="ts">
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 // 面试预约跳转
 const toReservation = () => {
@@ -18,8 +18,7 @@ const toProcedure = () => {
     url: '/pages/procedure/procedure'
   })
 }
-
-</script> 
+</script>
 
 <template>
   <view class="whole_interview_box">
@@ -44,13 +43,13 @@ const toProcedure = () => {
             src="../../static/interview/interview_interview appointment_icon.png"
             mode="scaleToFill"
           />
-          <text >面试预约</text>
+          <text>面试预约</text>
         </view>
         <view class="select_box2" @click="toSignIn">
           <image src="../../static/interview/interview_sign-in_icon.png" mode="scaleToFill" />
           <text>面试签到</text>
         </view>
-        <view class="select_box3" @click=toProcedure>
+        <view class="select_box3" @click="toProcedure">
           <image
             src="../../static/interview/interview_interview progress_icon.png"
             mode="scaleToFill"
@@ -60,14 +59,11 @@ const toProcedure = () => {
       </view>
     </view>
   </view>
-</template> 
-
-
+</template>
 
 <style lang="scss" scoped>
 // 大盒子
 .whole_interview_box {
-
   width: 786rpx;
   height: 1388rpx;
   background-color: rgba(248, 247, 255, 1);
@@ -77,7 +73,6 @@ const toProcedure = () => {
 .remind {
   width: 100%;
   height: 480rpx;
-
 }
 
 //   温馨提示盒子公共部分
@@ -90,11 +85,9 @@ const toProcedure = () => {
   background-color: rgba(127, 82, 255, 0.7);
   text-align: center;
   line-height: 62rpx;
-
 }
 
 .remind_box1 {
-
   top: 72rpx;
   left: 218rpx;
   width: 416rpx;
@@ -102,7 +95,6 @@ const toProcedure = () => {
 }
 
 .remind_box2 {
-
   top: 202rpx;
   left: 98rpx;
   width: 256rpx;
@@ -110,7 +102,6 @@ const toProcedure = () => {
 }
 
 .remind_box3 {
-
   top: 334rpx;
   left: 225rpx;
   width: 472rpx;
@@ -119,7 +110,6 @@ const toProcedure = () => {
 
 //温馨提示文字
 .remind text {
-
   font-size: 24rpx;
   color: white;
 }
@@ -143,7 +133,6 @@ const toProcedure = () => {
 .select_box3 {
   position: relative;
   margin-bottom: 46rpx;
-
 }
 
 .select_boxes {
@@ -185,8 +174,4 @@ const toProcedure = () => {
   color: rgb(217, 0, 221);
   top: 20rpx;
 }
-</style> 
-
-
-
-
+</style>

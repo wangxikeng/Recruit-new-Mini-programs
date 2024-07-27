@@ -1,42 +1,58 @@
+<script setup lang="ts">
+import { ref, reactive, toRef } from 'vue'
+import { useDirectionStore } from '../../stores/modules/reservation'
+import { onLoad } from '@dcloudio/uni-app'
+import { useUserDetailStore } from '@/stores/modules/registration'
+import {
+  getTimeListAll,
+  getTargets,
+  saveTargets,
+  getDirectionTime,
+  getSignIn
+} from '@/api/reservation'
 
-   <script setup lang="ts">
-  import { ref, reactive,toRef } from "vue";
-  // 方向导航
-  const list=reactive([
-    {name:'UI'},
-    {name:'前端'},
-    {name:'后台'},
-    {name:'安卓'},
-    {name:'深度学习'}
-  ])
-  let current=ref(0)
+const userDetailStore = useUserDetailStore()
+const userDirectionStore = useDirectionStore()
 
-  // 签到弹出框确定
-  const show=ref(false)
+// 方向导航
+let current = ref(0)
+
+// 签到弹出框确定
+const show = ref(false)
 //点击签到按钮弹出确认框
-  const signIn=()=>{
-      show.value=true
-  }
-  // 点击取消
-  const cancelSignIn=()=>{
-      show.value=false
-  }
-  // 点击确定
-  const confirmSignIn=()=>{
-    show.value=false
-    showcase=1
-  }
+const signIn = () => {
+  show.value = true
+}
+// 点击取消
+const cancelSignIn = () => {
+  show.value = false
+}
+// 点击确定
+const confirmSignIn = () => {
+  show.value = false
+  showcase = 1
+  userDirectionStore.saveSignInTime()
+}
 
-  // 温馨提示语
-  let showcase=0
-</script> 
+// 温馨提示语
+let showcase = 0
 
+onLoad(async () => {
+  userDirectionStore.getDirectionName()
+  for (const item of userDetailStore.directionNum) {
+    userDirectionStore.chooseDirection = item + 1
+    userDirectionStore.getItemDirectionTome(item)
+    return
+  }
+})
 
-   
+const directionTimeClick = async () => {
+  userDirectionStore.directionTime()
+}
+</script>
 
 <template>
   <view class="whole_box">
-
     <view class="image">
       <image
         src="../../static/interview/interview_background@3x.png"
@@ -48,49 +64,62 @@
         mode="scaleToFill"
         class="logo_warning_img"
       />
-      <view class="caution_word_notCheck" v-if="showcase===0">请提前五分钟到达面试场地等待</view>
-      <view class="caution_word_checked" v-if="showcase===1">祝你面试顺利哦~</view>
+      <view class="caution_word_notCheck" v-if="showcase === 0">请提前五分钟到达面试场地等待</view>
+      <view class="caution_word_checked" v-if="showcase === 1">祝你面试顺利哦~</view>
     </view>
 
     <!-- 剩下部分 -->
-  <view class="below">
+    <view class="below">
       <!-- 导航栏部分 -->
       <!-- <view class="nav_box"> </view> -->
-          <view class="nav">
-            <up-subsection
-              activeColor="#7f52ff"
-              :list="list"
-              mode="subsection"
-              :current="0"
-            ></up-subsection>
+      <view class="nav">
+        <!-- <up-subsection
+          activeColor="#7f52ff"
+          :list="userDirectionStore.list"
+          mode="subsection"
+          :current="0"
+        ></up-subsection> -->
+        <view
+          v-for="item in userDirectionStore.list"
+          :key="item.id"
+          class="direction"
+          @click="directionTimeClick"
+        >
+          <view
+            class="navDirection"
+            @click="userDirectionStore.chooseDirection = item.id"
+            :class="{ activeDirection: item.id === userDirectionStore.chooseDirection }"
+          >
+            {{ item.name }}
           </view>
-      
-       <!-- 预约时间确定-->
-        <view class="confirm-box">
-          <view class="appointment-time">预约时间</view>
-          <view class="parting-line"></view>
-          <view class="detail-time">2024年6月4日9：00-9：10</view>
-        </view> 
+        </view>
+      </view>
 
-         <!-- 按钮 暂未开启签到 签到 已签到 -->
-         <!-- <view class="signIn-inactive">暂未开启签到</view> -->
-         <view class="signIn-active" @click="signIn" v-if="showcase===0">签到</view>
-         <view class="have-signIn" v-if="showcase===1">已签到 </view> 
+      <!-- 预约时间确定-->
+      <view class="confirm-box">
+        <view class="appointment-time">预约时间</view>
+        <view class="parting-line"></view>
+        <view class="detail-time">{{ userDirectionStore.signInTime }}</view>
+      </view>
 
+      <!-- 按钮 暂未开启签到 签到 已签到 -->
+      <!-- <view class="signIn-inactive">暂未开启签到</view> -->
+      <view class="signIn-active" @click="signIn" v-if="showcase === 0">签到</view>
+      <view class="have-signIn" v-if="showcase === 1">已签到 </view>
 
-          <!-- 弹窗确定预约时间 -->
-          <up-modal :show="show" content='是否确认签到？确认后不可更改' :showCancelButton="true"
-          @cancel="cancelSignIn" @confirm="confirmSignIn" confirmColor="#fff" cancelColor="#7f52ff"
-          ></up-modal>
-
-
-</view> 
-  
-
-
+      <!-- 弹窗确定预约时间 -->
+      <up-modal
+        :show="show"
+        content="是否确认签到？确认后不可更改"
+        :showCancelButton="true"
+        @cancel="cancelSignIn"
+        @confirm="confirmSignIn"
+        confirmColor="#fff"
+        cancelColor="#7f52ff"
+      ></up-modal>
+    </view>
   </view>
 </template>
-
 
 <style lang="scss" scoped>
 .whole_box {
@@ -108,11 +137,11 @@
   width: 506rpx;
   height: 106rpx;
   margin-left: 240rpx;
-  transform: translate(0,-180rpx);
+  transform: translate(0, -180rpx);
 }
 
 // 未签到时提醒
-.caution_word_notCheck{
+.caution_word_notCheck {
   color: #f7f9ff;
   font-weight: 400;
   font-size: 24rpx;
@@ -129,7 +158,6 @@
   transform: translate(84rpx, -264rpx);
 }
 
-
 .nav_box {
   background-color: #f7f9ff;
   height: 100rpx;
@@ -139,12 +167,12 @@
 }
 
 // 五个方向导航
-.nav {
-  transform: translate(30rpx, 6rpx);
-}
+// .nav {
+//   transform: translate(30rpx, 6rpx);
+// }
 
 // 导航样式改变
-::v-deep .u-subsection.data-v-7b2e14a2{
+::v-deep .u-subsection.data-v-7b2e14a2 {
   width: 95%;
 }
 
@@ -158,7 +186,6 @@
   width: 144rpx !important;
   margin-top: 48rpx;
   margin-left: 5rpx;
-
 }
 ::v-deep .u-subsection__bar--center.data-v-7b2e14a2 {
   border-radius: 50rpx;
@@ -173,7 +200,6 @@
   font-weight: 500;
   color: #1a1a1a;
   font-size: 32rpx !important;
-
 }
 ::v-deep .u-subsection__item {
   width: 156rpx;
@@ -181,134 +207,160 @@
   margin-top: 48rpx;
 }
 
-
-::v-deep .u-subsection.data-v-7b2e14a2{
+::v-deep .u-subsection.data-v-7b2e14a2 {
   margin-left: -25rpx;
 }
 
 //       // 剩下部分大盒子
-      .below{
-        position: absolute;
-        top:218rpx ;
-        width: 786rpx;
-        height: 1312rpx;
-        background-color: rgba(248, 247, 255, 1);
-        box-shadow: -4rpx -6rpx 29.8rpx 0 rgba(90, 109, 148, 0.2);
-        border-radius: 32rpx 32rpx 0 0;
-        text-align: center;
-      }
+.below {
+  position: absolute;
+  top: 218rpx;
+  width: 786rpx;
+  height: 1312rpx;
+  background-color: rgba(248, 247, 255, 1);
+  box-shadow: -4rpx -6rpx 29.8rpx 0 rgba(90, 109, 148, 0.2);
+  border-radius: 32rpx 32rpx 0 0;
+  text-align: center;
+}
 
 //       // 预约时间确定框
-      .confirm-box{
-        width: 556rpx;
-        height: 164rpx;
-        border-radius: 32rpx;
-        background-color: rgba(183, 158, 255, 1);
-        // margin: 60rpx auto;
-        margin-top: 60rpx;
-        margin-left: 59rpx;
-        color: white;
-        padding: 42rpx;
-      }
+.confirm-box {
+  width: 556rpx;
+  height: 164rpx;
+  border-radius: 32rpx;
+  background-color: rgba(183, 158, 255, 1);
+  // margin: 60rpx auto;
+  margin-top: 60rpx;
+  margin-left: 59rpx;
+  color: white;
+  padding: 42rpx;
+}
 
-
-  
 //       // 预约时间分割线
-      .parting-line{
-        width: 390rpx;
-        height: 2rpx;
-        background-color: white;
-        margin: 36rpx auto;
-      }
+.parting-line {
+  width: 390rpx;
+  height: 2rpx;
+  background-color: white;
+  margin: 36rpx auto;
+}
 
- //暂未开启签到按钮
- .signIn-inactive{
-        position: absolute;
-          width: 576rpx;
-          height: 96rpx;
-          top: 946rpx;
-        left: 93rpx;
-          background-color: rgba(174, 180, 194, 1);
-          color: white;
-          font-weight: 600;
-          text-align: center;
-          border-radius: 32rpx;
-         line-height: 92rpx;
-      }
+//暂未开启签到按钮
+.signIn-inactive {
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  background-color: rgba(174, 180, 194, 1);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
 
-      // 签到按钮
-      .signIn-active{
-        position: absolute;
-          top: 946rpx;
-        left: 93rpx;
-          width: 576rpx;
-          height: 96rpx;
-          background-color: rgba(127, 82, 255, 1);
-          color: white;
-          font-weight: 600;
-          text-align: center;
-          border-radius: 32rpx;
-          line-height: 92rpx;
-      }
-    
+// 签到按钮
+.signIn-active {
+  position: absolute;
+  top: 946rpx;
+  left: 93rpx;
+  width: 576rpx;
+  height: 96rpx;
+  background-color: rgba(127, 82, 255, 1);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
 
-      // 已签到按钮
-      .have-signIn{
-        position: absolute;
-        
-          width: 576rpx;
-          height: 96rpx;
-          top: 946rpx;
-        left: 93rpx;
-          background-color: rgba(174, 180, 194, 1);
-          color: white;
-          font-weight: 600;
-          text-align: center;
-          border-radius: 32rpx;
-         line-height: 92rpx;
-      }
+// 已签到按钮
+.have-signIn {
+  position: absolute;
 
-       //弹窗
-      // 弹窗高度
-      ::v-deep .u-popup__content.data-v-74921bef {
-        height: 358rpx;
-      }
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  background-color: rgba(174, 180, 194, 1);
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
 
-      // 弹窗内容
-      ::v-deep .u-modal__content.data-v-12b77a26{
-        padding-top: 96rpx !important;
-      }
+//弹窗
+// 弹窗高度
+::v-deep .u-popup__content.data-v-74921bef {
+  height: 358rpx;
+}
 
-      // 弹窗分割线
-      ::v-deep .u-line.data-v-bbd9963c{
-        border-bottom-style: none !important;
-      }
+// 弹窗内容
+::v-deep .u-modal__content.data-v-12b77a26 {
+  padding-top: 96rpx !important;
+}
 
-      // 取消确认按钮大盒子
-      ::v-deep .u-modal__button-group.data-v-12b77a26{
-        position: absolute;
-        bottom: 54rpx;
-      }
+// 弹窗分割线
+::v-deep .u-line.data-v-bbd9963c {
+  border-bottom-style: none !important;
+}
 
-      // 取消 确定 单个按钮小盒子
-      ::v-deep .u-modal__button-group__wrapper.data-v-12b77a26{
-          border-radius: 20rpx !important;
-          border: 2px solid rgba(127, 82, 255, 1);
-          height: 64rpx;
-          width: 160rpx;
-          margin-left: 118rpx;
-      }
+// 取消确认按钮大盒子
+::v-deep .u-modal__button-group.data-v-12b77a26 {
+  position: absolute;
+  bottom: 54rpx;
+}
 
-      // 是否确定 字体
-      ::v-deep .u-modal__content__text.data-v-12b77a26 {
-        color: black;
-      }
+// 取消 确定 单个按钮小盒子
+::v-deep .u-modal__button-group__wrapper.data-v-12b77a26 {
+  border-radius: 20rpx !important;
+  border: 2px solid rgba(127, 82, 255, 1);
+  height: 64rpx;
+  width: 160rpx;
+  margin-left: 118rpx;
+}
 
-      // 确定按钮盒子
-      ::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26, .u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
-          background-color: rgba(127, 82, 255, 1);
-      }
+// 是否确定 字体
+::v-deep .u-modal__content__text.data-v-12b77a26 {
+  color: black;
+}
 
+// 确定按钮盒子
+::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
+.u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
+  background-color: rgba(127, 82, 255, 1);
+}
 
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24rpx;
+}
 
+.navDirection {
+  width: 144rpx;
+  height: 70rpx;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 16px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  outline: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navDirection:focus {
+  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
+}
+.activeDirection {
+  background-color: #7f52ff;
+  color: #ffffff !important;
+  border-radius: 24px;
+  font-weight: 700;
+}
 </style>

@@ -9,21 +9,14 @@ export const useUserStore = defineStore(
     // 用户信息
     const uerInfo = ref<IUser>()
 
-    // 保存信息，登录时使用
-    const setUerInfo = (val: any) => {
-      uerInfo.value = val
-    }
-
-    // 清理用户信息，退出时使用
-    const clearProfile = () => {
-      uerInfo.value = undefined
+    const setUserToken = (token: string) => {
+      uni.setStorageSync('token', token)
     }
 
     // 记得 return
     return {
       uerInfo,
-      setUerInfo,
-      clearProfile
+      setUserToken
     }
   },
   // TODO: 持久化

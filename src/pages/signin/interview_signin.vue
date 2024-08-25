@@ -103,16 +103,16 @@ const directionTimeClick = async () => {
       </view>
 
       <!-- 预约时间确定-->
-      <view class="confirm-box">
-        <view class="appointment-time">预约时间</view>
-        <view class="parting-line"></view>
-        <view class="detail-time">{{ userDirectionStore.signInTime }}</view>
+      <view class="confirm_box">
+        <view class="appointment_time">预约时间</view>
+        <view class="parting_line"></view>
+        <view class="detail_time">{{ userDirectionStore.signInTime }}</view>
       </view>
 
       <!-- 按钮 暂未开启签到 签到 已签到 -->
       <!-- <view class="signIn-inactive">暂未开启签到</view> -->
-      <view class="signIn-active" @click="signIn" v-if="showcase === 0">签到</view>
-      <view class="have-signIn" v-if="showcase === 1">已签到 </view>
+      <view class="signIn_active" @click="signIn" v-if="showcase === 0">签到</view>
+      <view class="have_signIn" v-if="showcase === 1">已签到 </view>
 
       <!-- 弹窗确定预约时间 -->
       <up-modal
@@ -231,7 +231,7 @@ const directionTimeClick = async () => {
 }
 
 //       // 预约时间确定框
-.confirm-box {
+.confirm_box {
   width: 556rpx;
   height: 164rpx;
   border-radius: 32rpx;
@@ -244,7 +244,7 @@ const directionTimeClick = async () => {
 }
 
 //       // 预约时间分割线
-.parting-line {
+.parting_line {
   width: 390rpx;
   height: 2rpx;
   background-color: white;
@@ -252,7 +252,7 @@ const directionTimeClick = async () => {
 }
 
 //暂未开启签到按钮
-.signIn-inactive {
+.signIn_inactive {
   position: absolute;
   width: 576rpx;
   height: 96rpx;
@@ -267,7 +267,7 @@ const directionTimeClick = async () => {
 }
 
 // 签到按钮
-.signIn-active {
+.signIn_active {
   position: absolute;
   top: 946rpx;
   left: 93rpx;
@@ -282,7 +282,7 @@ const directionTimeClick = async () => {
 }
 
 // 已签到按钮
-.have-signIn {
+.have_signIn {
   position: absolute;
 
   width: 576rpx;

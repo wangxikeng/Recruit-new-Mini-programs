@@ -99,9 +99,9 @@
         >
           选择文件
         </up-upload>
-        <view class="file-desc" v-if="false">未选择文件</view>
-        <view class="file-desc" v-else>
-          <view class="file-name">try.html</view>
+        <view class="file_desc" v-if="false">未选择文件</view>
+        <view class="file_desc" v-else>
+          <view class="file_name">try.html</view>
           <up-icon name="close" v-if="file_btn"></up-icon>
         </view>
       </view>
@@ -587,7 +587,7 @@ onLoad(async () => {
   width: 144rpx !important;
   height: 48rpx;
 }
-.file-desc {
+.file_desc {
   font-size: 24rpx;
   margin-top: 32rpx;
   display: flex;
@@ -602,7 +602,7 @@ onLoad(async () => {
   z-index: 1000;
   margin-left: 48rpx;
 }
-.file-name {
+.file_name {
   font-size: 28rpx;
   font-weight: 500;
   color: #7f52ff;
@@ -613,7 +613,7 @@ onLoad(async () => {
   display: flex;
   white-space: nowrap;
 }
-.file-name-inactive {
+.file_name_inactive {
   font-size: 28rpx;
   font-weight: 500;
   display: flex;

@@ -91,12 +91,12 @@ const showPasswordError = () => {
   <image
     src="../../static/layoutHome/login_background.png"
     mode="scaleToFill"
-    class="login-background"
+    class="login_background"
   />
   <!-- 下面信息表格 -->
-  <view class="student-information">
+  <view class="student_information">
     <!-- 账号框 -->
-    <view class="account-box">
+    <view class="account_box">
       <text>账号</text>
       <up-input
         placeholder="请输入学号"
@@ -107,7 +107,7 @@ const showPasswordError = () => {
       ></up-input>
     </view>
     <!-- 密码框 -->
-    <view class="password-box">
+    <view class="password_box">
       <text>密码</text>
       <up-input
         placeholder="请输入密码"
@@ -120,7 +120,7 @@ const showPasswordError = () => {
       ></up-input>
       <up-icon
         :name="isEyeOpen"
-        class="eye-off-icon"
+        class="eye_off_icon"
         color="rgba(102, 102, 102, 1)"
         size="56rpx"
         top="-110rpx"
@@ -128,39 +128,26 @@ const showPasswordError = () => {
       ></up-icon>
     </view>
     <!-- 忘记密码 -->
-    <text class="forget-password">
-      忘记密码？
-    </text>
+    <text class="forget_password"> 忘记密码？ </text>
     <!-- 校验错误提示 -->
-    <view
-      class="error-remind-box"
-      v-show="isErrorRemind"
-    >
-      <image
-        src="../../static/icons/login-error-remind.png"
-        mode="scaleToFill"
-      />
+    <view class="error_remind_box" v-show="isErrorRemind">
+      <image src="../../static/icons/login-error-remind.png" mode="scaleToFill" />
       <text>账号或密码输入错误</text>
     </view>
     <!-- 登录按钮 -->
-    <up-button
-      text="登录"
-      @click="toHome"
-    ></up-button>
+    <up-button text="登录" @click="toHome"></up-button>
     <!-- 注释提醒 -->
-    <text class="annotation">
-      注：初次登录输入密码即视为注册
-    </text>
+    <text class="annotation"> 注：初次登录输入密码即视为注册 </text>
   </view>
 </template>
 
 <style lang="scss">
-.login-background {
+.login_background {
   width: 750rpx;
   height: 500rpx;
 }
 
-.student-information {
+.student_information {
   width: 100%;
   height: 920rpx;
   background-color: rgba(248, 247, 255, 1);
@@ -181,14 +168,14 @@ const showPasswordError = () => {
 }
 
 //账号框
-.account-box text {
+.account_box text {
   display: block;
   color: rgba(26, 26, 26, 1);
   transform: translate(130rpx, 6rpx);
 }
 
 //密码框
-.password-box text {
+.password_box text {
   display: block;
   color: rgba(26, 26, 26, 1);
   transform: translate(130rpx, 66rpx);
@@ -199,13 +186,13 @@ const showPasswordError = () => {
 }
 
 //校验错误提示
-.error-remind-box {
+.error_remind_box {
   position: absolute;
   bottom: 436rpx;
   left: 276rpx;
 }
 
-.error-remind-box image {
+.error_remind_box image {
   width: 36rpx;
   height: 36rpx;
   position: absolute;
@@ -213,14 +200,14 @@ const showPasswordError = () => {
   left: -42rpx;
 }
 
-.error-remind-box text {
+.error_remind_box text {
   color: rgba(127, 82, 255, 1);
   font-size: 28rpx;
   font-weight: 500;
 }
 
 //忘记密码
-.forget-password {
+.forget_password {
   display: block;
   transform: translate(540rpx, 13rpx);
   color: rgba(79, 129, 254, 1);

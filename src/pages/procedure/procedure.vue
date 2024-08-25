@@ -70,8 +70,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 
-const current = ref(1)
-
 import { getProcedure } from '@/api/procedure'
 import { onLoad } from '@dcloudio/uni-app'
 import { useDirectionStore } from '@/stores/modules/reservation'
@@ -82,7 +80,6 @@ const userDirectionStore = useDirectionStore()
 const userProcedureStore = useProcedureStore()
 const colorArr = ['will', 'ongoing', 'finish']
 const nameArr = ['未开始', '进行中', '已完成']
-const numInterview = ref<number>(0)
 
 const directionDetail = () => {
   for (const item of userDetailStore.directionNum) {

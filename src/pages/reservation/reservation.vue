@@ -26,7 +26,10 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <view v-for="time in timeList1" :key="time.id">
+          <view
+            v-for="time in timeList1"
+            :key="time.id"
+          >
             <button
               class="btn"
               @click="choosetime = time.id"
@@ -37,7 +40,10 @@
           </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <view v-for="time in timeList2" :key="time.id">
+          <view
+            v-for="time in timeList2"
+            :key="time.id"
+          >
             <button
               class="btn"
               @click="choosetime = time.id"
@@ -53,7 +59,10 @@
       <view class="day">2024年6月4日</view>
       <view class="time_cloumn">
         <view class="time_cloumn_1">
-          <view v-for="time in timeList3" :key="time.id">
+          <view
+            v-for="time in timeList3"
+            :key="time.id"
+          >
             <button
               class="btn"
               @click="choosetime = time.id"
@@ -64,7 +73,10 @@
           </view>
         </view>
         <view class="time_cloumn_1 time_cloumn_2">
-          <view v-for="time in timeList4" :key="time.id">
+          <view
+            v-for="time in timeList4"
+            :key="time.id"
+          >
             <button
               class="btn"
               @click="choosetime = time.id"
@@ -77,10 +89,17 @@
       </view>
     </view>
     <view class="make_sure">
-      <up-button text="确认预约" @click="pop_up"></up-button>
+      <up-button
+        text="确认预约"
+        @click="pop_up"
+      ></up-button>
     </view>
 
-    <up-popup :show="show" mode="center" overlay="false">
+    <up-popup
+      :show="show"
+      mode="center"
+      overlay="false"
+    >
       <view class="pop">
         <view class="pop_desc">
           <text class="sure_desc">请确认你选择预约的时间是否为</text>
@@ -89,10 +108,16 @@
         </view>
         <view class="pop_btn">
           <view class="btn_1">
-            <up-button text="取消" @click="pop_cancel"></up-button>
+            <up-button
+              text="取消"
+              @click="pop_cancel"
+            ></up-button>
           </view>
           <view class="btn_2">
-            <up-button text="确认" @click="pop_sure"></up-button>
+            <up-button
+              text="确认"
+              @click="pop_sure"
+            ></up-button>
           </view>
         </view>
       </view>

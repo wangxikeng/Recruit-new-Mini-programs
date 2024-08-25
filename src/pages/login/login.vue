@@ -53,7 +53,6 @@ const toHome = async () => {
     // 显示账号或密码错误提示
     isErrorRemind.value = true
   } else {
-   
     // 把token保存本地
     SetUserToken(res.data.token)
     //跳转到首页
@@ -65,22 +64,25 @@ const toHome = async () => {
 
 //请求前表单校验
 const showAccountError = () => {
-  if (accountValue.value == '' || accountValue.value.includes(' ')||accountValue.value.length<10) {
+  if (
+    accountValue.value == '' ||
+    accountValue.value.includes(' ') ||
+    accountValue.value.length < 10
+  ) {
     uni.showToast({
       title: '请正确输入账号',
       icon: 'error'
     })
-  } 
+  }
 }
 
-const showPasswordError=()=>{
-  if (passwordValue.value=='' || passwordValue.value.includes(' ')) {
+const showPasswordError = () => {
+  if (passwordValue.value == '' || passwordValue.value.includes(' ')) {
     uni.showToast({
       title: '请正确输入密码',
-      icon: 'error',
-      
+      icon: 'error'
     })
-}
+  }
 }
 </script>
 
@@ -90,9 +92,6 @@ const showPasswordError=()=>{
     src="../../static/layoutHome/login_background.png"
     mode="scaleToFill"
     class="login-background"
-
-    
-
   />
   <!-- 下面信息表格 -->
   <view class="student-information">
@@ -105,7 +104,6 @@ const showPasswordError=()=>{
         v-model="accountValue"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
         @blur="showAccountError"
-        
       ></up-input>
     </view>
     <!-- 密码框 -->
@@ -119,7 +117,6 @@ const showPasswordError=()=>{
         customStyle="margin-top:59rpx !important"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
         @blur="showPasswordError"
-
       ></up-input>
       <up-icon
         :name="isEyeOpen"

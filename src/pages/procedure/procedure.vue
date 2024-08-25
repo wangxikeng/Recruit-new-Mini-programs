@@ -4,63 +4,78 @@ const list = ref(['UI', '前端', '后台', '安卓', '深度学习'])
 const current = ref(1)
 
 // 进度数组
-const progressArr:string[]=['未开始','进行中','已完成']
+const progressArr: string[] = ['未开始', '进行中', '已完成']
 </script>
 
 
 <template>
   <view class="wholepage">
-      <view class="nav">
+    <view class="nav">
       <up-subsection
         activeColor="#7f52ff"
         :list="list"
         mode="subsection"
         :current="0"
       ></up-subsection>
-      </view>
+    </view>
 
-      <view class="content">
-          <view class="content_box">
+    <view class="content">
+      <view class="content_box">
         <view class="content_desc_1">面试</view>
         <view class="content_desc_2">({{ progressArr[2] }})</view>
-          </view>
-          <view class="icon_box">
-            <view class="square"></view>
-            <view class="line"></view>
-            <view class="arrow">
-              <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
-            </view>
-          </view>
+      </view>
+      <view class="icon_box">
+        <view class="square"></view>
+        <view class="line"></view>
+        <view class="arrow">
+          <up-icon
+            name="arrow-down"
+            color="#9773FF"
+            size="14"
+            bold="true"
+          ></up-icon>
+        </view>
+      </view>
 
-          <view class="content_box content_box_2">
+      <view class="content_box content_box_2">
         <view class="content_desc_1">一轮考核</view>
         <view class="content_desc_2">({{ progressArr[1] }})</view>
-          </view>
-          <view class="icon_box icon_box_2">
-            <view class="square"></view>
-            <view class="line"></view>
-            <view class="arrow">
-              <up-icon name="arrow-down" color="#9773FF" size="16" bold="true"></up-icon>
-            </view>
-          </view>
-
-          <view class="content_box content_box_3">
-          <view class="content_desc_1">二轮考核</view>
-          <view class="content_desc_2">({{ progressArr[0] }})</view>
-          </view>
-          <view class="icon_box icon_box_3">
-            <view class="square"></view>
-            <view class="line"></view>
-            <view class="arrow">
-              <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
-            </view>
-          </view>
-
-          <view class="content_box content_box_4">
-          <view class="content_desc_1">三轮</view>
-          <view class="content_desc_2">({{ progressArr[0] }})</view>
-          </view>
       </view>
+      <view class="icon_box icon_box_2">
+        <view class="square"></view>
+        <view class="line"></view>
+        <view class="arrow">
+          <up-icon
+            name="arrow-down"
+            color="#9773FF"
+            size="16"
+            bold="true"
+          ></up-icon>
+        </view>
+      </view>
+
+      <view class="content_box content_box_3">
+        <view class="content_desc_1">二轮考核</view>
+        <view class="content_desc_2">({{ progressArr[0] }})</view>
+      </view>
+      <view class="icon_box icon_box_3">
+        <view class="square"></view>
+        <view class="line"></view>
+        <view class="arrow">
+          <up-icon
+            name="arrow-down"
+            color="#9773FF"
+            size="14"
+            bold="true"
+          ></up-icon>
+        </view>
+      </view>
+
+      <view class="content_box content_box_4">
+        <view class="content_desc_1">三轮</view>
+        <view class="content_desc_2">({{ progressArr[0] }})</view>
+      </view>
+    </view>
   </view>
 </template>
 

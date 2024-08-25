@@ -14,9 +14,7 @@ onLoad(async () => {
   const res = await getAnnouncement()
   //截取公告前几位字显示
   announcementContent.value = `${res.data.content.replace(/\s*/g, '').substring(0, 15)}...`
-
 })
-
 
 // 发请求
 const showAnnouncement = async () => {
@@ -62,25 +60,21 @@ const androidContent = ref(
 const deepLearnContent = ref(
   '不吃亏的市场价多少v你苏打绿那个人v发呢我闺女陪我给v帮忙物色不过，我们【色鬼革命人民被害人么我怕魔法物品每次分手了'
 )
-const directionContent=[uiContent, frontContent,backendContent,androidContent,deepLearnContent]
-
+const directionContent = [uiContent, frontContent, backendContent, androidContent, deepLearnContent]
 
 // 点击分段器更改方向介绍内容
-const changeContent = (index:number) => {
-  console.log(index);
-  console.log(directionContent[index].value);
-    if(index===0){
-      directionContent[0].value='三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
-    }
-    else{
-      directionContent[0].value=directionContent[index].value
-    }
+const changeContent = (index: number) => {
+  console.log(index)
+  console.log(directionContent[index].value)
+  if (index === 0) {
+    directionContent[0].value =
+      '三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
+  } else {
+    directionContent[0].value = directionContent[index].value
+  }
 }
-
-
 </script>
 <template>
-
 
   <view class="home">
     <!-- 背景图 -->
@@ -88,7 +82,6 @@ const changeContent = (index:number) => {
       <image
         src="../../static/layoutHome/background.png"
         alt=""
-     
       ></image>
     </view>
     <!-- 公告 -->
@@ -169,9 +162,6 @@ const changeContent = (index:number) => {
 </template>
 
 <style lang="scss" scoped>
-
-
-
 .home {
   width: 100%;
 }

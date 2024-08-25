@@ -120,15 +120,17 @@
           class="file-desc"
           v-else
         >
-          <view :class=file_btn?classArr[0]:classArr[1] v-if="isShowFile">{{ uploadFileName }}
-              <up-icon
+          <view
+            :class=file_btn?classArr[0]:classArr[1]
+            v-if="isShowFile"
+          >{{ uploadFileName }}
+            <up-icon
               name="close"
-             
               @click="DeleteFile"
               customStyle="margin-left:5rpx"
-          ></up-icon>
+            ></up-icon>
           </view>
-          
+
         </view>
       </view>
       <up-overlay
@@ -229,7 +231,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { ref, reactive } from 'vue'
 const show = ref(false)
 //复选框
@@ -339,87 +340,79 @@ const cancel_btn = () => {
 
 //文件部分
 import { uploadMyFile } from '@/api/uploadFile'
-import { deleteMyFile } from '@/api/deleteFile';
-import { showMyFile } from '@/api/showFiles';
+import { deleteMyFile } from '@/api/deleteFile'
+import { showMyFile } from '@/api/showFiles'
 import { onLoad } from '@dcloudio/uni-app'
 
 // 是否显示文件名
-const isShowFile=ref(false)
+const isShowFile = ref(false)
 // 上传文件名字
-const uploadFileName=ref('')
+const uploadFileName = ref('')
 
-const Upload=()=>{
-      wx.chooseMessageFile({
-        type:'all',
-        count: 1, 
-        success:async function (res) {
-          // 保存上传文件名
+const Upload = () => {
+  wx.chooseMessageFile({
+    type: 'all',
+    count: 1,
+    success: async function (res) {
+      // 保存上传文件名
 
-          uploadFileName.value= res.tempFiles[0].name;
-          
-          // 发送上传文件请求
-          const response:any=await uploadMyFile(res.tempFiles[0].path,uploadFileName.value)
-          const res_format=JSON.parse(response)
-          
-          //根据响应码提示用户
-          if(res_format.code==200){
-            uni.showToast({
-              title:'上传成功',
-              icon:'success'
-            })
-            // 显示文件名
-            isShowFile.value=true
-          }
-          else if(res_format.code==402){
-            uni.showToast({
-              title:'已上传过该文件',
-              icon:'error'
-            })
-          }
-          else{
-            uni.showToast({
-              title:'上传失败',
-              icon:'error'
-            })
-            isShowFile.value=false
-            
-          }
-        }
-      })
+      uploadFileName.value = res.tempFiles[0].name
+
+      // 发送上传文件请求
+      const response: any = await uploadMyFile(res.tempFiles[0].path, uploadFileName.value)
+      const res_format = JSON.parse(response)
+
+      //根据响应码提示用户
+      if (res_format.code == 200) {
+        uni.showToast({
+          title: '上传成功',
+          icon: 'success'
+        })
+        // 显示文件名
+        isShowFile.value = true
+      } else if (res_format.code == 402) {
+        uni.showToast({
+          title: '已上传过该文件',
+          icon: 'error'
+        })
+      } else {
+        uni.showToast({
+          title: '上传失败',
+          icon: 'error'
+        })
+        isShowFile.value = false
+      }
+    }
+  })
 }
 // 动态显示文件名的位置
-const classArr=['file-name','file-name-inactive']
-   
-//删除文件
-const DeleteFile=async()=>{
-    // 发送删除文件请求
-   const res:any=await deleteMyFile(uploadFileName.value)
-    // 根据响应码判断是否删除成功
-    if(res.code==200){
-        uni.showToast({
-          title:'删除成功',
-          icon:'success'
-        })
-       uploadFileName.value=''
-        isShowFile.value=false
+const classArr = ['file-name', 'file-name-inactive']
 
-    }
-    
+//删除文件
+const DeleteFile = async () => {
+  // 发送删除文件请求
+  const res: any = await deleteMyFile(uploadFileName.value)
+  // 根据响应码判断是否删除成功
+  if (res.code == 200) {
+    uni.showToast({
+      title: '删除成功',
+      icon: 'success'
+    })
+    uploadFileName.value = ''
+    isShowFile.value = false
+  }
 }
 
 // 获取文件显示
-onLoad(async()=>{
-    const res=await showMyFile()
-    if(res.data.length>0){
-        uploadFileName.value=res.data[res.data.length-1].fileName
-        isShowFile.value=true
-    }
-    else{
-      isShowFile.value=false
-      
-    }
+onLoad(async () => {
+  const res = await showMyFile()
+  if (res.data.length > 0) {
+    uploadFileName.value = res.data[res.data.length - 1].fileName
+    isShowFile.value = true
+  } else {
+    isShowFile.value = false
+  }
 })
-
 </script>
 
 
@@ -568,9 +561,6 @@ onLoad(async()=>{
   margin-top: 32rpx;
   display: flex;
   gap: 24rpx;
- 
-   
-
 }
 .filebutton {
   margin-top: 128rpx;
@@ -586,21 +576,19 @@ onLoad(async()=>{
   font-weight: 500;
   color: #7f52ff;
   transform: translate(-169rpx, 66rpx);
-  
 }
-::v-deep .file-name.data-v-5727c6f2{
+::v-deep .file-name.data-v-5727c6f2 {
   align-items: center;
   display: flex;
   white-space: nowrap;
 }
-.file-name-inactive{
+.file-name-inactive {
   font-size: 28rpx;
   font-weight: 500;
   display: flex;
   color: #7f52ff;
   transform: translate(5rpx, -21rpx);
 }
-
 
 .save_btn {
   margin-left: 70rpx;

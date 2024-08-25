@@ -1,4 +1,4 @@
- <script setup lang="ts">
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 // 面试预约跳转
 const toReservation = () => {
@@ -18,7 +18,7 @@ const toProcedure = () => {
     url: '/pages/procedure/procedure'
   })
 }
-</script> 
+</script>
 
 <template>
   <view class="whole_interview_box">
@@ -38,30 +38,18 @@ const toProcedure = () => {
     <!-- 下面按钮选择部分 -->
     <view class="select">
       <view class="select_boxes">
-        <view
-          class="select_box1"
-          @click="toReservation"
-        >
+        <view class="select_box1" @click="toReservation">
           <image
             src="../../static/interview/interview_interview appointment_icon.png"
             mode="scaleToFill"
           />
           <text>面试预约</text>
         </view>
-        <view
-          class="select_box2"
-          @click="toSignIn"
-        >
-          <image
-            src="../../static/interview/interview_sign-in_icon.png"
-            mode="scaleToFill"
-          />
+        <view class="select_box2" @click="toSignIn">
+          <image src="../../static/interview/interview_sign-in_icon.png" mode="scaleToFill" />
           <text>面试签到</text>
         </view>
-        <view
-          class="select_box3"
-          @click=toProcedure
-        >
+        <view class="select_box3" @click="toProcedure">
           <image
             src="../../static/interview/interview_interview progress_icon.png"
             mode="scaleToFill"
@@ -71,9 +59,7 @@ const toProcedure = () => {
       </view>
     </view>
   </view>
-</template> 
-
-
+</template>
 
 <style lang="scss" scoped>
 // 大盒子
@@ -188,8 +174,4 @@ const toProcedure = () => {
   color: rgb(217, 0, 221);
   top: 20rpx;
 }
-</style> 
-
-
-
-
+</style>

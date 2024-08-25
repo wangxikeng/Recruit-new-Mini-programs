@@ -75,14 +75,10 @@ const changeContent = (index: number) => {
 }
 </script>
 <template>
-
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">
-      <image
-        src="../../static/layoutHome/background.png"
-        alt=""
-      ></image>
+      <image src="../../static/layoutHome/background.png" alt=""></image>
     </view>
     <!-- 公告 -->
     <view class="home_announcement">
@@ -92,27 +88,18 @@ const changeContent = (index: number) => {
         <text>公告</text>
         <text class="home_announcement_line"></text>
         <text class="home_announcement_content">{{ announcementContent }}</text>
-        <text
-          class="home_announcement_view"
-          @click="showAnnouncement"
-        >查看 ></text>
+        <text class="home_announcement_view" @click="showAnnouncement">查看 ></text>
       </view>
     </view>
     <!-- 公告弹框 -->
-    <up-popup
-      :show="show"
-      mode="center"
-    >
+    <up-popup :show="show" mode="center">
       <view class="announcement-detail-box">
         <text>公告</text>
         <view class="announcement-detail">
           {{ newAnnouncement }}
         </view>
       </view>
-      <up-button
-        @click="show = false"
-        text="确认"
-      ></up-button>
+      <up-button @click="show = false" text="确认"></up-button>
     </up-popup>
     <!-- 工作室介绍和方向介绍-大盒子 -->
     <view class="home_content">
@@ -120,26 +107,20 @@ const changeContent = (index: number) => {
       <view class="home_studio">
         <!-- 图标 -->
         <view class="home_studio_title">
-          <image
-            src="../../static/layoutHome/studio_introduction.png"
-            alt=""
-          ></image>
+          <image src="../../static/layoutHome/studio_introduction.png" alt=""></image>
           <text class="home_studio_introduce">工作室介绍</text>
         </view>
 
         <!-- 内容 -->
         <view class="home_studio_content_box">
-          {{homeStudioContent}}
+          {{ homeStudioContent }}
         </view>
       </view>
       <!-- 方向介绍 -->
       <view class="home_direction">
         <view class="direction-box">
           <!-- 图标 -->
-          <image
-            src="../../static/layoutHome/direction_introduce.png"
-            alt=""
-          ></image>
+          <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
           <text class="home_direction_introduce">方向介绍</text>
         </view>
         <!-- 五个方向tag标签 -->
@@ -154,7 +135,7 @@ const changeContent = (index: number) => {
         </view>
         <!-- 方向介绍文本框 -->
         <view class="direction_details">
-          {{directionContent[0]}}
+          {{ directionContent[0] }}
         </view>
       </view>
     </view>
@@ -441,5 +422,3 @@ const changeContent = (index: number) => {
 // <button @tap="test">点击</button>
 // <button @tap="test2">点击获取</button>
 </style>
-
-

@@ -10,8 +10,8 @@ const httpInterceptor = {
       option.url = __BASE_URL__ + option.url
     }
     option.timeout = __API_TIMEOUT__
-    const token=uni.getStorageSync('token')
-    // 取 token ，然后附在请求头上
+    const token = uni.getStorageSync('token')
+    // 取 token ，然后附在请求头上t
     if (token) {
       option.header = {
         ...option.header,
@@ -64,7 +64,7 @@ export const httpUpLoad = <T>(Option: UniApp.UploadFileOption) => {
         } else {
           uni.showToast({
             icon: 'none',
-            title: (res.data) || '请求错误'
+            title: res.data || '请求错误'
           })
           reject(res)
         }

@@ -1,7 +1,19 @@
-
-
-   <script setup lang="ts">
+<script setup lang="ts">
 import { ref, reactive, toRef } from 'vue'
+import { useDirectionStore } from '../../stores/modules/reservation'
+import { onLoad } from '@dcloudio/uni-app'
+import { useUserDetailStore } from '@/stores/modules/registration'
+import {
+  getTimeListAll,
+  getTargets,
+  saveTargets,
+  getDirectionTime,
+  getSignIn
+} from '@/api/reservation'
+
+const userDetailStore = useUserDetailStore()
+const userDirectionStore = useDirectionStore()
+
 // 方向导航
 const list = reactive([
   { name: 'UI' },
@@ -26,18 +38,28 @@ const cancelSignIn = () => {
 const confirmSignIn = () => {
   show.value = false
   showcase = 1
+  userDirectionStore.saveSignInTime()
 }
 
 // 温馨提示语
 let showcase = 0
-</script> 
 
+onLoad(async () => {
+  userDirectionStore.getDirectionName()
+  for (const item of userDetailStore.directionNum) {
+    userDirectionStore.chooseDirection = item + 1
+    userDirectionStore.getItemDirectionTome(item)
+    return
+  }
+})
 
-   
+const directionTimeClick = async () => {
+  userDirectionStore.directionTime()
+}
+</script>
 
 <template>
   <view class="whole_box">
-
     <view class="image">
       <image
         src="../../static/interview/interview_background@3x.png"
@@ -49,14 +71,8 @@ let showcase = 0
         mode="scaleToFill"
         class="logo_warning_img"
       />
-      <view
-        class="caution_word_notCheck"
-        v-if="showcase===0"
-      >请提前五分钟到达面试场地等待</view>
-      <view
-        class="caution_word_checked"
-        v-if="showcase===1"
-      >祝你面试顺利哦~</view>
+      <view class="caution_word_notCheck" v-if="showcase === 0">请提前五分钟到达面试场地等待</view>
+      <view class="caution_word_checked" v-if="showcase === 1">祝你面试顺利哦~</view>
     </view>
 
     <!-- 剩下部分 -->
@@ -64,49 +80,53 @@ let showcase = 0
       <!-- 导航栏部分 -->
       <!-- <view class="nav_box"> </view> -->
       <view class="nav">
-        <up-subsection
+        <!-- <up-subsection
           activeColor="#7f52ff"
-          :list="list"
+          :list="userDirectionStore.list"
           mode="subsection"
           :current="0"
-        ></up-subsection>
+        ></up-subsection> -->
+        <view
+          v-for="item in userDirectionStore.list"
+          :key="item.id"
+          class="direction"
+          @click="directionTimeClick"
+        >
+          <view
+            class="navDirection"
+            @click="userDirectionStore.chooseDirection = item.id"
+            :class="{ activeDirection: item.id === userDirectionStore.chooseDirection }"
+          >
+            {{ item.name }}
+          </view>
+        </view>
       </view>
 
       <!-- 预约时间确定-->
       <view class="confirm-box">
         <view class="appointment-time">预约时间</view>
         <view class="parting-line"></view>
-        <view class="detail-time">2024年6月4日9：00-9：10</view>
+        <view class="detail-time">{{ userDirectionStore.signInTime }}</view>
       </view>
 
       <!-- 按钮 暂未开启签到 签到 已签到 -->
       <!-- <view class="signIn-inactive">暂未开启签到</view> -->
-      <view
-        class="signIn-active"
-        @click="signIn"
-        v-if="showcase===0"
-      >签到</view>
-      <view
-        class="have-signIn"
-        v-if="showcase===1"
-      >已签到 </view>
+      <view class="signIn-active" @click="signIn" v-if="showcase === 0">签到</view>
+      <view class="have-signIn" v-if="showcase === 1">已签到 </view>
 
       <!-- 弹窗确定预约时间 -->
       <up-modal
         :show="show"
-        content='是否确认签到？确认后不可更改'
+        content="是否确认签到？确认后不可更改"
         :showCancelButton="true"
         @cancel="cancelSignIn"
         @confirm="confirmSignIn"
         confirmColor="#fff"
         cancelColor="#7f52ff"
       ></up-modal>
-
     </view>
-
   </view>
 </template>
-
 
 <style lang="scss" scoped>
 .whole_box {

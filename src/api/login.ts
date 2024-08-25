@@ -15,8 +15,6 @@ export const logIn = (data: any) => {
   })
 }
 
-
-
 /**
  * 获取到最新的一条通知
  */

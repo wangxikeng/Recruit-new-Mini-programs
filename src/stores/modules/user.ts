@@ -7,24 +7,16 @@ export const useUserStore = defineStore(
   'user',
   () => {
     // 用户信息
-    const userInfo = ref<IUser>()
+    const uerInfo = ref<IUser>()
 
-
-    //保存信息，登录时使用
-    const SetUserToken=(token:string)=>{
-        uni.setStorageSync('token',token)
-    }
-
-    // 清理用户信息，退出时使用
-    const clearProfile = () => {
-      userInfo.value = undefined
+    const setUserToken = (token: string) => {
+      uni.setStorageSync('token', token)
     }
 
     // 记得 return
     return {
-      userInfo,
-      SetUserToken,
-      clearProfile
+      uerInfo,
+      setUserToken
     }
   },
   // TODO: 持久化

@@ -1,94 +1,114 @@
-<script setup lang="ts">
-import { ref, reactive } from 'vue'
-const list = ref(['UI', '前端', '后台', '安卓', '深度学习'])
-const current = ref(1)
-
-// 进度数组
-const progressArr: string[] = ['未开始', '进行中', '已完成']
-</script>
-
-
 <template>
   <view class="wholepage">
     <view class="nav">
-      <up-subsection
+      <!-- <up-subsection
         activeColor="#7f52ff"
-        :list="list"
+        :list="userDirectionStore.list"
         mode="subsection"
         :current="0"
-      ></up-subsection>
+      ></up-subsection> -->
+      <view
+        v-for="item in userDirectionStore.list"
+        :key="item.id"
+        class="direction"
+        @click="directionDetail"
+      >
+        <view
+          class="navDirection"
+          @click="userProcedureStore.chooseDirection = item.id"
+          :class="{ activeDirection: item.id === userProcedureStore.chooseDirection }"
+        >
+          {{ item.name }}
+        </view>
+      </view>
     </view>
 
     <view class="content">
-      <view class="content_box">
+      <view class="content_box" :class="colorArr[userProcedureStore.interview]">
         <view class="content_desc_1">面试</view>
-        <view class="content_desc_2">({{ progressArr[2] }})</view>
+        <view class="content_desc_2">({{ nameArr[userProcedureStore.interview] }})</view>
       </view>
       <view class="icon_box">
-        <view class="square"></view>
-        <view class="line"></view>
+        <view class="square" :class="colorArr[userProcedureStore.interview]"></view>
+        <view class="line" :class="colorArr[userProcedureStore.interview]"></view>
         <view class="arrow">
-          <up-icon
-            name="arrow-down"
-            color="#9773FF"
-            size="14"
-            bold="true"
-          ></up-icon>
+          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
         </view>
       </view>
 
-      <view class="content_box content_box_2">
+      <view class="content_box content_box_2" :class="colorArr[userProcedureStore.statusOne]">
         <view class="content_desc_1">一轮考核</view>
-        <view class="content_desc_2">({{ progressArr[1] }})</view>
+        <view class="content_desc_2">({{ nameArr[userProcedureStore.statusOne] }})</view>
       </view>
       <view class="icon_box icon_box_2">
-        <view class="square"></view>
-        <view class="line"></view>
+        <view class="square" :class="colorArr[userProcedureStore.statusOne]"></view>
+        <view class="line" :class="colorArr[userProcedureStore.statusOne]"></view>
         <view class="arrow">
-          <up-icon
-            name="arrow-down"
-            color="#9773FF"
-            size="16"
-            bold="true"
-          ></up-icon>
+          <up-icon name="arrow-down" color="#9773FF" size="16" bold="true"></up-icon>
         </view>
       </view>
 
-      <view class="content_box content_box_3">
+      <view class="content_box content_box_3" :class="colorArr[userProcedureStore.statusTwo]">
         <view class="content_desc_1">二轮考核</view>
-        <view class="content_desc_2">({{ progressArr[0] }})</view>
+        <view class="content_desc_2">({{ nameArr[userProcedureStore.statusTwo] }})</view>
       </view>
       <view class="icon_box icon_box_3">
-        <view class="square"></view>
-        <view class="line"></view>
+        <view class="square" :class="colorArr[userProcedureStore.statusTwo]"></view>
+        <view class="line" :class="colorArr[userProcedureStore.statusTwo]"></view>
         <view class="arrow">
-          <up-icon
-            name="arrow-down"
-            color="#9773FF"
-            size="14"
-            bold="true"
-          ></up-icon>
+          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
         </view>
       </view>
 
-      <view class="content_box content_box_4">
+      <view class="content_box content_box_4" :class="colorArr[userProcedureStore.success]">
         <view class="content_desc_1">三轮</view>
-        <view class="content_desc_2">({{ progressArr[0] }})</view>
+        <view class="content_desc_2">({{ nameArr[userProcedureStore.success] }})</view>
       </view>
     </view>
   </view>
 </template>
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
 
+const current = ref(1)
 
+import { getProcedure } from '@/api/procedure'
+import { onLoad } from '@dcloudio/uni-app'
+import { useDirectionStore } from '@/stores/modules/reservation'
+import { useUserDetailStore } from '@/stores/modules/registration'
+import { useProcedureStore } from '@/stores/modules/procedure'
+const userDetailStore = useUserDetailStore()
+const userDirectionStore = useDirectionStore()
+const userProcedureStore = useProcedureStore()
+const colorArr = ['will', 'ongoing', 'finish']
+const nameArr = ['未开始', '进行中', '已完成']
+const numInterview = ref<number>(0)
 
+const directionDetail = () => {
+  for (const item of userDetailStore.directionNum) {
+    userProcedureStore.getDirectionDetail()
+    // numInterview.value = userProcedureStore.interview
+  }
+}
 
+onLoad(async () => {
+  userDirectionStore.getDirectionName()
+  for (const item of userDetailStore.directionNum) {
+    userProcedureStore.chooseDirection = item + 1
+    const res = await getProcedure(item)
+    userProcedureStore.getDirectionStatus(item, res)
+    // numInterview.value = userProcedureStore.interview
+    console.log(res)
+    return
+  }
+})
+</script>
 
 <style lang="scss" scoped>
 .wholepage {
   background-color: #f8f7ff;
   height: 100vh;
 }
-
 ::v-deep .u-subsection {
   height: 128rpx !important;
 }
@@ -127,7 +147,7 @@ const progressArr: string[] = ['未开始', '进行中', '已完成']
   height: 166rpx;
   margin: auto;
   border-radius: 20rpx;
-  background-color: #aeb4c2;
+  background-color: #9773ff;
   display: flex;
   flex-direction: column;
   gap: 16rpx;
@@ -137,7 +157,7 @@ const progressArr: string[] = ['未开始', '进行中', '已完成']
   font-size: 32rpx;
 }
 .content_box_2 {
-  background-color: #7f52ff;
+  background-color: #9773ff;
   transform: translate(0, -16rpx);
 }
 .content_box_3,
@@ -168,5 +188,46 @@ const progressArr: string[] = ['未开始', '进行中', '已完成']
 ::v-deep .u-icon__icon.data-v-1c933a9a {
   margin: auto;
   transform: translate(0, -14rpx);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navDirection {
+  margin-top: 36rpx;
+  width: 144rpx;
+  height: 70rpx;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 16px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  outline: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navDirection:focus {
+  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
+}
+.activeDirection {
+  background-color: #7f52ff;
+  color: #ffffff !important;
+  border-radius: 24px;
+  font-weight: 700;
+}
+.finish {
+  background-color: #aeb4c2;
+}
+.ongoing {
+  background-color: #7f52ff;
+}
+.will {
+  background-color: #9773ff;
 }
 </style>

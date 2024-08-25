@@ -15,6 +15,13 @@ const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
 
 // 方向导航
+const list = reactive([
+  { name: 'UI' },
+  { name: '前端' },
+  { name: '后台' },
+  { name: '安卓' },
+  { name: '深度学习' }
+])
 let current = ref(0)
 
 // 签到弹出框确定
@@ -167,9 +174,9 @@ const directionTimeClick = async () => {
 }
 
 // 五个方向导航
-// .nav {
-//   transform: translate(30rpx, 6rpx);
-// }
+.nav {
+  transform: translate(30rpx, 6rpx);
+}
 
 // 导航样式改变
 ::v-deep .u-subsection.data-v-7b2e14a2 {
@@ -330,37 +337,5 @@ const directionTimeClick = async () => {
 ::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
 .u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
   background-color: rgba(127, 82, 255, 1);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24rpx;
-}
-
-.navDirection {
-  width: 144rpx;
-  height: 70rpx;
-  color: #1a1a1a;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 16px;
-  background-color: transparent;
-  border: none !important;
-  cursor: pointer;
-  outline: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.navDirection:focus {
-  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
-}
-.activeDirection {
-  background-color: #7f52ff;
-  color: #ffffff !important;
-  border-radius: 24px;
-  font-weight: 700;
 }
 </style>

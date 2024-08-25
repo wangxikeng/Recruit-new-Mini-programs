@@ -22,6 +22,7 @@
         </view>
       </view>
     </view>
+
     <view class="content">
       <view class="content_box" :class="colorArr[userProcedureStore.interview]">
         <view class="content_desc_1">面试</view>

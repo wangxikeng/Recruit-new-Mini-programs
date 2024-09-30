@@ -1,5 +1,8 @@
 <template>
-  <view class="wholepage" ref="blurpage">
+  <view
+    class="wholepage"
+    ref="blurpage"
+  >
     <!-- 基本信息 -->
     <view class="basic_detail">
       <image
@@ -15,16 +18,28 @@
       <input placeholder="学院专业" class="input" />
       <input placeholder="手机号" class="input" /> -->
       <view class="input">
-        <up-input placeholder="姓名" v-model="userDetailStore.user.userName"></up-input>
+        <up-input
+          placeholder="姓名"
+          v-model="userDetailStore.user.userName"
+        ></up-input>
       </view>
       <view class="input">
-        <up-input placeholder="学号" v-model="userDetailStore.user.account"></up-input>
+        <up-input
+          placeholder="学号"
+          v-model="userDetailStore.user.account"
+        ></up-input>
       </view>
       <view class="input">
-        <up-input placeholder="学院专业" v-model="userDetailStore.user.major"></up-input>
+        <up-input
+          placeholder="学院专业"
+          v-model="userDetailStore.user.major"
+        ></up-input>
       </view>
       <view class="input">
-        <up-input placeholder="手机号" v-model="userDetailStore.user.phone"></up-input>
+        <up-input
+          placeholder="手机号"
+          v-model="userDetailStore.user.phone"
+        ></up-input>
       </view>
     </view>
     <!-- 考核方向 -->
@@ -37,7 +52,11 @@
       <view class="basic_desc">考核方向</view>
     </view>
     <view class="upcheckboxgroup direction_box">
-      <up-checkbox-group shape="circle" v-model="checkboxValue1" @change="checkboxChange1">
+      <up-checkbox-group
+        shape="circle"
+        v-model="checkboxValue1"
+        @change="checkboxChange1"
+      >
         <up-checkbox
           :customStyle="{ marginBottom: '8px', marginRight: '25px' }"
           v-for="(item, index) in checkboxList1"
@@ -53,12 +72,20 @@
 
     <!-- 其他信息 -->
     <view class="basic_detail otherdetail">
-      <image src="../../static/apply/apply_massage@3x.png" mode="scaleToFill" class="basic_icon" />
+      <image
+        src="../../static/apply/apply_massage@3x.png"
+        mode="scaleToFill"
+        class="basic_icon"
+      />
       <view class="basic_desc">其他信息</view>
     </view>
     <view class="career_plan">你的职业规划是</view>
     <view class="upcheckboxgroup">
-      <up-checkbox-group shape="circle" v-model="checkboxValue2" @change="checkboxChange2">
+      <up-checkbox-group
+        shape="circle"
+        v-model="checkboxValue2"
+        @change="checkboxChange2"
+      >
         <up-checkbox
           :customStyle="{ marginBottom: '8px', marginRight: '25px' }"
           v-for="(item, index) in checkboxList2"
@@ -86,23 +113,36 @@
     <view class="career_plan works">上传作品或简历（可选）</view>
     <view>
       <view class="filechoose">
-        <!-- <view class="filechoose_btn" v-if="file_btn">
-          <up-button type="primary" text="选择文件" size="small"></up-button>
-        </view> -->
-        <up-upload
-          :fileList="fileList"
-          @afterRead="afterRead"
-          @delete="deletePic"
-          name="1"
-          multiple
-          :maxCount="1"
+        <view
+          class="filechoose_btn"
+          v-if="file_btn"
         >
-          选择文件
-        </up-upload>
-        <view class="file-desc" v-if="false">未选择文件</view>
-        <view class="file-desc" v-else>
-          <view class="file-name">try.html</view>
-          <up-icon name="close" v-if="file_btn"></up-icon>
+          <up-button
+            type="primary"
+            text="选择文件"
+            size="small"
+            @click="Upload"
+          ></up-button>
+        </view>
+
+        <view
+          class="file-desc"
+          v-if="false"
+        >未选择文件</view>
+        <view
+          class="file-desc"
+          v-else
+        >
+          <view
+            :class=file_btn?classArr[0]:classArr[1]
+            v-if="isShowFile"
+          >{{ uploadFileName }}
+            <up-icon
+              name="close"
+              @click="DeleteFile"
+              customStyle="margin-left:5rpx"
+            ></up-icon>
+          </view>
         </view>
       </view>
       <up-overlay
@@ -112,39 +152,89 @@
         :opacity="0.2"
         :z-index="999"
       ></up-overlay>
-      <view class="filebutton" v-if="file_btn">
-        <view class="save_btn" @click="save_suc">
-          <up-button type="primary" text="保存"></up-button>
+      <view
+        class="filebutton"
+        v-if="file_btn"
+      >
+        <view
+          class="save_btn"
+          @click="save_suc"
+        >
+          <up-button
+            type="primary"
+            text="保存"
+          ></up-button>
         </view>
-        <view class="submit_btn" @click="submit_suc">
-          <up-button type="primary" text="提交"></up-button>
+        <view
+          class="submit_btn"
+          @click="submit_suc"
+        >
+          <up-button
+            type="primary"
+            text="提交"
+          ></up-button>
         </view>
         <view class="footer_1"></view>
       </view>
     </view>
 
-    <view class="submit_pop" v-if="submit_pop">
-      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+    <view
+      class="submit_pop"
+      v-if="submit_pop"
+    >
+      <up-icon
+        name="checkmark-circle-fill"
+        size="100px"
+        color="#9773FFE5"
+      ></up-icon>
       <view class="submit_desc">保存成功</view>
     </view>
-    <view class="submit_pop" v-if="submit_pop_1">
-      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+    <view
+      class="submit_pop"
+      v-if="submit_pop_1"
+    >
+      <up-icon
+        name="checkmark-circle-fill"
+        size="100px"
+        color="#9773FFE5"
+      ></up-icon>
       <view class="submit_desc">提交成功</view>
     </view>
-    <view class="change_part" v-if="change_part" @click="changedet">
+    <view
+      class="change_part"
+      v-if="change_part"
+      @click="changedet"
+    >
       <view class="change_detail">信息错误？点击重新提交</view>
       <view class="footer_2"></view>
     </view>
 
-    <view class="save_pop" v-if="save_pop">
+    <view
+      class="save_pop"
+      v-if="save_pop"
+    >
       <view class="save_pop">
         <view class="save_decs">是否确认重新填写信息</view>
         <view class="pop_btn">
-          <view class="sure_btn" @click="sure_btn">
-            <up-button type="primary" text="确认" size="small"></up-button>
+          <view
+            class="sure_btn"
+            @click="sure_btn"
+          >
+            <up-button
+              type="primary"
+              text="确认"
+              size="small"
+            ></up-button>
           </view>
-          <view class="cancel_btn" @click="cancel_btn">
-            <up-button type="primary" text="取消" size="small"></up-button>
+          <view
+            class="cancel_btn"
+            @click="cancel_btn"
+          >
+            <up-button
+              type="primary"
+              text="取消"
+              size="small"
+            ></up-button>
           </view>
         </view>
       </view>
@@ -158,88 +248,6 @@ import { saveDetail, getDetail, fileUpload, fileGet, fileDelete } from '@/api/re
 import type { IRequest } from '@/types/userdetail'
 import { useUserDetailStore } from '@/stores/modules/registration'
 const userDetailStore = useUserDetailStore()
-
-interface FileItem {
-  name: string
-  url: string
-  status: 'uploading' | 'success' | 'fail'
-  message: string
-}
-
-const fileList = ref<FileItem[]>([])
-
-// 删除图片
-const deletePic = (event: { index: number }) => {
-  fileList.value.splice(event.index, 1)
-}
-
-// 新增图片
-const afterRead = (event: { file: File[] | File }) => {
-  // 当设置 mutiple 为 true 时, file 为数组格式,否则为对象格式
-  const lists = Array.isArray(event.file) ? event.file : [event.file]
-  lists.forEach((item) => {
-    fileList.value.push({
-      name: item.name,
-      url: '',
-      status: 'uploading',
-      message: '上传中'
-    })
-  })
-
-  lists.forEach((item, index) => {
-    uploadFilePromise(item)
-      .then((result) => {
-        fileList.value[index] = {
-          ...fileList.value[index],
-          url: result,
-          status: 'success',
-          message: ''
-        }
-      })
-      .catch((err) => {
-        fileList.value[index] = {
-          ...fileList.value[index],
-          status: 'fail',
-          message: '上传失败'
-        }
-      })
-  })
-}
-
-const uploadFilePromise = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    // 检查文件类型
-    const allowedTypes = [
-      'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/msword'
-    ]
-    if (!allowedTypes.includes(file.type)) {
-      reject(new Error('Only PDF and Word documents are allowed.'))
-      return
-    }
-
-    uni.uploadFile({
-      url: 'http://47.121.198.19:8888/user/file/upload', // 仅为示例,非真实的接口地址
-      filePath: file.name,
-      name: 'file',
-      formData: {
-        user: 'test'
-      },
-      success: (res) => {
-        try {
-          const data = JSON.parse(res.data)
-          resolve(data.data)
-        } catch (err) {
-          reject(err)
-        }
-      },
-      fail: (err) => {
-        reject(err)
-      }
-    })
-  })
-}
 
 const show = ref(false)
 //复选框
@@ -393,7 +401,7 @@ const Upload = () => {
       uploadFileName.value = res.tempFiles[0].name
 
       // 发送上传文件请求
-      const response: any = await uploadMyFile(res.tempFiles[0].path, uploadFileName.value)
+      const response : any= await uploadMyFile(res.tempFiles[0].path, uploadFileName.value)
       const res_format = JSON.parse(response)
 
       //根据响应码提示用户

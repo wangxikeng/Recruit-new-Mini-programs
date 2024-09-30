@@ -20,8 +20,6 @@ onLoad(async () => {
 const showAnnouncement = async () => {
   const res = await getAnnouncement()
   show.value = true
-  console.log(res.data.content)
-
   // 将公告内容存入弹框
   // setAnnouncement(res.data.content)
   newAnnouncement.value = res.data.content
@@ -39,38 +37,60 @@ const list = reactive([
   { name: '安卓' },
   { name: '深度学习' }
 ])
-let current = ref(0)
 
 // 工作室介绍内容
-const homeStudioContent = ref(
+const homeStudioContent = ref<string>(
   '睡觉哦的承诺觉哦v呢hi哦五年的女成为哦成为出动十万才能深刻出你的论文从v那我的那位v我能看到v那我'
 )
 
+// enum directionContent{
+//   uiContent,
+//   frontContent,
+//   backendContent,
+//   androidContent,
+//   deepLearnContent
+// }
+
 // 各组方向介绍内容
-const uiContent = ref(
-  '三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
-)
-const frontContent = ref('都能看出次贷危机从未v难忘的v那我呢可称为分配没饭吃v你打开v物品')
-const backendContent = ref(
-  '星巴克首播超级你成为从前啊v难忘的v那我IP访问篇v干嘛不么譬如不好么还没被他们不会普通后面图片模糊让人痛恨排名'
-)
-const androidContent = ref(
-  '效能比实际并分为八个v哦额我热根本蓉儿排位那个巫婆仍然王婆卖瓜肉片给你面对我佩服'
-)
-const deepLearnContent = ref(
-  '不吃亏的市场价多少v你苏打绿那个人v发呢我闺女陪我给v帮忙物色不过，我们【色鬼革命人民被害人么我怕魔法物品每次分手了'
-)
-const directionContent = [uiContent, frontContent, backendContent, androidContent, deepLearnContent]
+// const uiContent:string =
+//   '工作室的UI组包含UI设计和产品经理两个工作内容。UI即用户界面设计，也称人机界面。最普遍的应用是在软件开发中，指程序的用户操作界面设计。UI在网站界面、软件界面、手机应用界面等多图形用户界面的设计都属于UI设计。学习UI将需要熟练使用figma, PS，AI等设计软件，同时也需要学习动效建模和用户心理学，UI是和用户最直接接触的环节，优秀的UI能最大程度提高用户体验，最大化实现功能的应用。产品经理是工作室对标企业设立的新职位，负责产品规划，分析理解梳理市场的需求和竞争情况，确定产品的需求，制定产品的来发计划和进度控制，验收开发者的产品开发。在工作室中扮演着产品决策者的角色，通俗的说，你是这个学生团队的甲方！欢迎你加入我们，一起创造美的产品！'
+
+// const frontContent:string = '前端是产品的门面担当，也是离用户最近的一部分。前端从PC端到移动端畅游无阻，可以开发出高性能的web、桌面端应用、app和小程序，你可以通过自己编写的代码把自己的酷炫想法变成真实的页面效果呈现。随着node.js的面世，前端也能进行后台开发。热门的TypeScript能极大规避错误和提升效率。互联网技术发展迅猛，Flutter、WebAssembly、Serverless、LowCode等大型前端领域的蓬勃发展都超出了人们的预期，并且让我们看到了更多前端融合趋势。加入我们吧！从现在开始奔跑！'
+// const backendContent:string =
+//   '后端开发即“服务器端”开发，是创建完整可运行的Web应用服务端程序的过程，是Web应用程序开发的一部分。后端开发者使用Java Golang等语言及其衍生的各种框架、库和解决方案来实现Web应用程序的核心业务逻辑，并向外提供特定的API，使得Web应用能够高效、安全、稳定地运行。数智工作室后台组主要致力于JavaWeb端的API开发，主要负责数据逻辑存储和复杂逻辑的设计。如果你对与数据、信息、服务器打交道感兴趣欢迎加入我们后台组!'
+
+// const androidContent:string =
+//   'Android开发组，是数智工作室开发安卓App的核心研发团队，专注于有创意、有特色的App的开发，以及Android技术的研究。Android开发在当下大前端的定义上，也属于大前端，与后台组配合一起编写出手机APP。开发组主要使用原生Android技术来开发软件，以达到软件的最优性能。如果你热爱Android，渴望做出属于你的App，那么数智Android组欢迎你的到来！'
+
+// const deepLearnContent:string =
+//   '回顾过去，人工智能已经以各种方式深入到我们的生活中。人脸识别技术使得支付和通行检查变得更加便捷；语音识别技术使我们无需费力地输入文字；翻译技术降低了我们学习外语的门槛。人工智能正不断改变着我们的生活和工作方式。如果你被ChatGPT强大的对话和推理能力所惊艳，被AI绘图展现的无尽想象力所着迷，对那些技术高超的人机在游戏中所展现出的实力感到好奇，那么现在就是加入深度学习组的时候了！ 我们深度学习组是数智工作室的paper制造小组，这里可以同研究生科研团队共同学习进步。我们不仅专注于深度学习相关的学术前沿，还为开发组提供需要的模型协助开发。我们的组员已有本科师兄发表数篇论文、本校直博以及考研上岸复旦等高校。加入我们的深度学习组，从0开始带你构建属于你自己的人工智能模型大厦。让我们一起探索这个充满魅力的领域！'
+
+// const directionContentArr:string[] = [uiContent, frontContent, backendContent, androidContent, deepLearnContent]
 
 // 点击分段器更改方向介绍内容
+// const changeContent = (index: number) => {
+
+//   if (index === 0) {
+//     directionContent[0].value =
+//       '工作室的UI组包含UI设计和产品经理两个工作内容。UI即用户界面设计，也称人机界面。最普遍的应用是在软件开发中，指程序的用户操作界面设计。UI在网站界面、软件界面、手机应用界面等多图形用户界面的设计都属于UI设计。学习UI将需要熟练使用figma, PS，AI等设计软件，同时也需要学习动效建模和用户心理学，UI是和用户最直接接触的环节，优秀的UI能最大程度提高用户体验，最大化实现功能的应用。产品经理是工作室对标企业设立的新职位，负责产品规划，分析理解梳理市场的需求和竞争情况，确定产品的需求，制定产品的来发计划和进度控制，验收开发者的产品开发。在工作室中扮演着产品决策者的角色，通俗的说，你是这个学生团队的甲方！欢迎你加入我们，一起创造美的产品！'
+//   } else {
+//     directionContent[0].value = directionContent[index].value
+//   }
+// }
+
+const directionContentArr = ref<string[]>([
+  '工作室的UI组包含UI设计和产品经理两个工作内容...（省略详细内容）',
+  '前端是产品的门面担当，也是离用户最近的一部分...（省略详细内容）',
+  '后端开发即“服务器端”开发，是创建完整可运行的Web应用服务端程序的过程...（省略详细内容）',
+  'Android开发组，是数智工作室开发安卓App的核心研发团队...（省略详细内容）',
+  '回顾过去，人工智能已经以各种方式深入到我们的生活中...（省略详细内容）'
+])
+
 const changeContent = (index: number) => {
-  console.log(index)
-  console.log(directionContent[index].value)
   if (index === 0) {
-    directionContent[0].value =
-      '三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
+    directionContentArr.value[0] = '工作室的UI组包含UI设计和产品经理两个工作内容...（省略详细内容）'
   } else {
-    directionContent[0].value = directionContent[index].value
+    directionContentArr.value[0] = directionContentArr.value[index]
   }
 }
 </script>
@@ -78,7 +98,10 @@ const changeContent = (index: number) => {
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">
-      <image src="../../static/layoutHome/background.png" alt=""></image>
+      <image
+        src="../../static/layoutHome/background.png"
+        alt=""
+      ></image>
     </view>
     <!-- 公告 -->
     <view class="home_announcement">
@@ -88,18 +111,27 @@ const changeContent = (index: number) => {
         <text>公告</text>
         <text class="home_announcement_line"></text>
         <text class="home_announcement_content">{{ announcementContent }}</text>
-        <text class="home_announcement_view" @click="showAnnouncement">查看 ></text>
+        <text
+          class="home_announcement_view"
+          @click="showAnnouncement"
+        >查看 ></text>
       </view>
     </view>
     <!-- 公告弹框 -->
-    <up-popup :show="show" mode="center">
+    <up-popup
+      :show="show"
+      mode="center"
+    >
       <view class="announcement-detail-box">
         <text>公告</text>
         <view class="announcement-detail">
           {{ newAnnouncement }}
         </view>
       </view>
-      <up-button @click="show = false" text="确认"></up-button>
+      <up-button
+        @click="show = false"
+        text="确认"
+      ></up-button>
     </up-popup>
     <!-- 工作室介绍和方向介绍-大盒子 -->
     <view class="home_content">
@@ -107,7 +139,10 @@ const changeContent = (index: number) => {
       <view class="home_studio">
         <!-- 图标 -->
         <view class="home_studio_title">
-          <image src="../../static/layoutHome/studio_introduction.png" alt=""></image>
+          <image
+            src="../../static/layoutHome/studio_introduction.png"
+            alt=""
+          ></image>
           <text class="home_studio_introduce">工作室介绍</text>
         </view>
 
@@ -120,7 +155,10 @@ const changeContent = (index: number) => {
       <view class="home_direction">
         <view class="direction-box">
           <!-- 图标 -->
-          <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
+          <image
+            src="../../static/layoutHome/direction_introduce.png"
+            alt=""
+          ></image>
           <text class="home_direction_introduce">方向介绍</text>
         </view>
         <!-- 五个方向tag标签 -->
@@ -135,7 +173,7 @@ const changeContent = (index: number) => {
         </view>
         <!-- 方向介绍文本框 -->
         <view class="direction_details">
-          {{ directionContent[0] }}
+          {{ directionContentArr[0] }}
         </view>
       </view>
     </view>
@@ -400,25 +438,4 @@ const changeContent = (index: number) => {
   border-radius: 16rpx;
   box-shadow: 0 0 14rpx 0 rgba(189, 207, 243, 0.81);
 }
-
-// import { getNewNotice, logIn } from '@/api/login'
-
-// const test = async () => {
-//   const res = await logIn()
-//   uerInfo.value = res.data
-// }
-
-// const test2 = () => {
-//   getNewNotice()
-
-// }
-// onLoad(async () => {
-//   console.log(111);
-
-//   const res = await logIn()
-//   uerInfo.value = res.data
-// })
-
-// <button @tap="test">点击</button>
-// <button @tap="test2">点击获取</button>
 </style>

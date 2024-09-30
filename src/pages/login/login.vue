@@ -6,29 +6,23 @@ import { storeToRefs } from 'pinia'
 const store = useUserStore()
 // 解构数据 方法
 const { userInfo } = storeToRefs(store)
-const { SetUserToken } = store
+const { setUserToken } = store
 
 // 校验错误提示
-const isErrorRemind = ref(false)
+const isErrorRemind = ref<boolean>(false)
 
 //密码是否显示
 const isDisplay = ref<boolean>(true)
-
-// 密码框密码icon显示隐藏
 const isEyeOpen = ref<string>('eye-off')
+// 密码框密码icon显示隐藏
 const changeEye = () => {
-  if (isEyeOpen.value === 'eye-off') {
-    isEyeOpen.value = 'eye-fill'
-    isDisplay.value = false
-  } else {
-    isEyeOpen.value = 'eye-off'
-    isDisplay.value = true
-  }
-}
+isEyeOpen.value = isEyeOpen.value === 'eye-off' ? 'eye-fill' : 'eye-off';
+isDisplay.value = !isDisplay.value;
+};
 
 // // 账号 密码
 const accountValue = ref<string>('')
-const passwordValue = ref<string>('')
+const passwordValue = ref<any>('')
 const loginParams = ref<object>({
   account: accountValue,
   password: passwordValue
@@ -44,46 +38,49 @@ uni.getStorage({
   }
 })
 
-//登录请求
-const toHome = async () => {
-  const res = await logIn(loginParams.value)
+// 登录前验证
+const validateLoginInfo = () => {  
+  if (accountValue.value === '' || accountValue.value.includes(' ') || accountValue.value.length < 10) {  
+    uni.showToast({  
+      title: '请正确输入账号',  
+      icon: 'error'  
+    });  
+    return false;  
+  }  
+  if (passwordValue.value === '' || passwordValue.value.includes(' ')) {  
+    uni.showToast({  
+      title: '请正确输入密码',  
+      icon: 'error'  
+    });  
+    return false;  
+  }  
+  return true;  
+};  
 
-  userInfo.value = res.data
-  if (userInfo.value === undefined) {
-    // 显示账号或密码错误提示
-    isErrorRemind.value = true
-  } else {
-    // 把token保存本地
-    SetUserToken(res.data.token)
-    //跳转到首页
-    uni.switchTab({
-      url: '/pages/home/home'
-    })
+// // 登录请求  
+const toHome = async () => {  
+  if (!validateLoginInfo()) {  
+    // 验证失败，不执行登录  
+    return;  
+  }  
+  const res: any = await logIn(loginParams.value)
+    if (res.code == 200) {
+      setUserToken(res.data.token)
+//       //   //跳转到首页
+      uni.switchTab({
+        url: '/pages/home/home'
+      })
+    } else {
+//       // 显示账号或密码错误提示
+      isErrorRemind.value = true
+       // 3 秒后清除错误提示  
+      setTimeout(() => {  
+        isErrorRemind.value = false;  
+      }, 3000); 
+    }
   }
-}
 
-//请求前表单校验
-const showAccountError = () => {
-  if (
-    accountValue.value == '' ||
-    accountValue.value.includes(' ') ||
-    accountValue.value.length < 10
-  ) {
-    uni.showToast({
-      title: '请正确输入账号',
-      icon: 'error'
-    })
-  }
-}
 
-const showPasswordError = () => {
-  if (passwordValue.value == '' || passwordValue.value.includes(' ')) {
-    uni.showToast({
-      title: '请正确输入密码',
-      icon: 'error'
-    })
-  }
-}
 </script>
 
 <template>
@@ -103,7 +100,6 @@ const showPasswordError = () => {
         border="surround"
         v-model="accountValue"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
-        @blur="showAccountError"
       ></up-input>
     </view>
     <!-- 密码框 -->
@@ -116,7 +112,6 @@ const showPasswordError = () => {
         :password="isDisplay"
         customStyle="margin-top:59rpx !important"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
-        @blur="showPasswordError"
       ></up-input>
       <up-icon
         :name="isEyeOpen"

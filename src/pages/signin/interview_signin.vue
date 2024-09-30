@@ -14,16 +14,6 @@ import {
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
 
-// 方向导航
-const list = reactive([
-  { name: 'UI' },
-  { name: '前端' },
-  { name: '后台' },
-  { name: '安卓' },
-  { name: '深度学习' }
-])
-let current = ref(0)
-
 // 签到弹出框确定
 const show = ref(false)
 //点击签到按钮弹出确认框
@@ -44,15 +34,17 @@ const confirmSignIn = () => {
 // 温馨提示语
 let showcase = 0
 
+//点进来就要显示第一个方向
 onLoad(async () => {
   userDirectionStore.getDirectionName()
   for (const item of userDetailStore.directionNum) {
     userDirectionStore.chooseDirection = item + 1
-    userDirectionStore.getItemDirectionTome(item)
+    userDirectionStore.getItemDirectionTime(item)
     return
   }
 })
 
+//切换导航方向之后显示的
 const directionTimeClick = async () => {
   userDirectionStore.directionTime()
 }
@@ -80,17 +72,12 @@ const directionTimeClick = async () => {
       <!-- 导航栏部分 -->
       <!-- <view class="nav_box"> </view> -->
       <view class="nav">
-        <!-- <up-subsection
-          activeColor="#7f52ff"
-          :list="userDirectionStore.list"
-          mode="subsection"
-          :current="0"
-        ></up-subsection> -->
         <view
           v-for="item in userDirectionStore.list"
           :key="item.id"
           class="direction"
           @click="directionTimeClick"
+          ref="directionBtn"
         >
           <view
             class="navDirection"
@@ -100,6 +87,7 @@ const directionTimeClick = async () => {
             {{ item.name }}
           </view>
         </view>
+        <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
       </view>
 
       <!-- 预约时间确定-->
@@ -175,7 +163,7 @@ const directionTimeClick = async () => {
 
 // 五个方向导航
 .nav {
-  transform: translate(30rpx, 6rpx);
+  transform: translate(-15rpx, 6rpx);
 }
 
 // 导航样式改变
@@ -337,5 +325,36 @@ const directionTimeClick = async () => {
 ::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
 .u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
   background-color: rgba(127, 82, 255, 1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24rpx;
+}
+.navDirection {
+  width: 144rpx;
+  height: 70rpx;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 16px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  outline: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navDirection:focus {
+  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
+}
+.activeDirection {
+  background-color: #7f52ff;
+  color: #ffffff !important;
+  border-radius: 24px;
+  font-weight: 700;
 }
 </style>

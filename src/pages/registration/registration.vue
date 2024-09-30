@@ -45,6 +45,7 @@
           :label="item.name"
           :name="index"
           activeColor="#7F52FF"
+          :check="item.checked"
           @change="checkChange(index)"
         >
         </up-checkbox>
@@ -86,9 +87,6 @@
     <view class="career_plan works">上传作品或简历（可选）</view>
     <view>
       <view class="filechoose">
-        <!-- <view class="filechoose_btn" v-if="file_btn">
-          <up-button type="primary" text="选择文件" size="small"></up-button>
-        </view> -->
         <up-upload
           :fileList="fileList"
           @afterRead="afterRead"
@@ -102,48 +100,48 @@
         <view class="file_desc" v-if="false">未选择文件</view>
         <view class="file_desc" v-else>
           <view class="file_name">try.html</view>
-          <up-icon name="close" v-if="file_btn"></up-icon>
+          <up-icon name="close" v-if="isShowFileBtn"></up-icon>
         </view>
       </view>
       <up-overlay
-        :show="show"
-        @click="show = false"
+        :show="isShowPop"
+        @click="isShowPop = false"
         duration="0"
         :opacity="0.2"
         :z-index="999"
       ></up-overlay>
-      <view class="filebutton" v-if="file_btn">
-        <view class="save_btn" @click="save_suc">
+      <view class="filebutton" v-if="isShowFileBtn">
+        <view class="save_btn" @click="saveSuc">
           <up-button type="primary" text="保存"></up-button>
         </view>
-        <view class="submit_btn" @click="submit_suc">
+        <view class="submit_btn" @click="submitSuc">
           <up-button type="primary" text="提交"></up-button>
         </view>
         <view class="footer_1"></view>
       </view>
     </view>
 
-    <view class="submit_pop" v-if="submit_pop">
+    <view class="submit_pop" v-if="isShowSubmitPop">
       <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
       <view class="submit_desc">保存成功</view>
     </view>
-    <view class="submit_pop" v-if="submit_pop_1">
+    <view class="submit_pop" v-if="isShowSubmitPop_1">
       <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
       <view class="submit_desc">提交成功</view>
     </view>
-    <view class="change_part" v-if="change_part" @click="changedet">
+    <view class="change_part" v-if="isShowChangePart" @click="changeDet">
       <view class="change_detail">信息错误？点击重新提交</view>
       <view class="footer_2"></view>
     </view>
 
-    <view class="save_pop" v-if="save_pop">
+    <view class="save_pop" v-if="isShowSavePop">
       <view class="save_pop">
         <view class="save_decs">是否确认重新填写信息</view>
         <view class="pop_btn">
-          <view class="sure_btn" @click="sure_btn">
+          <view class="sure_btn" @click="sureBtn">
             <up-button type="primary" text="确认" size="small"></up-button>
           </view>
-          <view class="cancel_btn" @click="cancel_btn">
+          <view class="cancel_btn" @click="cancelBtn">
             <up-button type="primary" text="取消" size="small"></up-button>
           </view>
         </view>
@@ -161,8 +159,17 @@ const userDetailStore = useUserDetailStore()
 
 interface FileItem {
   name: string
+  /**
+   * 文件名字
+   */
   url: string
+  /**
+   * 文件路径
+   */
   status: 'uploading' | 'success' | 'fail'
+  /**
+   * 上传中 上传成功 上传失败
+   */
   message: string
 }
 
@@ -241,7 +248,7 @@ const uploadFilePromise = (file: File): Promise<string> => {
   })
 }
 
-const show = ref(false)
+const isShowPop = ref(false)
 //复选框
 const checkboxValue1 = reactive([])
 const checkboxValue2 = reactive([])
@@ -296,21 +303,18 @@ const checkboxList2 = reactive([
   }
 ])
 
-const plan = ref<string>('')
 const checkboxChange1 = (n: any) => {
-  console.log('change', n)
-  console.log(n.join('-'))
-  // n.forEach((item: number[]) => {
-  //   console.log(item)
-  // })
+  // console.log('change', n)
+  // console.log(n.join('-'))
   userDetailStore.directionNum = n
-  console.log(userDetailStore.directionNum)
+  // console.log(userDetailStore.directionNum)
 }
 const checkboxChange2 = (n: any) => {
-  console.log('change', n)
+  // console.log('change', n)
   userDetailStore.user.plan = n.join('-')
 }
 const checkChange = (index: any) => {
+  //传值：被选中否
   checkboxList1[index].checked = !checkboxList1[index].checked
   userDetailStore.user.headend = checkboxList1[0].checked
   userDetailStore.user.backend = checkboxList1[1].checked
@@ -324,52 +328,52 @@ const workvalue = ref('')
 
 //保存弹窗
 const blurpage = ref()
-const submit_pop = ref(false)
-const file_btn = ref(true)
-const change_part = ref(false)
-const savesuccess = () => {
-  submit_pop.value = true
-  show.value = true
+const isShowSubmitPop = ref(false)
+const isShowFileBtn = ref(true)
+const isShowChangePart = ref(false)
+const saveSuccess = () => {
+  isShowSubmitPop.value = true
+  isShowPop.value = true
   setTimeout(function () {
-    submit_pop.value = false
-    show.value = false
+    isShowSubmitPop.value = false
+    isShowPop.value = false
   }, 2000)
 }
-const save_suc = async () => {
-  savesuccess()
+const saveSuc = async () => {
+  saveSuccess()
   userDetailStore.setUerDetailInfo()
 }
 
 //确认弹窗
-const submit_pop_1 = ref(false)
-const submitsuccess = () => {
-  submit_pop_1.value = true
-  show.value = true
+const isShowSubmitPop_1 = ref(false)
+const submitSuccess = () => {
+  isShowSubmitPop_1.value = true
+  isShowPop.value = true
   setTimeout(function () {
-    submit_pop_1.value = false
-    file_btn.value = false
-    change_part.value = true
-    show.value = false
+    isShowSubmitPop_1.value = false
+    isShowFileBtn.value = false
+    isShowChangePart.value = true
+    isShowPop.value = false
   }, 2000)
   userDetailStore.setUerDetailInfo()
 }
-const submit_suc = async () => {
-  submitsuccess()
+const submitSuc = async () => {
+  submitSuccess()
 }
 
 //修改弹窗
-const save_pop = ref(false)
-const changedet = () => {
-  show.value = true
-  save_pop.value = true
+const isShowSavePop = ref(false)
+const changeDet = () => {
+  isShowPop.value = true
+  isShowSavePop.value = true
 }
-const sure_btn = () => {
-  save_pop.value = false
-  submitsuccess()
+const sureBtn = () => {
+  isShowSavePop.value = false
+  submitSuccess()
 }
-const cancel_btn = () => {
-  save_pop.value = false
-  show.value = false
+const cancelBtn = () => {
+  isShowSavePop.value = false
+  isShowPop.value = false
 }
 
 //文件部分

@@ -63,7 +63,8 @@ export interface IPreTime {
   /**
    * 用户在该时间段是否忙(0为否,1为是)
    */
-  userBusy: boolean
+  // userBusy: boolean
+  attendAble: boolean
 }
 
 /**

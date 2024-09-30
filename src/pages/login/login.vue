@@ -6,7 +6,8 @@ import { storeToRefs } from 'pinia'
 const store = useUserStore()
 // 解构数据 方法
 const { userInfo } = storeToRefs(store)
-const { SetUserToken } = store
+// const { SetUserToken } = store
+const SetUserToken = store.setUserToken
 
 // 校验错误提示
 const isErrorRemind = ref(false)

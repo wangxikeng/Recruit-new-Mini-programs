@@ -1,7 +1,7 @@
 import type { IRequest } from '@/types/userdetail'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { saveDetail, getDetail, fileUpload, fileGet, fileDelete } from '@/api/resgistration'
+import { saveDetail, getDetail } from '@/api/resgistration'
 
 // 定义 Store
 export const useUserDetailStore = defineStore('registration', () => {
@@ -21,12 +21,12 @@ export const useUserDetailStore = defineStore('registration', () => {
     committed: true
   })
 
-  const directionNum = ref<number[]>([])
-  const directionName = ref<string[]>([])
+  const directionNum = ref<number[]>([]) //选择的方向
+  const directionName = ref<string[]>([]) //选择方向的名字
 
+  //获取用户报名信息
   const setUerDetailInfo = async () => {
     const res = await saveDetail(user.value)
-    console.log(res)
     const resDetail = await getDetail()
     user.value = resDetail.data
   }

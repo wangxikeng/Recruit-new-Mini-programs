@@ -84,7 +84,6 @@ const nameArr = ['未开始', '进行中', '已完成']
 const directionDetail = () => {
   for (const item of userDetailStore.directionNum) {
     userProcedureStore.getDirectionDetail()
-    // numInterview.value = userProcedureStore.interview
   }
 }
 
@@ -94,8 +93,6 @@ onLoad(async () => {
     userProcedureStore.chooseDirection = item + 1
     const res = await getProcedure(item)
     userProcedureStore.getDirectionStatus(item, res)
-    // numInterview.value = userProcedureStore.interview
-    console.log(res)
     return
   }
 })

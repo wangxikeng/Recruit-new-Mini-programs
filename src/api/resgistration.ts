@@ -3,6 +3,11 @@ import type { IRequest } from '@/types/userdetail'
 import { http } from '@/utils/http'
 
 //保存填写的信息
+/**
+ *
+ * @param data 所有报名相关信息
+ * @returns
+ */
 export const saveDetail = (data: IRequest) => {
   return http<IRequest>({
     url: '/user/apply/save',

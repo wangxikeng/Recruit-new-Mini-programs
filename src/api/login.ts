@@ -3,15 +3,17 @@ import type { IUser } from '@/types/user'
 import { http } from '@/utils/http'
 
 // 登录
+/**
+ * 
+ * @param data account账号 password密码
+
+ * @returns 
+ */
 export const logIn = (data: any) => {
   return http<IUser>({
     url: '/user/login/user',
     method: 'POST',
     data
-    // data: {
-    //   account: '3123004529',
-    //   password: '123456'
-    // }
   })
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import { logIn } from '@/api/login'
 import { useUserStore } from '@/stores/modules/user'
 import { storeToRefs } from 'pinia'
@@ -28,6 +28,9 @@ const loginParams = ref<object>({
   password: passwordValue
 })
 
+// 登录按钮是否禁用
+const isButtonEnabled = computed(() => accountValue.value && passwordValue.value);
+
 //如果存在token 重定向至首页
 uni.getStorage({
   key: 'token',
@@ -40,25 +43,42 @@ uni.getStorage({
 
 // 登录前验证
 const validateLoginInfo = () => {  
-  if (accountValue.value === '' || accountValue.value.includes(' ') || accountValue.value.length < 10) {  
+  if (accountValue.value === ''||accountValue.value.includes(' ') || accountValue.value.length < 10) {  
     uni.showToast({  
       title: '请正确输入账号',  
       icon: 'error'  
     });  
     return false;  
   }  
-  if (passwordValue.value === '' || passwordValue.value.includes(' ')) {  
+  else if(passwordValue.value === ''||passwordValue.value.includes(' ')) {  
     uni.showToast({  
       title: '请正确输入密码',  
       icon: 'error'  
     });  
     return false;  
   }  
+ 
   return true;  
 };  
 
-// // 登录请求  
+// 登录防抖 防抖函数
+const debounce = (fn: Function, time: number): Function => {  
+  let timer: number | null = null;  
+  return (...args: any[]) => {  
+    if (timer !== null) {  
+      clearTimeout(timer);  
+    }  
+    timer = setTimeout(() => {  
+      fn(...args);  
+      timer = null;  
+    }, time);  
+  };  
+};  
+
+// 登录请求  
 const toHome = async () => {  
+  // 计时器
+  let timeId:number
   if (!validateLoginInfo()) {  
     // 验证失败，不执行登录  
     return;  
@@ -74,11 +94,16 @@ const toHome = async () => {
 //       // 显示账号或密码错误提示
       isErrorRemind.value = true
        // 3 秒后清除错误提示  
-      setTimeout(() => {  
+      timeId=setTimeout(() => {  
         isErrorRemind.value = false;  
+        // 清除计时器
+        clearTimeout(timeId)
       }, 3000); 
     }
   }
+
+const handleToHome=debounce(toHome,1000)
+
 
 
 </script>
@@ -140,7 +165,8 @@ const toHome = async () => {
     <!-- 登录按钮 -->
     <up-button
       text="登录"
-      @click="toHome"
+      :disabled="!isButtonEnabled"
+      @click="handleToHome"
     ></up-button>
     <!-- 注释提醒 -->
     <text class="annotation">

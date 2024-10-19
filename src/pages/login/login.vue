@@ -3,6 +3,10 @@ import { ref,computed } from 'vue'
 import { logIn } from '@/api/login'
 import { useUserStore } from '@/stores/modules/user'
 import { storeToRefs } from 'pinia'
+import { debounce } from '@/utils/debounce'
+import type { ILogin } from '@/types/user'
+import type { IUser } from '@/types/user'
+import type { IData } from '@/types/baseType'
 const store = useUserStore()
 // 解构数据 方法
 const { userInfo } = storeToRefs(store)
@@ -22,12 +26,11 @@ isDisplay.value = !isDisplay.value;
 
 // // 账号 密码
 const accountValue = ref<string>('')
-const passwordValue = ref<any>('')
-const loginParams = ref<object>({
-  account: accountValue,
-  password: passwordValue
-})
-
+const passwordValue = ref<string>('')
+const loginParams = computed<ILogin>(() => ({  
+  account: accountValue.value,  
+  password: passwordValue.value  
+}));
 // 登录按钮是否禁用
 const isButtonEnabled = computed(() => accountValue.value && passwordValue.value);
 
@@ -41,16 +44,19 @@ uni.getStorage({
   }
 })
 
+
 // 登录前验证
 const validateLoginInfo = () => {  
-  if (accountValue.value === ''||accountValue.value.includes(' ') || accountValue.value.length < 10) {  
+  const accountRegex=/^\d{10}$/
+  const passwordRegex=/^[^\s]*$/
+  if (!accountRegex.test(accountValue.value)) {  
     uni.showToast({  
       title: '请正确输入账号',  
       icon: 'error'  
     });  
     return false;  
   }  
-  else if(passwordValue.value === ''||passwordValue.value.includes(' ')) {  
+  else if(!passwordRegex.test(passwordValue.value)) {  
     uni.showToast({  
       title: '请正确输入密码',  
       icon: 'error'  
@@ -61,19 +67,7 @@ const validateLoginInfo = () => {
   return true;  
 };  
 
-// 登录防抖 防抖函数
-const debounce = (fn: Function, time: number): Function => {  
-  let timer: number | null = null;  
-  return (...args: any[]) => {  
-    if (timer !== null) {  
-      clearTimeout(timer);  
-    }  
-    timer = setTimeout(() => {  
-      fn(...args);  
-      timer = null;  
-    }, time);  
-  };  
-};  
+
 
 // 登录请求  
 const toHome = async () => {  
@@ -83,15 +77,15 @@ const toHome = async () => {
     // 验证失败，不执行登录  
     return;  
   }  
-  const res: any = await logIn(loginParams.value)
-    if (res.code == 200) {
+  const res:IData<IUser> = await logIn(loginParams.value)
+    if (res.code == '200') {
       setUserToken(res.data.token)
-//       //   //跳转到首页
+      //   //跳转到首页
       uni.switchTab({
         url: '/pages/home/home'
       })
     } else {
-//       // 显示账号或密码错误提示
+       // 显示账号或密码错误提示
       isErrorRemind.value = true
        // 3 秒后清除错误提示  
       timeId=setTimeout(() => {  

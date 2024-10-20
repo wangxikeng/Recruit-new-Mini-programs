@@ -1,19 +1,14 @@
 <script setup lang="ts">
-import { ref, reactive, toRef } from 'vue'
+import { ref } from 'vue'
 import { useDirectionStore } from '../../stores/modules/reservation'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserDetailStore } from '@/stores/modules/registration'
-import {
-  getTimeListAll,
-  getTargets,
-  saveTargets,
-  getDirectionTime,
-  getSignIn
-} from '@/api/reservation'
+import { getDirectionTime, getSignIn } from '@/api/reservation'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-
+const attendColorArr = ['ongoing', 'will', 'finish']
+const attendArr = ['签到', '未开启', '已签到']
 // 签到弹出框确定
 const show = ref(false)
 //点击签到按钮弹出确认框
@@ -27,8 +22,8 @@ const cancelSignIn = () => {
 // 点击确定
 const confirmSignIn = () => {
   show.value = false
-  showcase = 1
-  userDirectionStore.saveSignInTime()
+  getSignIn(userDirectionStore.chooseDirection - 1)
+  userDirectionStore.attend = 2
 }
 
 // 温馨提示语
@@ -40,6 +35,8 @@ onLoad(async () => {
   for (const item of userDetailStore.directionNum) {
     userDirectionStore.chooseDirection = item + 1
     userDirectionStore.getItemDirectionTime(item)
+    const resTime = await getDirectionTime(item)
+    userDirectionStore.attend = resTime.data.attendAble
     return
   }
 })
@@ -47,6 +44,7 @@ onLoad(async () => {
 //切换导航方向之后显示的
 const directionTimeClick = async () => {
   userDirectionStore.directionTime()
+  console.log(userDirectionStore.attend)
 }
 </script>
 
@@ -99,8 +97,11 @@ const directionTimeClick = async () => {
 
       <!-- 按钮 暂未开启签到 签到 已签到 -->
       <!-- <view class="signIn-inactive">暂未开启签到</view> -->
-      <view class="signIn_active" @click="signIn" v-if="showcase === 0">签到</view>
-      <view class="have_signIn" v-if="showcase === 1">已签到 </view>
+      <view @click="signIn" :class="attendColorArr[userDirectionStore.attend]">{{
+        attendArr[userDirectionStore.attend]
+      }}</view>
+      <!-- <view class="signIn_active" @click="signIn" v-if="showcase === 0">签到</view> -->
+      <!-- <view class="have_signIn" v-if="showcase === 1">已签到 </view> -->
 
       <!-- 弹窗确定预约时间 -->
       <up-modal
@@ -117,6 +118,45 @@ const directionTimeClick = async () => {
 </template>
 
 <style lang="scss" scoped>
+.finish {
+  background-color: #aeb4c2;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
+.ongoing {
+  background-color: #7f52ff;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
+.will {
+  background-color: #9773ff;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
 .whole_box {
   background-color: #f8f7ff;
 }
@@ -261,7 +301,7 @@ const directionTimeClick = async () => {
   left: 93rpx;
   width: 576rpx;
   height: 96rpx;
-  background-color: rgba(127, 82, 255, 1);
+  // background-color: rgba(127, 82, 255, 1);
   color: white;
   font-weight: 600;
   text-align: center;

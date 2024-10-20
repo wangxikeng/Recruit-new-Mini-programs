@@ -45,7 +45,7 @@
               <button
                 class="btn"
                 @click="idChoose = item.id"
-                :class="{ activeBtn: item.id === idChoose }"
+                :class="{ activeBtn: item.id === idChoose, activeTimeBtn: item.status == 1 }"
               >
                 {{ item.time }}
               </button>
@@ -60,7 +60,7 @@
               <button
                 class="btn"
                 @click="idChoose = time.id"
-                :class="{ activeBtn: time.id === idChoose }"
+                :class="{ activeBtn: time.id === idChoose, activeTimeBtn: time.status == 1 }"
               >
                 {{ time.time }}
               </button>
@@ -69,43 +69,12 @@
         </view>
       </view>
     </view>
-    <!-- <view class="res_time_box_1 res_time_box_2">
-      <view class="day">{{ userDirectionStore.formattedDate }}</view>
-      <view class="time_cloumn">
-        <view class="time_cloumn_1">
-          <view
-            v-for="time in userDirectionStore.timeList3"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
-            >
-              {{ time.time }}
-            </button>
-          </view>
-        </view>
-        <view class="time_cloumn_1 time_cloumn_2">
-          <view
-            v-for="time in userDirectionStore.timeList4"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
-            >
-              {{ time.time }}
-            </button>
-          </view>
-        </view>
-      </view>
-    </view> -->
-    <view class="make_sure">
+
+    <view class="make_sure" v-if="userStatus == 0">
       <up-button text="确认预约" @click="popUp"></up-button>
+    </view>
+    <view class="have_sure" v-if="userStatus == 1">
+      <up-button text="您已预约"></up-button>
     </view>
 
     <up-popup :show="isShowPop" mode="center" overlay="false">
@@ -140,7 +109,7 @@ import { watch } from 'vue'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-let { timeList, timeKeys, chooseDirection, idChoose } = toRefs(useDirectionStore())
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus } = toRefs(useDirectionStore())
 
 // 创建响应式数据
 const isShowPop = ref(false)
@@ -152,11 +121,12 @@ const popCancel = () => {
 }
 const popSure = () => {
   isShowPop.value = false
+  userStatus.value = 1
   saveTargets(userDirectionStore.idChoose)
 }
 
 //进页面先显示第一个方向的所有时间
-onLoad(async () => {
+onLoad(() => {
   userDirectionStore.getDirectionName()
   userDirectionStore.firstdirectionTimeListAll()
 })
@@ -295,6 +265,17 @@ const directionTimeList = async () => {
   margin: auto;
   transform: translate(0, -190rpx);
 }
+::v-deep .have_sure .u-button.data-v-461e713c {
+  width: 576rpx;
+  height: 96rpx;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  background-color: #aeb4c2;
+  border-radius: 16px;
+  margin: auto;
+  transform: translate(0, -190rpx);
+}
 .pop_desc {
   display: flex;
   flex-direction: column;
@@ -366,5 +347,10 @@ const directionTimeList = async () => {
   color: #ffffff !important;
   border-radius: 24px;
   font-weight: 700;
+}
+.activeTimeBtn {
+  background-color: #aeb4c2;
+  color: #fff;
+  border: 2rpx solid #aeb4c2;
 }
 </style>

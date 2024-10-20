@@ -24,10 +24,12 @@ export const useDirectionStore = defineStore('reservation', () => {
   const timeChoose = ref<string>() //点击的方向显示的所有时间
   const signInTime = ref<string>() //确认页面显示的预约时间
   const formattedDate = ref<string>() //时间的格式
-  let timeList: { [x: string]: { id: number; time: string }[] } = {} //获取预约时间的所有
+  let timeList: { [x: string]: { id: number; time: string; status: number }[] } = {} //获取预约时间的所有
   let groupedByDateMap = new Map() //map方法
   let timeKeys = ref<string[]>([]) //预约时间的所有日期
   let timeListKeys = ref<string[]>([]) //按渲染模板的预约日期
+  let userStatus = ref(0)
+  let attend = ref(0)
 
   //获取预约时间且分配到数组里面
   const getTimeList = (timeKeys: string[]) => {
@@ -85,6 +87,12 @@ export const useDirectionStore = defineStore('reservation', () => {
         idChoose.value = 0
         const resTime = await getTimeListAll(item)
         timeData(resTime.data)
+        const resStatus = await getDirectionTime(item)
+        if (resStatus.code != '500') {
+          userStatus.value = resStatus.data.status
+        } else {
+          userStatus.value = 0
+        }
       }
     }
   }
@@ -94,7 +102,11 @@ export const useDirectionStore = defineStore('reservation', () => {
     groupedByDateMap.clear()
     data.forEach((item) => {
       const day = item.timeStart.split('T')[0]
-      const timeRange = { id: item.id, time: item.timeStart1 + '-' + item.timeEnd1 }
+      const timeRange = {
+        id: item.id,
+        time: item.timeStart1 + '-' + item.timeEnd1,
+        status: item.status
+      }
       if (groupedByDateMap.has(day)) {
         groupedByDateMap.get(day).push(timeRange)
       } else {
@@ -137,6 +149,12 @@ export const useDirectionStore = defineStore('reservation', () => {
       idChoose.value = 0
       const resTime = await getTimeListAll(item)
       timeData(resTime.data)
+      const resStatus = await getDirectionTime(item)
+      if (resStatus.code != '500') {
+        userStatus.value = resStatus.data.status
+      } else {
+        userStatus.value = 0
+      }
       return
     }
   }
@@ -154,11 +172,23 @@ export const useDirectionStore = defineStore('reservation', () => {
     }
   }
 
-  //签到页面显示的时间及规范时间格式
-  const directionTime = () => {
+  //签到页面显示的时间及规范时间格式 刚刚进来及剩下的
+  const firstDirectionTime = async () => {
     for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
         getItemDirectionTime(item)
+        const resTime = await getDirectionTime(item)
+        attend.value = resTime.data.attendAble
+        return
+      }
+    }
+  }
+  const directionTime = async () => {
+    for (const item of userDetailStore.directionNum) {
+      if (chooseDirection.value === item + 1) {
+        getItemDirectionTime(item)
+        const resTime = await getDirectionTime(item)
+        attend.value = resTime.data.attendAble
       }
     }
   }
@@ -170,6 +200,8 @@ export const useDirectionStore = defineStore('reservation', () => {
 
   // 记得 return
   return {
+    userStatus,
+    attend,
     timeList,
     groupedByDateMap,
     timeKeys,

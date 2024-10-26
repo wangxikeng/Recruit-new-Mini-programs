@@ -20,8 +20,6 @@ onLoad(async () => {
 const showAnnouncement = async () => {
   const res = await getAnnouncement()
   show.value = true
-  console.log(res.data.content)
-
   // 将公告内容存入弹框
   // setAnnouncement(res.data.content)
   newAnnouncement.value = res.data.content
@@ -39,46 +37,40 @@ const list = reactive([
   { name: '安卓' },
   { name: '深度学习' }
 ])
-let current = ref(0)
 
 // 工作室介绍内容
-const homeStudioContent = ref(
+const homeStudioContent = ref<string>(
   '睡觉哦的承诺觉哦v呢hi哦五年的女成为哦成为出动十万才能深刻出你的论文从v那我的那位v我能看到v那我'
 )
 
-// 各组方向介绍内容
-const uiContent = ref(
-  '三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
-)
-const frontContent = ref('都能看出次贷危机从未v难忘的v那我呢可称为分配没饭吃v你打开v物品')
-const backendContent = ref(
-  '星巴克首播超级你成为从前啊v难忘的v那我IP访问篇v干嘛不么譬如不好么还没被他们不会普通后面图片模糊让人痛恨排名'
-)
-const androidContent = ref(
-  '效能比实际并分为八个v哦额我热根本蓉儿排位那个巫婆仍然王婆卖瓜肉片给你面对我佩服'
-)
-const deepLearnContent = ref(
-  '不吃亏的市场价多少v你苏打绿那个人v发呢我闺女陪我给v帮忙物色不过，我们【色鬼革命人民被害人么我怕魔法物品每次分手了'
-)
-const directionContent = [uiContent, frontContent, backendContent, androidContent, deepLearnContent]
+// 方向介绍
+let index=ref(0)
+const directionContentArr = ref<string[]>([
+  '工作室的UI组包含UI设计和产品经理两个工作内容...（省略详细内容）',
+  '前端是产品的门面担当，也是离用户最近的一部分...（省略详细内容）',
+  '后端开发即“服务器端”开发，是创建完整可运行的Web应用服务端程序的过程...（省略详细内容）',
+  'Android开发组，是数智工作室开发安卓App的核心研发团队...（省略详细内容）',
+  '回顾过去，人工智能已经以各种方式深入到我们的生活中...（省略详细内容）'
+])
 
-// 点击分段器更改方向介绍内容
 const changeContent = (index: number) => {
-  console.log(index)
-  console.log(directionContent[index].value)
   if (index === 0) {
-    directionContent[0].value =
-      '三年从山东吃必胜客的v吧的v扣税的u非我发你我欸发那位妇女围殴番外篇你无非恐怕无法分泌物咖啡馆'
+    directionContentArr.value[0] = '工作室的UI组包含UI设计和产品经理两个工作内容...（省略详细内容）'
   } else {
-    directionContent[0].value = directionContent[index].value
+    directionContentArr.value[0] = directionContentArr.value[index]
   }
 }
+
+
 </script>
 <template>
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">
-      <image src="../../static/layoutHome/background.png" alt=""></image>
+      <image
+        src="../../static/layoutHome/background.png"
+        alt=""
+      ></image>
     </view>
     <!-- 公告 -->
     <view class="home_announcement">
@@ -88,18 +80,27 @@ const changeContent = (index: number) => {
         <text>公告</text>
         <text class="home_announcement_line"></text>
         <text class="home_announcement_content">{{ announcementContent }}</text>
-        <text class="home_announcement_view" @click="showAnnouncement">查看 ></text>
+        <text
+          class="home_announcement_view"
+          @click="showAnnouncement"
+        >查看 ></text>
       </view>
     </view>
     <!-- 公告弹框 -->
-    <up-popup :show="show" mode="center">
-      <view class="announcement_detail_box">
+    <up-popup
+      :show="show"
+      mode="center"
+    >
+      <view class="announcement-detail-box">
         <text>公告</text>
-        <view class="announcement_detail">
+        <view class="announcement-detail">
           {{ newAnnouncement }}
         </view>
       </view>
-      <up-button @click="show = false" text="确认"></up-button>
+      <up-button
+        @click="show = false"
+        text="确认"
+      ></up-button>
     </up-popup>
     <!-- 工作室介绍和方向介绍-大盒子 -->
     <view class="home_content">
@@ -107,7 +108,10 @@ const changeContent = (index: number) => {
       <view class="home_studio">
         <!-- 图标 -->
         <view class="home_studio_title">
-          <image src="../../static/layoutHome/studio_introduction.png" alt=""></image>
+          <image
+            src="../../static/layoutHome/studio_introduction.png"
+            alt=""
+          ></image>
           <text class="home_studio_introduce">工作室介绍</text>
         </view>
 
@@ -118,9 +122,12 @@ const changeContent = (index: number) => {
       </view>
       <!-- 方向介绍 -->
       <view class="home_direction">
-        <view class="direction_box">
+        <view class="direction-box">
           <!-- 图标 -->
-          <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
+          <image
+            src="../../static/layoutHome/direction_introduce.png"
+            alt=""
+          ></image>
           <text class="home_direction_introduce">方向介绍</text>
         </view>
         <!-- 五个方向tag标签 -->
@@ -135,7 +142,7 @@ const changeContent = (index: number) => {
         </view>
         <!-- 方向介绍文本框 -->
         <view class="direction_details">
-          {{ directionContent[0] }}
+            {{ directionContentArr[index] }}
         </view>
       </view>
     </view>
@@ -154,7 +161,7 @@ const changeContent = (index: number) => {
 }
 
 // 公告弹框
-.announcement_detail_box {
+.announcement-detail-box {
   padding: 42rpx 60rpx;
   // text-align: center;
   font-size: 28rpx;
@@ -162,12 +169,12 @@ const changeContent = (index: number) => {
   margin-bottom: 85rpx;
 }
 
-.announcement_detail_box text {
+.announcement-detail-box text {
   display: block;
   transform: translate(214rpx, -3rpx);
 }
 
-.announcement_detail {
+.announcement-detail {
   transform: translate(14rpx, 18rpx);
   line-height: 47rpx;
   white-space: pre-wrap;
@@ -317,7 +324,7 @@ const changeContent = (index: number) => {
 }
 
 //方向介绍-图标
-.direction_box image {
+.direction-box image {
   width: 48rpx;
   height: 48rpx;
   margin-left: 66rpx;
@@ -400,25 +407,4 @@ const changeContent = (index: number) => {
   border-radius: 16rpx;
   box-shadow: 0 0 14rpx 0 rgba(189, 207, 243, 0.81);
 }
-
-// import { getNewNotice, logIn } from '@/api/login'
-
-// const test = async () => {
-//   const res = await logIn()
-//   uerInfo.value = res.data
-// }
-
-// const test2 = () => {
-//   getNewNotice()
-
-// }
-// onLoad(async () => {
-//   console.log(111);
-
-//   const res = await logIn()
-//   uerInfo.value = res.data
-// })
-
-// <button @tap="test">点击</button>
-// <button @tap="test2">点击获取</button>
 </style>

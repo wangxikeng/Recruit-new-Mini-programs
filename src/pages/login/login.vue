@@ -1,39 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import { logIn } from '@/api/login'
 import { useUserStore } from '@/stores/modules/user'
 import { storeToRefs } from 'pinia'
+import { debounce } from '@/utils/debounce'
+import type { ILogin } from '@/types/user'
+import type { IUser } from '@/types/user'
+import type { IData } from '@/types/baseType'
 const store = useUserStore()
 // 解构数据 方法
 const { userInfo } = storeToRefs(store)
-// const { SetUserToken } = store
-const SetUserToken = store.setUserToken
+const { setUserToken } = store
 
 // 校验错误提示
-const isErrorRemind = ref(false)
+const isErrorRemind = ref<boolean>(false)
 
 //密码是否显示
 const isDisplay = ref<boolean>(true)
-
-// 密码框密码icon显示隐藏
 const isEyeOpen = ref<string>('eye-off')
+// 密码框密码icon显示隐藏
 const changeEye = () => {
-  if (isEyeOpen.value === 'eye-off') {
-    isEyeOpen.value = 'eye-fill'
-    isDisplay.value = false
-  } else {
-    isEyeOpen.value = 'eye-off'
-    isDisplay.value = true
-  }
-}
+isEyeOpen.value = isEyeOpen.value === 'eye-off' ? 'eye-fill' : 'eye-off';
+isDisplay.value = !isDisplay.value;
+};
 
 // // 账号 密码
 const accountValue = ref<string>('')
 const passwordValue = ref<string>('')
-const loginParams = ref<object>({
-  account: accountValue,
-  password: passwordValue
-})
+const loginParams = computed<ILogin>(() => ({  
+  account: accountValue.value,  
+  password: passwordValue.value  
+}));
+// 登录按钮是否禁用
+const isButtonEnabled = computed(() => accountValue.value && passwordValue.value);
 
 //如果存在token 重定向至首页
 uni.getStorage({
@@ -45,46 +44,63 @@ uni.getStorage({
   }
 })
 
-//登录请求
-const toHome = async () => {
-  const res = await logIn(loginParams.value)
 
-  userInfo.value = res.data
-  if (userInfo.value === undefined) {
-    // 显示账号或密码错误提示
-    isErrorRemind.value = true
-  } else {
-    // 把token保存本地
-    SetUserToken(res.data.token)
-    //跳转到首页
-    uni.switchTab({
-      url: '/pages/home/home'
-    })
-  }
-}
+// 登录前验证
+const validateLoginInfo = () => {  
+  const accountRegex=/^\d{10}$/
+  const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
 
-//请求前表单校验
-const showAccountError = () => {
-  if (
-    accountValue.value == '' ||
-    accountValue.value.includes(' ') ||
-    accountValue.value.length < 10
-  ) {
-    uni.showToast({
-      title: '请正确输入账号',
-      icon: 'error'
-    })
-  }
-}
+  if (!accountRegex.test(accountValue.value)) {  
+    uni.showToast({  
+      title: '请正确输入账号',  
+      icon: 'error'  
+    });  
+    return false;  
+  }  
+  else if(!passwordRegex.test(passwordValue.value)) {  
+    uni.showToast({  
+      title: '请正确输入密码',  
+      icon: 'error'  
+    });  
+    return false;  
+  }  
+ 
+  return true;  
+};  
 
-const showPasswordError = () => {
-  if (passwordValue.value == '' || passwordValue.value.includes(' ')) {
-    uni.showToast({
-      title: '请正确输入密码',
-      icon: 'error'
-    })
+
+
+// 登录请求  
+const toHome = async () => {  
+  // 计时器
+  let timeId:number
+  if (!validateLoginInfo()) {  
+    // 验证失败，不执行登录  
+    return;  
+  }  
+  const res:IData<IUser> = await logIn(loginParams.value)
+    if (res.code == '200') {
+      setUserToken(res.data.token)
+      //   //跳转到首页
+      uni.switchTab({
+        url: '/pages/home/home'
+      })
+    } else {
+       // 显示账号或密码错误提示
+      isErrorRemind.value = true
+       // 3 秒后清除错误提示  
+      timeId=setTimeout(() => {  
+        isErrorRemind.value = false;  
+        // 清除计时器
+        clearTimeout(timeId)
+      }, 3000); 
+    }
   }
-}
+
+const handleToHome=debounce(toHome,1000)
+
+
+
 </script>
 
 <template>
@@ -92,23 +108,22 @@ const showPasswordError = () => {
   <image
     src="../../static/layoutHome/login_background.png"
     mode="scaleToFill"
-    class="login_background"
+    class="login-background"
   />
   <!-- 下面信息表格 -->
-  <view class="student_information">
+  <view class="student-information">
     <!-- 账号框 -->
-    <view class="account_box">
+    <view class="account-box">
       <text>账号</text>
       <up-input
         placeholder="请输入学号"
         border="surround"
         v-model="accountValue"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
-        @blur="showAccountError"
       ></up-input>
     </view>
     <!-- 密码框 -->
-    <view class="password_box">
+    <view class="password-box">
       <text>密码</text>
       <up-input
         placeholder="请输入密码"
@@ -117,11 +132,10 @@ const showPasswordError = () => {
         :password="isDisplay"
         customStyle="margin-top:59rpx !important"
         placeholderStyle="{color:'rgba(102, 102, 102, 1)',fontsize:'28rpx'}"
-        @blur="showPasswordError"
       ></up-input>
       <up-icon
         :name="isEyeOpen"
-        class="eye_off_icon"
+        class="eye-off-icon"
         color="rgba(102, 102, 102, 1)"
         size="56rpx"
         top="-110rpx"
@@ -129,26 +143,40 @@ const showPasswordError = () => {
       ></up-icon>
     </view>
     <!-- 忘记密码 -->
-    <text class="forget_password"> 忘记密码？ </text>
+    <text class="forget-password">
+      忘记密码？
+    </text>
+    <!-- 密码格式提示 -->
+     <text class="passwordFormat-include">必须包含字母、数字</text>
+     <text class="passwordFormat-number">不少于6个字符</text>
     <!-- 校验错误提示 -->
-    <view class="error_remind_box" v-show="isErrorRemind">
-      <image src="../../static/icons/login-error-remind.png" mode="scaleToFill" />
+    <view
+      class="error-remind-box"
+      v-show="isErrorRemind"
+    >
+  
       <text>账号或密码输入错误</text>
     </view>
     <!-- 登录按钮 -->
-    <up-button text="登录" @click="toHome"></up-button>
+    <up-button
+      text="登录"
+      :disabled="!isButtonEnabled"
+      @click="handleToHome"
+    ></up-button>
     <!-- 注释提醒 -->
-    <text class="annotation"> 注：初次登录输入密码即视为注册 </text>
+    <text class="annotation">
+      注：初次登录输入密码即视为注册
+    </text>
   </view>
 </template>
 
 <style lang="scss">
-.login_background {
+.login-background {
   width: 750rpx;
   height: 500rpx;
 }
 
-.student_information {
+.student-information {
   width: 100%;
   height: 920rpx;
   background-color: rgba(248, 247, 255, 1);
@@ -169,14 +197,14 @@ const showPasswordError = () => {
 }
 
 //账号框
-.account_box text {
+.account-box text {
   display: block;
   color: rgba(26, 26, 26, 1);
   transform: translate(130rpx, 6rpx);
 }
 
 //密码框
-.password_box text {
+.password-box text {
   display: block;
   color: rgba(26, 26, 26, 1);
   transform: translate(130rpx, 66rpx);
@@ -187,28 +215,24 @@ const showPasswordError = () => {
 }
 
 //校验错误提示
-.error_remind_box {
+.error-remind-box {
   position: absolute;
   bottom: 436rpx;
   left: 276rpx;
 }
 
-.error_remind_box image {
-  width: 36rpx;
-  height: 36rpx;
-  position: absolute;
-  top: 6rpx;
-  left: -42rpx;
-}
 
-.error_remind_box text {
-  color: rgba(127, 82, 255, 1);
+
+
+.error-remind-box text {
+  // color: rgba(127, 82, 255, 1);
+  color: #ff5252;
   font-size: 28rpx;
   font-weight: 500;
 }
 
 //忘记密码
-.forget_password {
+.forget-password {
   display: block;
   transform: translate(540rpx, 13rpx);
   color: rgba(79, 129, 254, 1);
@@ -227,10 +251,27 @@ const showPasswordError = () => {
 }
 
 // 注释提醒
-.annotation {
+.annotation{
   font-size: 24rpx;
   color: rgba(102, 102, 102, 1);
   display: block;
   transform: translate(206rpx, 224rpx);
+ 
+}
+
+
+.passwordFormat-include,.passwordFormat-number{
+  font-size: 24rpx;
+  color: rgba(102, 102, 102, 1);
+  display: block;
+}
+.passwordFormat-include{
+  transform: translate(102rpx, -12rpx);
+
+}
+
+.passwordFormat-number{
+  
+  transform: translate(102rpx, -4rpx);
 }
 </style>

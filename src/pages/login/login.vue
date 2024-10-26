@@ -48,7 +48,8 @@ uni.getStorage({
 // 登录前验证
 const validateLoginInfo = () => {  
   const accountRegex=/^\d{10}$/
-  const passwordRegex=/^[^\s]*$/
+  const passwordRegex=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
+
   if (!accountRegex.test(accountValue.value)) {  
     uni.showToast({  
       title: '请正确输入账号',  
@@ -145,15 +146,15 @@ const handleToHome=debounce(toHome,1000)
     <text class="forget-password">
       忘记密码？
     </text>
+    <!-- 密码格式提示 -->
+     <text class="passwordFormat-include">必须包含字母、数字</text>
+     <text class="passwordFormat-number">不少于6个字符</text>
     <!-- 校验错误提示 -->
     <view
       class="error-remind-box"
       v-show="isErrorRemind"
     >
-      <image
-        src="../../static/icons/login-error-remind.png"
-        mode="scaleToFill"
-      />
+  
       <text>账号或密码输入错误</text>
     </view>
     <!-- 登录按钮 -->
@@ -220,16 +221,12 @@ const handleToHome=debounce(toHome,1000)
   left: 276rpx;
 }
 
-.error-remind-box image {
-  width: 36rpx;
-  height: 36rpx;
-  position: absolute;
-  top: 6rpx;
-  left: -42rpx;
-}
+
+
 
 .error-remind-box text {
-  color: rgba(127, 82, 255, 1);
+  // color: rgba(127, 82, 255, 1);
+  color: #ff5252;
   font-size: 28rpx;
   font-weight: 500;
 }
@@ -254,10 +251,27 @@ const handleToHome=debounce(toHome,1000)
 }
 
 // 注释提醒
-.annotation {
+.annotation{
   font-size: 24rpx;
   color: rgba(102, 102, 102, 1);
   display: block;
   transform: translate(206rpx, 224rpx);
+ 
+}
+
+
+.passwordFormat-include,.passwordFormat-number{
+  font-size: 24rpx;
+  color: rgba(102, 102, 102, 1);
+  display: block;
+}
+.passwordFormat-include{
+  transform: translate(102rpx, -12rpx);
+
+}
+
+.passwordFormat-number{
+  
+  transform: translate(102rpx, -4rpx);
 }
 </style>

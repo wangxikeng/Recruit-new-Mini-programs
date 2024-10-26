@@ -1,32 +1,22 @@
 import { defineStore } from 'pinia'
 import { useUserDetailStore } from '@/stores/modules/registration'
-import { useDirectionStore } from '@/stores/modules/reservation'
-import {
-  getTimeListAll,
-  getTargets,
-  saveTargets,
-  getDirectionTime,
-  getSignIn
-} from '@/api/reservation'
 import { getProcedure } from '@/api/procedure'
 import { ref } from 'vue'
 
 const userDetailStore = useUserDetailStore()
-const userDirectionStore = useDirectionStore()
 
 export const useProcedureStore = defineStore('procedure', () => {
-  const statusOne = ref<number>(0)
-  const statusTwo = ref<number>(0)
-  const success = ref<number>(0)
-  const interview = ref<number>(0)
+  const statusOne = ref(0) //一轮考核
+  const statusTwo = ref(0) //二轮考核
+  const success = ref(0) //通过所有考核
+  const interview = ref(0) //面试
   const chooseDirection = ref<number>()
 
-  const getDirectionStatus = async (item: number, res: any) => {
+  //获取通过与否状态
+  // const getDirectionStatus = async (item: number, res: any) => {
+  const getDirectionStatus = (item: number, res: any) => {
+    //传对应是否通过的值
     interview.value = res.data.interview
-    // interview.value = 1
-    // statusOne.value = 2
-    // statusTwo.value = 2
-    // success.value = 2
     statusOne.value = res.data.statusOne
     statusTwo.value = res.data.statusTwo
     success.value = res.data.success

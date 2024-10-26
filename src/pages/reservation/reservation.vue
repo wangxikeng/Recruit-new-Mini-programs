@@ -15,12 +15,6 @@
     </view>
     <view class="nav_box"> </view>
     <view class="nav">
-      <!-- <up-subsection
-        activeColor="#7f52ff"
-        :list="list"
-        mode="subsection"
-        :current="0"
-      ></up-subsection> -->
       <view
         v-for="item in userDirectionStore.list"
         :key="item.id"
@@ -30,89 +24,60 @@
       >
         <view
           class="navDirection"
-          @click="userDirectionStore.chooseDirection = item.id"
-          :class="{ activeDirection: item.id === userDirectionStore.chooseDirection }"
+          @click="chooseDirection = item.id"
+          :class="{ activeDirection: item.id === chooseDirection }"
         >
           {{ item.name }}
         </view>
       </view>
       <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
     </view>
-    <view class="res_time_box_1">
-      <view class="day">{{ userDirectionStore.formattedDate }}</view>
-      <view class="time_cloumn">
-        <view class="time_cloumn_1">
-          <view
-            v-for="time in userDirectionStore.timeList1"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+    <view v-for="itemKey in timeKeys" :key="itemKey">
+      <view class="res_time_box_1">
+        <view class="day">{{ itemKey }}</view>
+        <view class="time_cloumn">
+          <view class="time_cloumn_1">
+            <view
+              v-for="item in timeList[itemKey + '_' + '1']"
+              :key="item.id"
+              @click="userDirectionStore.getTime(item.id)"
             >
-              {{ time.time }}
-            </button>
+              <button
+                class="btn"
+                @click="idChoose = item.id"
+                :class="{ activeBtn: item.id === idChoose, activeTimeBtn: item.status == 1 }"
+              >
+                {{ item.time }}
+              </button>
+            </view>
           </view>
-        </view>
-        <view class="time_cloumn_1 time_cloumn_2">
-          <view
-            v-for="time in userDirectionStore.timeList2"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
+          <view class="time_cloumn_1 time_cloumn_2">
+            <view
+              v-for="time in timeList[itemKey + '_' + '2']"
+              :key="time.id"
+              @click="userDirectionStore.getTime(time.id)"
             >
-              {{ time.time }}
-            </button>
-          </view>
-        </view>
-      </view>
-    </view>
-    <view class="res_time_box_1 res_time_box_2">
-      <view class="day">{{ userDirectionStore.formattedDate }}</view>
-      <view class="time_cloumn">
-        <view class="time_cloumn_1">
-          <view
-            v-for="time in userDirectionStore.timeList3"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
-            >
-              {{ time.time }}
-            </button>
-          </view>
-        </view>
-        <view class="time_cloumn_1 time_cloumn_2">
-          <view
-            v-for="time in userDirectionStore.timeList4"
-            :key="time.id"
-            @click="userDirectionStore.getTime(time.id)"
-          >
-            <button
-              class="btn"
-              @click="userDirectionStore.idChoose = time.id"
-              :class="{ activeBtn: time.id === userDirectionStore.idChoose }"
-            >
-              {{ time.time }}
-            </button>
+              <button
+                class="btn"
+                @click="idChoose = time.id"
+                :class="{ activeBtn: time.id === idChoose, activeTimeBtn: time.status == 1 }"
+              >
+                {{ time.time }}
+              </button>
+            </view>
           </view>
         </view>
       </view>
-    </view>
-    <view class="make_sure">
-      <up-button text="确认预约" @click="pop_up"></up-button>
     </view>
 
-    <up-popup :show="show" mode="center" overlay="false">
+    <view class="make_sure" v-if="userStatus == 0">
+      <up-button text="确认预约" @click="popUp"></up-button>
+    </view>
+    <view class="have_sure" v-if="userStatus == 1">
+      <up-button text="您已预约"></up-button>
+    </view>
+
+    <up-popup :show="isShowPop" mode="center" overlay="false">
       <view class="pop">
         <view class="pop_desc">
           <text class="sure_desc">请确认你选择预约的时间是否为</text>
@@ -121,10 +86,10 @@
         </view>
         <view class="pop_btn">
           <view class="btn_1">
-            <up-button text="取消" @click="pop_cancel"></up-button>
+            <up-button text="取消" @click="popCancel"></up-button>
           </view>
           <view class="btn_2">
-            <up-button text="确认" @click="pop_sure"></up-button>
+            <up-button text="确认" @click="popSure"></up-button>
           </view>
         </view>
       </view>
@@ -132,7 +97,7 @@
   </view>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, toRefs } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import type { IResponse, IPreTime, IDirection } from '@/types/reservation'
 
@@ -140,32 +105,30 @@ import { useUserDetailStore } from '@/stores/modules/registration'
 import { useDirectionStore } from '@/stores/modules/reservation'
 import dayjs from 'dayjs'
 import { getTimeListAll, getTargets, saveTargets, getDirectionTime } from '@/api/reservation'
+import { watch } from 'vue'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus } = toRefs(useDirectionStore())
+
 // 创建响应式数据
-const show = ref(false)
-const pop_up = () => {
-  show.value = true
+const isShowPop = ref(false)
+const popUp = () => {
+  isShowPop.value = true
 }
-const pop_cancel = () => {
-  show.value = false
+const popCancel = () => {
+  isShowPop.value = false
 }
-const pop_sure = () => {
-  show.value = false
+const popSure = () => {
+  isShowPop.value = false
+  userStatus.value = 1
   saveTargets(userDirectionStore.idChoose)
 }
 
-onLoad(async () => {
+//进页面先显示第一个方向的所有时间
+onLoad(() => {
   userDirectionStore.getDirectionName()
-  console.log(userDirectionStore.list)
-  for (const item of userDetailStore.directionNum) {
-    userDirectionStore.chooseDirection = item + 1
-    const resTime = await getTimeListAll(item)
-    userDirectionStore.getTimeList(resTime.data, item)
-    userDirectionStore.getYearMD(resTime.data[0].timeStart)
-    return
-  }
+  userDirectionStore.firstdirectionTimeListAll()
 })
 
 const directionTimeList = async () => {
@@ -241,11 +204,16 @@ const directionTimeList = async () => {
 }
 .res_time_box_1 {
   width: 706rpx;
-  height: 458rpx;
+  // height: 458rpx;
   margin: auto;
+  padding-bottom: 60rpx;
   border: 4rpx solid #b79eff8c;
   border-radius: 24rpx;
   transform: translate(0, -200rpx);
+  margin-bottom: 80rpx;
+}
+.res_time_box_1:not(:first-child) {
+  margin-top: 80rpx;
 }
 .res_time_box_2 {
   height: 360rpx;
@@ -295,7 +263,18 @@ const directionTimeList = async () => {
   background-color: #7f52ff;
   border-radius: 16px;
   margin: auto;
-  transform: translate(0, -128rpx);
+  transform: translate(0, -190rpx);
+}
+::v-deep .have_sure .u-button.data-v-461e713c {
+  width: 576rpx;
+  height: 96rpx;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 15px;
+  background-color: #aeb4c2;
+  border-radius: 16px;
+  margin: auto;
+  transform: translate(0, -190rpx);
 }
 .pop_desc {
   display: flex;
@@ -368,5 +347,10 @@ const directionTimeList = async () => {
   color: #ffffff !important;
   border-radius: 24px;
   font-weight: 700;
+}
+.activeTimeBtn {
+  background-color: #aeb4c2;
+  color: #fff;
+  border: 2rpx solid #aeb4c2;
 }
 </style>

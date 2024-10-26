@@ -1,29 +1,14 @@
 <script setup lang="ts">
-import { ref, reactive, toRef } from 'vue'
+import { ref } from 'vue'
 import { useDirectionStore } from '../../stores/modules/reservation'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserDetailStore } from '@/stores/modules/registration'
-import {
-  getTimeListAll,
-  getTargets,
-  saveTargets,
-  getDirectionTime,
-  getSignIn
-} from '@/api/reservation'
+import { getDirectionTime, getSignIn } from '@/api/reservation'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-
-// 方向导航
-const list = reactive([
-  { name: 'UI' },
-  { name: '前端' },
-  { name: '后台' },
-  { name: '安卓' },
-  { name: '深度学习' }
-])
-let current = ref(0)
-
+const attendColorArr = ['ongoing', 'will', 'finish']
+const attendArr = ['签到', '未开启', '已签到']
 // 签到弹出框确定
 const show = ref(false)
 //点击签到按钮弹出确认框
@@ -37,24 +22,29 @@ const cancelSignIn = () => {
 // 点击确定
 const confirmSignIn = () => {
   show.value = false
-  showcase = 1
-  userDirectionStore.saveSignInTime()
+  getSignIn(userDirectionStore.chooseDirection - 1)
+  userDirectionStore.attend = 2
 }
 
 // 温馨提示语
 let showcase = 0
 
+//点进来就要显示第一个方向
 onLoad(async () => {
   userDirectionStore.getDirectionName()
   for (const item of userDetailStore.directionNum) {
     userDirectionStore.chooseDirection = item + 1
-    userDirectionStore.getItemDirectionTome(item)
+    userDirectionStore.getItemDirectionTime(item)
+    const resTime = await getDirectionTime(item)
+    userDirectionStore.attend = resTime.data.attendAble
     return
   }
 })
 
+//切换导航方向之后显示的
 const directionTimeClick = async () => {
   userDirectionStore.directionTime()
+  console.log(userDirectionStore.attend)
 }
 </script>
 
@@ -80,17 +70,12 @@ const directionTimeClick = async () => {
       <!-- 导航栏部分 -->
       <!-- <view class="nav_box"> </view> -->
       <view class="nav">
-        <!-- <up-subsection
-          activeColor="#7f52ff"
-          :list="userDirectionStore.list"
-          mode="subsection"
-          :current="0"
-        ></up-subsection> -->
         <view
           v-for="item in userDirectionStore.list"
           :key="item.id"
           class="direction"
           @click="directionTimeClick"
+          ref="directionBtn"
         >
           <view
             class="navDirection"
@@ -100,19 +85,23 @@ const directionTimeClick = async () => {
             {{ item.name }}
           </view>
         </view>
+        <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
       </view>
 
       <!-- 预约时间确定-->
-      <view class="confirm-box">
-        <view class="appointment-time">预约时间</view>
-        <view class="parting-line"></view>
-        <view class="detail-time">{{ userDirectionStore.signInTime }}</view>
+      <view class="confirm_box">
+        <view class="appointment_time">预约时间</view>
+        <view class="parting_line"></view>
+        <view class="detail_time">{{ userDirectionStore.signInTime }}</view>
       </view>
 
       <!-- 按钮 暂未开启签到 签到 已签到 -->
       <!-- <view class="signIn-inactive">暂未开启签到</view> -->
-      <view class="signIn-active" @click="signIn" v-if="showcase === 0">签到</view>
-      <view class="have-signIn" v-if="showcase === 1">已签到 </view>
+      <view @click="signIn" :class="attendColorArr[userDirectionStore.attend]">{{
+        attendArr[userDirectionStore.attend]
+      }}</view>
+      <!-- <view class="signIn_active" @click="signIn" v-if="showcase === 0">签到</view> -->
+      <!-- <view class="have_signIn" v-if="showcase === 1">已签到 </view> -->
 
       <!-- 弹窗确定预约时间 -->
       <up-modal
@@ -129,6 +118,45 @@ const directionTimeClick = async () => {
 </template>
 
 <style lang="scss" scoped>
+.finish {
+  background-color: #aeb4c2;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
+.ongoing {
+  background-color: #7f52ff;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
+.will {
+  background-color: #9773ff;
+  position: absolute;
+  width: 576rpx;
+  height: 96rpx;
+  top: 946rpx;
+  left: 93rpx;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 32rpx;
+  line-height: 92rpx;
+}
 .whole_box {
   background-color: #f8f7ff;
 }
@@ -175,7 +203,7 @@ const directionTimeClick = async () => {
 
 // 五个方向导航
 .nav {
-  transform: translate(30rpx, 6rpx);
+  transform: translate(-15rpx, 6rpx);
 }
 
 // 导航样式改变
@@ -231,7 +259,7 @@ const directionTimeClick = async () => {
 }
 
 //       // 预约时间确定框
-.confirm-box {
+.confirm_box {
   width: 556rpx;
   height: 164rpx;
   border-radius: 32rpx;
@@ -244,7 +272,7 @@ const directionTimeClick = async () => {
 }
 
 //       // 预约时间分割线
-.parting-line {
+.parting_line {
   width: 390rpx;
   height: 2rpx;
   background-color: white;
@@ -252,7 +280,7 @@ const directionTimeClick = async () => {
 }
 
 //暂未开启签到按钮
-.signIn-inactive {
+.signIn_inactive {
   position: absolute;
   width: 576rpx;
   height: 96rpx;
@@ -267,13 +295,13 @@ const directionTimeClick = async () => {
 }
 
 // 签到按钮
-.signIn-active {
+.signIn_active {
   position: absolute;
   top: 946rpx;
   left: 93rpx;
   width: 576rpx;
   height: 96rpx;
-  background-color: rgba(127, 82, 255, 1);
+  // background-color: rgba(127, 82, 255, 1);
   color: white;
   font-weight: 600;
   text-align: center;
@@ -282,7 +310,7 @@ const directionTimeClick = async () => {
 }
 
 // 已签到按钮
-.have-signIn {
+.have_signIn {
   position: absolute;
 
   width: 576rpx;
@@ -337,5 +365,36 @@ const directionTimeClick = async () => {
 ::v-deep .u-modal__button-group__wrapper--confirm.data-v-12b77a26,
 .u-modal__button-group__wrapper--only-cancel.data-v-12b77a26 {
   background-color: rgba(127, 82, 255, 1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24rpx;
+}
+.navDirection {
+  width: 144rpx;
+  height: 70rpx;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 16px;
+  background-color: transparent;
+  border: none !important;
+  cursor: pointer;
+  outline: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navDirection:focus {
+  outline: none !important; /* 去除按钮获取焦点时的默认边框 */
+}
+.activeDirection {
+  background-color: #7f52ff;
+  color: #ffffff !important;
+  border-radius: 24px;
+  font-weight: 700;
 }
 </style>

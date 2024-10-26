@@ -93,9 +93,9 @@ const changeContent = (index: number) => {
     </view>
     <!-- 公告弹框 -->
     <up-popup :show="show" mode="center">
-      <view class="announcement-detail-box">
+      <view class="announcement_detail_box">
         <text>公告</text>
-        <view class="announcement-detail">
+        <view class="announcement_detail">
           {{ newAnnouncement }}
         </view>
       </view>
@@ -118,7 +118,7 @@ const changeContent = (index: number) => {
       </view>
       <!-- 方向介绍 -->
       <view class="home_direction">
-        <view class="direction-box">
+        <view class="direction_box">
           <!-- 图标 -->
           <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
           <text class="home_direction_introduce">方向介绍</text>
@@ -154,7 +154,7 @@ const changeContent = (index: number) => {
 }
 
 // 公告弹框
-.announcement-detail-box {
+.announcement_detail_box {
   padding: 42rpx 60rpx;
   // text-align: center;
   font-size: 28rpx;
@@ -162,12 +162,12 @@ const changeContent = (index: number) => {
   margin-bottom: 85rpx;
 }
 
-.announcement-detail-box text {
+.announcement_detail_box text {
   display: block;
   transform: translate(214rpx, -3rpx);
 }
 
-.announcement-detail {
+.announcement_detail {
   transform: translate(14rpx, 18rpx);
   line-height: 47rpx;
   white-space: pre-wrap;
@@ -317,7 +317,7 @@ const changeContent = (index: number) => {
 }
 
 //方向介绍-图标
-.direction-box image {
+.direction_box image {
   width: 48rpx;
   height: 48rpx;
   margin-left: 66rpx;

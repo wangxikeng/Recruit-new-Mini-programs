@@ -61,9 +61,10 @@ export interface IPreTime {
    */
   timeUser: number
   /**
-   * 用户在该时间段是否忙(0为否,1为是)
+   * 能不能签到(0为可以,1为未开启，2为已签到)
    */
-  userBusy: boolean
+  // userBusy: boolean
+  attendAble: number
 }
 
 /**

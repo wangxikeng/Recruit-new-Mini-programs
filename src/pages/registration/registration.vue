@@ -13,10 +13,6 @@
       <view class="basic_desc">基本信息</view>
     </view>
     <view class="input_all">
-      <!-- <input placeholder="姓名" class="input" />
-      <input placeholder="学号" class="input" /
-      <input placeholder="学院专业" class="input" />
-      <input placeholder="手机号" class="input" /> -->
       <view class="input">
         <up-input
           placeholder="姓名"
@@ -62,7 +58,7 @@
           v-for="(item, index) in checkboxList1"
           :key="index"
           :label="item.name"
-          :name="index"
+          :name="item.name"
           activeColor="#7F52FF"
           @change="checkChange(index)"
         >
@@ -103,19 +99,21 @@
     <view class="text">
       <up-textarea
         v-model="userDetailStore.user.introduction"
-        placeholder="可以介绍你的性格、所任职务及你对于所选发现的储备、已获得的成果噢~"
+        placeholder="可以介绍你的性格、所任职务及你对于所选发现的储备、已获得的成果噢~(10~200字)"
         maxlength="200"
         count
       ></up-textarea>
     </view>
 
+    <!-- v-if="false" -->
+    <!-- v-if="file_btn&&isShowFile==false" -->
     <!-- 上传作品或简历 -->
     <view class="career_plan works">上传作品或简历（可选）</view>
     <view>
       <view class="filechoose">
         <view
           class="filechoose_btn"
-          v-if="file_btn"
+         v-if="file_btn"
         >
           <up-button
             type="primary"
@@ -126,8 +124,9 @@
         </view>
 
         <view
-          class="file-desc"
-          v-if="false"
+          :class="change_part?classArray[1]:classArray[0]"
+          v-if="isShowFile==false"
+          
         >未选择文件</view>
         <view
           class="file-desc"
@@ -154,8 +153,8 @@
       ></up-overlay>
       <view
         class="filebutton"
-        v-if="file_btn"
-      >
+        v-if="saveSubmit_btn"
+       >
         <view
           class="save_btn"
           @click="save_suc"
@@ -203,7 +202,7 @@
     <view
       class="change_part"
       v-if="change_part"
-      @click="changedet"
+      @click="changedet" 
     >
       <view class="change_detail">信息错误？点击重新提交</view>
       <view class="footer_2"></view>
@@ -240,19 +239,31 @@
       </view>
     </view>
   </view>
+  <template>
+	<up-popup :show="userDetailStore.showError" :round="10" mode="center" :customStyle="{width:'542rpx',height:'380rpx'}">
+		<view class="errorContainer">
+        <view v-for="(error,index) in userDetailStore.errorRemindArr" :key="index" class="errorDetail">
+          <text >{{error}}</text>
+        </view>
+		</view>
+    <up-button text="关闭" type="primary" :customStyle="{marginTop:'126rpx',width:'214rpx',borderRadius:'24rpx'}" @click="closeErrorBox"></up-button>
+	</up-popup>
 </template>
+</template>
+
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { saveDetail, getDetail, fileUpload, fileGet, fileDelete } from '@/api/resgistration'
 import type { IRequest } from '@/types/userdetail'
 import { useUserDetailStore } from '@/stores/modules/registration'
-const userDetailStore = useUserDetailStore()
 
+const userDetailStore = useUserDetailStore()
 const show = ref(false)
 //复选框
-const checkboxValue1 = reactive([])
-const checkboxValue2 = reactive([])
+const nameToIndexMap = new Map()
+const checkboxValue1:any = reactive([])
+const checkboxValue2:any = reactive([])
 // 基本案列数据
 const checkboxList1 = reactive([
   {
@@ -305,17 +316,11 @@ const checkboxList2 = reactive([
 ])
 
 const plan = ref<string>('')
-const checkboxChange1 = (n: any) => {
-  console.log('change', n)
-  console.log(n.join('-'))
-  // n.forEach((item: number[]) => {
-  //   console.log(item)
-  // })
-  userDetailStore.directionNum = n
-  console.log(userDetailStore.directionNum)
+const checkboxChange1 = (n:any) => {
+  const selectedIndices = n.map((name:any) => nameToIndexMap.get(name));
+  userDetailStore.directionNum = selectedIndices
 }
 const checkboxChange2 = (n: any) => {
-  console.log('change', n)
   userDetailStore.user.plan = n.join('-')
 }
 const checkChange = (index: any) => {
@@ -325,6 +330,8 @@ const checkChange = (index: any) => {
   userDetailStore.user.android = checkboxList1[2].checked
   userDetailStore.user.uidesign = checkboxList1[3].checked
   userDetailStore.user.deeplearn = checkboxList1[4].checked
+  
+  
 }
 
 //自我介绍
@@ -334,6 +341,7 @@ const workvalue = ref('')
 const blurpage = ref()
 const submit_pop = ref(false)
 const file_btn = ref(true)
+const saveSubmit_btn=ref(true)
 const change_part = ref(false)
 const savesuccess = () => {
   submit_pop.value = true
@@ -345,24 +353,46 @@ const savesuccess = () => {
 }
 const save_suc = async () => {
   savesuccess()
+  // 保存的时候committed不是false吗
   userDetailStore.setUerDetailInfo()
 }
 
 //确认弹窗
 const submit_pop_1 = ref(false)
-const submitsuccess = () => {
+const submitsuccess =async () => {
+    // 确认之前先进行校验  新加的
+  const isValid= userDetailStore.validate()
+  if(!isValid){
+    return
+  }
+ await userDetailStore.setUerDetailInfo()
+ if(userDetailStore.showError===false){
+  
   submit_pop_1.value = true
   show.value = true
   setTimeout(function () {
     submit_pop_1.value = false
-    file_btn.value = false
+    if(isShowFile.value==true){
+      file_btn.value = false
+    }
+    else{
+      file_btn.value=true
+    }
+    saveSubmit_btn.value=false
     change_part.value = true
     show.value = false
   }, 2000)
-  userDetailStore.setUerDetailInfo()
+  // userDetailStore.setUerDetailInfo()
+ }
+  
 }
-const submit_suc = async () => {
+
+const submit_suc =  () => {
   submitsuccess()
+}
+
+const closeErrorBox=()=>{
+  userDetailStore.showError=false
 }
 
 //修改弹窗
@@ -380,11 +410,57 @@ const cancel_btn = () => {
   show.value = false
 }
 
+
+onLoad(async()=>{
+  checkboxList1.forEach((item,index)=>{
+    nameToIndexMap.set(item.name, index);
+  })
+  const res=await getDetail()
+  if(res.hasOwnProperty('data')){
+    userDetailStore.user=res.data
+  
+  checkboxList1[0].checked=userDetailStore.user.headend 
+  checkboxList1[1].checked= userDetailStore.user.backend
+  checkboxList1[2].checked= userDetailStore.user.android
+  checkboxList1[3].checked=userDetailStore.user.uidesign
+  checkboxList1[4].checked=userDetailStore.user.deeplearn 
+    
+    // 方向数组
+    checkboxValue1.length = 0;
+    if (res.data.android) checkboxValue1.push('安卓');
+    if (res.data.backend) checkboxValue1.push('后台');
+    if (res.data.deeplearn) checkboxValue1.push('深度学习');
+    if (res.data.headend) checkboxValue1.push('前端');
+    if (res.data.uidesign) checkboxValue1.push('UI');
+
+    
+    // 规划数组
+    checkboxValue2.length = 0;
+    res.data.plan.split('-').forEach(function(item:string) {
+        checkboxValue2.push(item);
+        console.log(checkboxValue2);
+        
+    });
+    // file_btn.value = false
+    if(isShowFile.value==true){
+      file_btn.value = false
+    }
+    else{
+      file_btn.value=true
+    }
+    saveSubmit_btn.value=false
+    change_part.value = true
+  }
+ 
+})
+
 //文件部分
 import { uploadMyFile } from '@/api/uploadFile'
 import { deleteMyFile } from '@/api/deleteFile'
 import { showMyFile } from '@/api/showFiles'
 import { onLoad } from '@dcloudio/uni-app'
+// import Login from '../login/login.vue';
+
 
 // 是否显示文件名
 const isShowFile = ref(false)
@@ -410,6 +486,7 @@ const Upload = () => {
           title: '上传成功',
           icon: 'success'
         })
+        file_btn.value=false
         // 显示文件名
         isShowFile.value = true
       } else if (res_format.code == 402) {
@@ -429,7 +506,8 @@ const Upload = () => {
 }
 // 动态显示文件名的位置
 const classArr = ['file-name', 'file-name-inactive']
-
+// 动态显示“未选择文件”的位置
+const classArray=['file-desc','file-desc-change']
 //删除文件
 const DeleteFile = async () => {
   // 发送删除文件请求
@@ -442,6 +520,7 @@ const DeleteFile = async () => {
     })
     uploadFileName.value = ''
     isShowFile.value = false
+    file_btn.value=true
   }
 }
 
@@ -455,6 +534,9 @@ onLoad(async () => {
     isShowFile.value = false
   }
 })
+
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -584,7 +666,7 @@ onLoad(async () => {
 .filechoose_btn {
   width: 144rpx;
   height: 48rpx;
-  margin-top: 32rpx;
+  margin-top: -10rpx;
 }
 ::v-deep .filechoose_btn .u-button--square.data-v-461e713c {
   width: 144rpx;
@@ -600,7 +682,17 @@ onLoad(async () => {
   margin-top: 32rpx;
   display: flex;
   gap: 24rpx;
+  transform: translate(-164rpx, 66rpx);
 }
+
+.file-desc-change {
+  font-size: 24rpx;
+  margin-top: 32rpx;
+  display: flex;
+  gap: 24rpx;
+  transform: translate(-164rpx, 48rpx);
+}
+
 .filebutton {
   margin-top: 128rpx;
   display: flex;
@@ -614,7 +706,7 @@ onLoad(async () => {
   font-size: 28rpx;
   font-weight: 500;
   color: #7f52ff;
-  transform: translate(-169rpx, 66rpx);
+  transform: translate(-4rpx, -7rpx);
 }
 ::v-deep .file-name.data-v-5727c6f2 {
   align-items: center;
@@ -626,7 +718,7 @@ onLoad(async () => {
   font-weight: 500;
   display: flex;
   color: #7f52ff;
-  transform: translate(5rpx, -21rpx);
+  transform: translate(166rpx, -74rpx);
 }
 
 .save_btn {
@@ -677,7 +769,7 @@ onLoad(async () => {
   font-size: 24rpx;
   font-weight: 500;
   margin-left: 470rpx;
-  margin-top: 48rpx;
+  margin-top: 93rpx;
 }
 
 //确认弹窗
@@ -731,4 +823,16 @@ onLoad(async () => {
   height: 96rpx;
   width: 100%;
 }
+
+.errorContainer{
+  text-align: center;
+  margin-top: 63rpx;
+}
+
+.errorDetail{
+  margin-top: 16rpx;
+}
+
+
+
 </style>

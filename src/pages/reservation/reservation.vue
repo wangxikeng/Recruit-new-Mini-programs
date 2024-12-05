@@ -44,7 +44,8 @@
             >
               <button
                 class="btn"
-                @click="idChoose = item.id"
+                
+                @click="handleClickColumn1(item)"
                 :class="{ activeBtn: item.id === idChoose, activeTimeBtn: item.status == 1 }"
               >
                 {{ item.time }}
@@ -59,8 +60,10 @@
             >
               <button
                 class="btn"
-                @click="idChoose = time.id"
+                @click="handleClickColumn2(time)"
+
                 :class="{ activeBtn: time.id === idChoose, activeTimeBtn: time.status == 1 }"
+
               >
                 {{ time.time }}
               </button>
@@ -95,6 +98,11 @@
       </view>
     </up-popup>
   </view>
+  <template>
+	<view >
+		<up-modal :show="isShowMsg" title="温馨提示" content='该时间段已被预约' @confirm="isShowMsg = false"></up-modal>
+	</view>
+</template>
 </template>
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
@@ -107,14 +115,53 @@ import dayjs from 'dayjs'
 import { getTimeListAll, getTargets, saveTargets, getDirectionTime } from '@/api/reservation'
 import { watch } from 'vue'
 
+
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-let { timeList, timeKeys, chooseDirection, idChoose, userStatus } = toRefs(useDirectionStore())
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus,hasReserved } = toRefs(useDirectionStore())
+const isShowMsg=ref(false)
 
+// 预约过的时间段不可被预约
+const isShowPopValue=ref<number>(0)
+const isShowMsgValue=ref<number>(0)
+const handleClickColumn1=(item:any)=>{
+  idChoose = item.id
+  console.log(item.status);
+  
+  if(item.status ===1){
+    isShowMsgValue.value=1
+    isShowPopValue.value=0
+
+  }
+  else{
+    isShowPopValue.value=1
+    isShowMsgValue.value=0
+
+  }
+}
+
+const handleClickColumn2=(time:any)=>{
+  idChoose = time.id
+  if(time.status == 1){
+    isShowMsgValue.value=1
+    isShowPopValue.value=0
+
+  }
+  else{
+    isShowPopValue.value=1
+    isShowMsgValue.value=0
+
+  }
+}
 // 创建响应式数据
 const isShowPop = ref(false)
 const popUp = () => {
+  if(isShowPopValue.value===1){
   isShowPop.value = true
+  }
+  else{
+    isShowMsg.value=true
+  }
 }
 const popCancel = () => {
   isShowPop.value = false
@@ -123,12 +170,18 @@ const popSure = () => {
   isShowPop.value = false
   userStatus.value = 1
   saveTargets(userDirectionStore.idChoose)
+ 
 }
 
 //进页面先显示第一个方向的所有时间
 onLoad(() => {
-  userDirectionStore.getDirectionName()
-  userDirectionStore.firstdirectionTimeListAll()
+  if(uni.getStorageSync('directionNum')){
+    hasReserved.value=true
+    userDirectionStore.getDirectionName()
+    userDirectionStore.firstdirectionTimeListAll()
+  }
+  // userDirectionStore.getDirectionName()
+  // userDirectionStore.firstdirectionTimeListAll()
 })
 
 const directionTimeList = async () => {
@@ -353,4 +406,40 @@ const directionTimeList = async () => {
   color: #fff;
   border: 2rpx solid #aeb4c2;
 }
+
+::v-deep .u-modal__content.data-v-12b77a26{
+  margin-top: 26rpx;
+  text-align: center;
+}
+
+::v-deep .u-modal__title.data-v-12b77a26{
+  margin-left: 72rpx;
+}
+
+::v-deep .u-modal__content.data-v-12b77a26{
+  margin-left: 66rpx;
+}
+
+::v-deep .u-modal__button-group.data-v-12b77a26 {
+    border-radius: 26rpx;
+    margin-left: 258rpx;
+    width: 196rpx;
+    margin-top: 76rpx;
+    
+    height: 96rpx;
+    height: 81rpx;
+    background-color: #7f52ff;
+}
+
+::v-deep .u-modal__button-group__wrapper__text.data-v-12b77a26 {
+    color: white !important;
+    margin-top: -10rpx;
+}
+
+::v-deep .u-line.data-v-bbd9963c {
+  border: 0rpx !important;
+}
+
+                // @click="idChoose = time.id"
+                // @click="idChoose = item.id"  
 </style>

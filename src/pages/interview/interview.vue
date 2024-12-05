@@ -34,7 +34,11 @@ const chooseDirectionArr=ref<number[]>([])
 
 // 跳转要判断是否成功报名，否弹框提示请先报名 
 // 面试预约跳转
-const toReservation = () => {
+const toReservation = async() => {
+  const res=await getDetail()
+  if(res.hasOwnProperty('data')){
+    ifRedirect.value=true
+  }
   if(ifRedirect.value){
     
     uni.navigateTo({
@@ -56,6 +60,10 @@ const toSignIn = async() => {
       ifAbleReserve.value=true
       break
     }
+  }
+  const res=await getDetail()
+  if(res.hasOwnProperty('data')){
+    ifRedirect.value=true
   }
   if(ifRedirect.value&&ifAbleReserve.value){
     uni.navigateTo({

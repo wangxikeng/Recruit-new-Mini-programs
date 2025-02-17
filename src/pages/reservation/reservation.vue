@@ -32,11 +32,7 @@
       </view>
       <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
     </view>
-    <view
-      v-for="itemKey in timeKeys"
-      :key="itemKey"
-      v-if="successPut == 0 && directionNone == false"
-    >
+    <view v-for="itemKey in timeKeys" :key="itemKey">
       <view class="res_time_box_1">
         <view class="day">{{ itemKey }}</view>
         <view class="time_cloumn">
@@ -74,16 +70,10 @@
       </view>
     </view>
 
-    <view class="make_sure" v-if="userStatus == 0 && successPut == 0 && directionNone == false">
+    <view class="make_sure" v-if="userStatus == 0">
       <up-button text="确认预约" @click="popUp"></up-button>
     </view>
-    <view class="make_sure" v-if="successPut == 1 && directionNone == false">
-      <up-button text="预约暂未开放~"></up-button>
-    </view>
-    <view class="make_sure" v-if="directionNone">
-      <up-button text="请先选择考核方向~"></up-button>
-    </view>
-    <view class="have_sure" v-if="userStatus == 1 && successPut == 0 && directionNone == false">
+    <view class="have_sure" v-if="userStatus == 1">
       <up-button text="您已预约"></up-button>
     </view>
 

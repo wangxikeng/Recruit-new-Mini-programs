@@ -36,9 +36,9 @@
       </view>
       <view class="icon_box icon_box_2">
         <view class="square" :class="colorArr[userProcedureStore.statusOne]"></view>
-        <view class="line" :class="colorArr[userProcedureStore.statusOne]"></view>
+        <view class="line line_2" :class="colorArr[userProcedureStore.statusOne]"></view>
         <view class="arrow">
-          <up-icon name="arrow-down" color="#9773FF" size="16" bold="true"></up-icon>
+          <up-icon name="arrow-down" color="#9773FF" size="14" bold="true"></up-icon>
         </view>
       </view>
 
@@ -61,12 +61,6 @@
       >
         <view class="content_desc_1">三轮</view>
         <view class="content_desc_2">({{ nameArr[userProcedureStore.success] }})</view>
-      </view>
-    </view>
-
-    <view class="content" v-if="userProcedureStore.directionTrue == false">
-      <view class="content_box content_box_5" :class="colorArr[userProcedureStore.interview]">
-        <view class="content_desc_1">请先选择考核方向</view>
       </view>
     </view>
   </view>
@@ -176,10 +170,6 @@ onLoad(async () => {
 .content_box_4 {
   transform: translate(0, -30rpx);
 }
-.content_box_5 {
-  width: 80%;
-  height: 88rpx;
-}
 .icon_box_2,
 .icon_box_3 {
   transform: translate(0, -16rpx);
@@ -197,9 +187,15 @@ onLoad(async () => {
   background-color: #9773ff;
   margin: auto;
 }
+
 ::v-deep .u-icon__icon.data-v-1c933a9a {
   margin: auto;
   transform: translate(0, -14rpx);
+}
+
+::v-deep .icon_box_2.data-v-a718f74a {
+  transform: translate(0, -11rpx);
+  height: 134rpx;
 }
 
 .nav {

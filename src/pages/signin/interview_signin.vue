@@ -3,12 +3,15 @@ import { ref } from 'vue'
 import { useDirectionStore } from '../../stores/modules/reservation'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserDetailStore } from '@/stores/modules/registration'
+import { watch } from 'vue'
 import { getDirectionTime, getSignIn } from '@/api/reservation'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
 const attendColorArr = ['ongoing', 'will', 'finish']
 const attendArr = ['签到', '未开启', '已签到']
+const chooseDirectionArr = ref<number[]>([])
+
 // 签到弹出框确定
 const show = ref(false)
 //点击签到按钮弹出确认框
@@ -29,14 +32,9 @@ const confirmSignIn = () => {
 // 温馨提示语
 let showcase = 0
 
-//点进来就要显示第一个方向
-onLoad(async () => {
-  if (userDetailStore.directionNum.length === 0) {
-    userDirectionStore.signInTime = '请先选择考核方向~'
-    userDirectionStore.attend = 1
-  }
-  userDirectionStore.getDirectionName()
-  for (const item of userDetailStore.directionNum) {
+const showReservedDirection = async () => {
+  userDirectionStore.getReservedDirectionName()
+  for (const item of userDetailStore.hasReservedDirectionArr) {
     userDirectionStore.chooseDirection = item + 1
     userDirectionStore.getItemDirectionTime(item)
     const resTime = await getDirectionTime(item)
@@ -44,12 +42,34 @@ onLoad(async () => {
     userDirectionStore.alreadyChooseTime = true
     return
   }
+}
+
+//点进来就要显示第一个方向
+onLoad(async () => {
+  userDetailStore.hasReservedDirectionArr = []
+  console.log(userDetailStore.hasReservedDirectionArr)
+
+  if (uni.getStorageSync('directionNum')) {
+    chooseDirectionArr.value = uni.getStorageSync('directionNum')
+    console.log(chooseDirectionArr.value)
+
+    for (const item of chooseDirectionArr.value) {
+      console.log(chooseDirectionArr.value)
+
+      const res = await getDirectionTime(item)
+      if (res.code != '500') {
+        // userDetailStore.hasReservedDirectionArr.push(res.data.target)
+        userDetailStore.pushReservedDirection(res.data.target)
+      }
+    }
+    console.log(userDetailStore.hasReservedDirectionArr)
+    showReservedDirection()
+  }
 })
 
 //切换导航方向之后显示的
 const directionTimeClick = async () => {
   userDirectionStore.directionTime()
-  console.log(userDirectionStore.attend)
 }
 </script>
 
@@ -76,7 +96,7 @@ const directionTimeClick = async () => {
       <!-- <view class="nav_box"> </view> -->
       <view class="nav">
         <view
-          v-for="item in userDirectionStore.list"
+          v-for="item in userDirectionStore.reservedList"
           :key="item.id"
           class="direction"
           @click="directionTimeClick"
@@ -90,7 +110,7 @@ const directionTimeClick = async () => {
             {{ item.name }}
           </view>
         </view>
-        <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
+        <!-- <view class="navDirection" v-for="item in reservedList" :key="item.id">{{ item.name }}</view> -->
       </view>
 
       <!-- 预约时间确定-->

@@ -5,12 +5,14 @@ import dayjs from 'dayjs'
 import type { IDirection } from '@/types/reservation'
 import { useUserDetailStore } from '@/stores/modules/registration'
 import { getTimeListAll, getDirectionTime, getSignIn } from '@/api/reservation'
+import Login from '@/pages/login/login.vue'
 
 const userDetailStore = useUserDetailStore()
 
 // 定义 Store
 export const useDirectionStore = defineStore('reservation', () => {
   const list = ref<IDirection[]>([])
+  const reservedList = ref<IDirection[]>([])
   const directionList = ref([
     { id: 1, name: '前端' },
     { id: 2, name: '后台' },
@@ -32,8 +34,8 @@ export const useDirectionStore = defineStore('reservation', () => {
   let userStatus = ref(0)
   let successPut = ref(0)
   let attend = ref(0)
+  const hasReserved = ref(false)
   let directionNone = ref(false)
-
   //获取预约时间且分配到数组里面
   const getTimeList = (timeKeys: string[]) => {
     const groups = 2
@@ -70,17 +72,40 @@ export const useDirectionStore = defineStore('reservation', () => {
     formattedDate.value = dayjs(timeUser).format('YYYY年MM月DD日')
   }
 
+  //在预约页面展示方向
   const getDirectionName = () => {
+    // 如果之前有报名信息
+    if (hasReserved.value == true) {
+      userDetailStore.directionNum = uni.getStorageSync('directionNum')
+    }
+    console.log(userDetailStore.directionNum)
+
     //只选择了一个方向时
     if (list.value.length === userDetailStore.directionNum.length) {
       list.value = list.value
+      console.log(list.value)
     } else {
       //选择多个方向时
       list.value = []
       for (const item of userDetailStore.directionNum) {
         list.value.push(directionList.value[item])
       }
+      console.log(list.value)
     }
+  }
+
+  // 在签到页面
+  const getReservedDirectionName = () => {
+    console.log(userDetailStore.hasReservedDirectionArr)
+    console.log(reservedList.value)
+    // 新加的
+    reservedList.value = []
+    for (const item of userDetailStore.hasReservedDirectionArr) {
+      if (!reservedList.value.some((every) => every.id === item + 1)) {
+        reservedList.value.push(directionList.value[item])
+      }
+    }
+    console.log(reservedList.value)
   }
 
   //获取+显示时间
@@ -155,12 +180,9 @@ export const useDirectionStore = defineStore('reservation', () => {
       chooseDirection.value = item + 1
       idChoose.value = 0
       const resTime = await getTimeListAll(item)
-      if (resTime.code == '200') {
-        timeData(resTime.data)
-        successPut.value = 0
-      } else {
-        successPut.value = 1
-      }
+      console.log(resTime)
+
+      timeData(resTime.data)
       const resStatus = await getDirectionTime(item)
       if (resStatus.code != '500') {
         userStatus.value = resStatus.data.status
@@ -185,6 +207,7 @@ export const useDirectionStore = defineStore('reservation', () => {
     if (parts.length > 1) {
       const timePart = parts[1] + ':' + parts[2]
       signInTime.value = formattedDate.value + timePart + '-' + resTime.data.timeEnd1
+      console.log(signInTime.value)
     }
   }
 
@@ -201,7 +224,7 @@ export const useDirectionStore = defineStore('reservation', () => {
   }
   let alreadyChooseTime = ref(false)
   const directionTime = async () => {
-    for (const item of userDetailStore.directionNum) {
+    for (const item of userDetailStore.hasReservedDirectionArr) {
       if (chooseDirection.value === item + 1) {
         getItemDirectionTime(item)
         const resTime = await getDirectionTime(item)
@@ -239,6 +262,9 @@ export const useDirectionStore = defineStore('reservation', () => {
     saveSignInTime,
     getItemDirectionTime,
     firstdirectionTimeListAll,
+    hasReserved,
+    getReservedDirectionName,
+    reservedList,
     successPut,
     directionNone,
     alreadyChooseTime

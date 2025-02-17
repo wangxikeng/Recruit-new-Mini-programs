@@ -16,7 +16,8 @@ export const useDirectionStore = defineStore('reservation', () => {
     { id: 2, name: '后台' },
     { id: 3, name: '安卓' },
     { id: 4, name: 'UI' },
-    { id: 5, name: '深度学习' }
+    { id: 5, name: '深度学习' },
+    { id: 6, name: '硬件' }
   ])
   const idChoose = ref(0) //选择的时间的对应id
   const popTime = ref<string>() //显示的时间
@@ -29,7 +30,9 @@ export const useDirectionStore = defineStore('reservation', () => {
   let timeKeys = ref<string[]>([]) //预约时间的所有日期
   let timeListKeys = ref<string[]>([]) //按渲染模板的预约日期
   let userStatus = ref(0)
+  let successPut = ref(0)
   let attend = ref(0)
+  let directionNone = ref(false)
 
   //获取预约时间且分配到数组里面
   const getTimeList = (timeKeys: string[]) => {
@@ -82,11 +85,28 @@ export const useDirectionStore = defineStore('reservation', () => {
 
   //获取+显示时间
   const directionTimeListAll = async () => {
+    if (userDetailStore.directionNum.length === 0) {
+      directionNone.value = true
+    } else {
+      directionNone.value = false
+    }
     for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
+        const resTimeChoose = await getDirectionTime(item)
+        if (resTimeChoose.data.id !== 0) {
+          alreadyChooseTime.value = true
+        } else {
+          alreadyChooseTime.value = false
+        }
         idChoose.value = 0
         const resTime = await getTimeListAll(item)
-        timeData(resTime.data)
+        // timeData(resTime.data)
+        if (resTime.code == '200') {
+          timeData(resTime.data)
+          successPut.value = 0
+        } else {
+          successPut.value = 1
+        }
         const resStatus = await getDirectionTime(item)
         if (resStatus.code != '500') {
           userStatus.value = resStatus.data.status
@@ -101,7 +121,7 @@ export const useDirectionStore = defineStore('reservation', () => {
   const timeData = (data: IPreTime[]) => {
     groupedByDateMap.clear()
     data.forEach((item) => {
-      const day = item.timeStart.split('T')[0]
+      const day = item.timeStart.split(' ')[0]
       const timeRange = {
         id: item.id,
         time: item.timeStart1 + '-' + item.timeEnd1,
@@ -118,37 +138,29 @@ export const useDirectionStore = defineStore('reservation', () => {
     return timeKeys
   }
 
-  //根据传入的开始时间与结束时间，自定义分割时间
-  // const generateTimeSlots = (
-  //   startHour: string,
-  //   startMin: string,
-  //   endHour: string,
-  //   endMin: string,
-  //   interval: number,
-  //   idArr: number[]
-  // ) => {
-  //   const timeSlots = []
-  //   const startTime = new Date()
-  //   startTime.setHours(Number(startHour), Number(startMin), 0, 0) // 设置开始时间为晚上 7 点
-
-  //   const endTime = new Date()
-  //   endTime.setHours(Number(endHour), Number(endMin), 0, 0)
-  //   for (let time = startTime; time <= endTime; time.setMinutes(time.getMinutes() + interval)) {
-  //     const hours = time.getHours().toString().padStart(2, '0')
-  //     const minutes = time.getMinutes().toString().padStart(2, '0')
-  //     timeSlots.push(`${hours}:${minutes}`)
-  //   }
-  //   getTimeList(timeSlots, idArr)
-  //   return timeSlots
-  // }
-
   //刚刚点进页面时
   const firstdirectionTimeListAll = async () => {
+    if (userDetailStore.directionNum.length === 0) {
+      directionNone.value = true
+    } else {
+      directionNone.value = false
+    }
     for (const item of userDetailStore.directionNum) {
+      const resTimeChoose = await getDirectionTime(item)
+      if (resTimeChoose.data.id !== 0) {
+        alreadyChooseTime.value = true
+      } else {
+        alreadyChooseTime.value = false
+      }
       chooseDirection.value = item + 1
       idChoose.value = 0
       const resTime = await getTimeListAll(item)
-      timeData(resTime.data)
+      if (resTime.code == '200') {
+        timeData(resTime.data)
+        successPut.value = 0
+      } else {
+        successPut.value = 1
+      }
       const resStatus = await getDirectionTime(item)
       if (resStatus.code != '500') {
         userStatus.value = resStatus.data.status
@@ -162,6 +174,10 @@ export const useDirectionStore = defineStore('reservation', () => {
   //显示时间的格式
   const getItemDirectionTime = async (item: number) => {
     const resTime = await getDirectionTime(item)
+    if (resTime.msg != '200') {
+      signInTime.value = '请先预约~'
+      attend.value = 1
+    }
     getYearMD(resTime.data.timeStart)
     const dateTimeString = resTime.data.timeStart1
     // 使用字符串分割提取时间部分
@@ -183,6 +199,7 @@ export const useDirectionStore = defineStore('reservation', () => {
       }
     }
   }
+  let alreadyChooseTime = ref(false)
   const directionTime = async () => {
     for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
@@ -221,6 +238,9 @@ export const useDirectionStore = defineStore('reservation', () => {
     signInTime,
     saveSignInTime,
     getItemDirectionTime,
-    firstdirectionTimeListAll
+    firstdirectionTimeListAll,
+    successPut,
+    directionNone,
+    alreadyChooseTime
   }
 })

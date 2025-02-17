@@ -31,12 +31,17 @@ let showcase = 0
 
 //点进来就要显示第一个方向
 onLoad(async () => {
+  if (userDetailStore.directionNum.length === 0) {
+    userDirectionStore.signInTime = '请先选择考核方向~'
+    userDirectionStore.attend = 1
+  }
   userDirectionStore.getDirectionName()
   for (const item of userDetailStore.directionNum) {
     userDirectionStore.chooseDirection = item + 1
     userDirectionStore.getItemDirectionTime(item)
     const resTime = await getDirectionTime(item)
     userDirectionStore.attend = resTime.data.attendAble
+    userDirectionStore.alreadyChooseTime = true
     return
   }
 })
@@ -112,6 +117,7 @@ const directionTimeClick = async () => {
         @confirm="confirmSignIn"
         confirmColor="#fff"
         cancelColor="#7f52ff"
+        v-if="userDirectionStore.attend === 0"
       ></up-modal>
     </view>
   </view>

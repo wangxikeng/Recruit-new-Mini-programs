@@ -55,4 +55,5 @@ export interface IRequest {
    * 姓名
    */
   userName: string
+  hardware: boolean
 }

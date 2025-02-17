@@ -32,7 +32,11 @@
       </view>
       <!-- <view class="navDirection" v-for="item in list" :key="item.id">{{ item.name }}</view> -->
     </view>
-    <view v-for="itemKey in timeKeys" :key="itemKey">
+    <view
+      v-for="itemKey in timeKeys"
+      :key="itemKey"
+      v-if="successPut == 0 && directionNone == false"
+    >
       <view class="res_time_box_1">
         <view class="day">{{ itemKey }}</view>
         <view class="time_cloumn">
@@ -70,10 +74,16 @@
       </view>
     </view>
 
-    <view class="make_sure" v-if="userStatus == 0">
+    <view class="make_sure" v-if="userStatus == 0 && successPut == 0 && directionNone == false">
       <up-button text="确认预约" @click="popUp"></up-button>
     </view>
-    <view class="have_sure" v-if="userStatus == 1">
+    <view class="make_sure" v-if="successPut == 1 && directionNone == false">
+      <up-button text="预约暂未开放~"></up-button>
+    </view>
+    <view class="make_sure" v-if="directionNone">
+      <up-button text="请先选择考核方向~"></up-button>
+    </view>
+    <view class="have_sure" v-if="userStatus == 1 && successPut == 0 && directionNone == false">
       <up-button text="您已预约"></up-button>
     </view>
 
@@ -109,7 +119,8 @@ import { watch } from 'vue'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-let { timeList, timeKeys, chooseDirection, idChoose, userStatus } = toRefs(useDirectionStore())
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus, successPut, directionNone } =
+  toRefs(useDirectionStore())
 
 // 创建响应式数据
 const isShowPop = ref(false)

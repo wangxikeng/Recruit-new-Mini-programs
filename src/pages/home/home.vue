@@ -4,7 +4,9 @@ import { useAnnouncementStore } from '@/stores/modules/Announcement'
 import { storeToRefs } from 'pinia'
 import { ref, reactive } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
-
+import { getDetail } from '@/api/resgistration'
+import { useUserDetailStore } from '@/stores/modules/registration'
+const userDetailStore = useUserDetailStore()
 const store = useAnnouncementStore()
 // 解构数据 方法
 const { newAnnouncement } = storeToRefs(store)
@@ -14,6 +16,15 @@ onLoad(async () => {
   const res = await getAnnouncement()
   //截取公告前几位字显示
   announcementContent.value = `${res.data.content.replace(/\s*/g, '').substring(0, 15)}...`
+  // 
+  const response=await getDetail()
+  userDetailStore.directionNum=[]
+  if(response.data.headend) userDetailStore.directionNum.push(0)
+  if(response.data.backend) userDetailStore.directionNum.push(1)
+  if(response.data.android) userDetailStore.directionNum.push(2)
+  if(response.data.uidesign) userDetailStore.directionNum.push(3)
+  if(response.data.deeplearn) userDetailStore.directionNum.push(4)
+  uni.setStorageSync('directionNum',userDetailStore.directionNum)
 })
 
 // 发请求

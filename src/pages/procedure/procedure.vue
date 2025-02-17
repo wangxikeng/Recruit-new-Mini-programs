@@ -1,12 +1,6 @@
 <template>
   <view class="wholepage">
     <view class="nav">
-      <!-- <up-subsection
-        activeColor="#7f52ff"
-        :list="userDirectionStore.list"
-        mode="subsection"
-        :current="0"
-      ></up-subsection> -->
       <view
         v-for="item in userDirectionStore.list"
         :key="item.id"
@@ -23,7 +17,7 @@
       </view>
     </view>
 
-    <view class="content">
+    <view class="content" v-if="userProcedureStore.directionTrue">
       <view class="content_box" :class="colorArr[userProcedureStore.interview]">
         <view class="content_desc_1">面试</view>
         <view class="content_desc_2">({{ nameArr[userProcedureStore.interview] }})</view>
@@ -52,7 +46,7 @@
         <view class="content_desc_1">二轮考核</view>
         <view class="content_desc_2">({{ nameArr[userProcedureStore.statusTwo] }})</view>
       </view>
-      <view class="icon_box icon_box_3">
+      <view class="icon_box icon_box_3" v-if="userProcedureStore.ui">
         <view class="square" :class="colorArr[userProcedureStore.statusTwo]"></view>
         <view class="line" :class="colorArr[userProcedureStore.statusTwo]"></view>
         <view class="arrow">
@@ -60,8 +54,12 @@
         </view>
       </view>
 
-      <view class="content_box content_box_4" :class="colorArr[userProcedureStore.success]">
-        <view class="content_desc_1">三轮考核</view>
+      <view
+        class="content_box content_box_4"
+        :class="colorArr[userProcedureStore.success]"
+        v-if="userProcedureStore.ui"
+      >
+        <view class="content_desc_1">三轮</view>
         <view class="content_desc_2">({{ nameArr[userProcedureStore.success] }})</view>
       </view>
     </view>
@@ -89,8 +87,18 @@ const directionDetail = () => {
 
 onLoad(async () => {
   userDirectionStore.getDirectionName()
+  if (userDetailStore.directionNum.length === 0) {
+    userProcedureStore.directionTrue = false
+  } else {
+    userProcedureStore.directionTrue = true
+  }
   for (const item of userDetailStore.directionNum) {
     userProcedureStore.chooseDirection = item + 1
+    if (item == 3) {
+      userProcedureStore.ui = true
+    } else {
+      userProcedureStore.ui = false
+    }
     const res = await getProcedure(item)
     userProcedureStore.getDirectionStatus(item, res)
     return
@@ -162,9 +170,7 @@ onLoad(async () => {
 .content_box_4 {
   transform: translate(0, -30rpx);
 }
-.icon_box_2{
-  transform: translate(0, -14rpx);
-}
+.icon_box_2,
 .icon_box_3 {
   transform: translate(0, -16rpx);
 }
@@ -188,8 +194,8 @@ onLoad(async () => {
 }
 
 ::v-deep .icon_box_2.data-v-a718f74a {
-    transform: translate(0, -11rpx);
-    height: 134rpx;
+  transform: translate(0, -11rpx);
+  height: 134rpx;
 }
 
 .nav {

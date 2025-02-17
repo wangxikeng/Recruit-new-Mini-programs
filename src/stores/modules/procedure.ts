@@ -11,9 +11,11 @@ export const useProcedureStore = defineStore('procedure', () => {
   const success = ref(0) //通过所有考核
   const interview = ref(0) //面试
   const chooseDirection = ref<number>()
+  let ui = ref(false)
+  let directionTrue = ref(false)
 
   //获取通过与否状态
-  // const getDirectionStatus = async (item: number, res: any) => {
+  // const getDirectionStatus = aesync (item: number, res: any) => {
   const getDirectionStatus = (item: number, res: any) => {
     //传对应是否通过的值
     interview.value = res.data.interview
@@ -23,10 +25,20 @@ export const useProcedureStore = defineStore('procedure', () => {
   }
 
   const getDirectionDetail = async () => {
+    if (userDetailStore.directionNum.length === 0) {
+      directionTrue.value = false
+    } else {
+      directionTrue.value = true
+    }
     for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
         const res = await getProcedure(item)
         getDirectionStatus(item, res)
+      }
+      if (chooseDirection.value == 4) {
+        ui.value = true
+      } else {
+        ui.value = false
       }
     }
   }
@@ -38,6 +50,8 @@ export const useProcedureStore = defineStore('procedure', () => {
     interview,
     getDirectionStatus,
     getDirectionDetail,
-    chooseDirection
+    chooseDirection,
+    ui,
+    directionTrue
   }
 })

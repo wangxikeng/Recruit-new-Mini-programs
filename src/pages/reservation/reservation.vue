@@ -44,7 +44,6 @@
             >
               <button
                 class="btn"
-                
                 @click="handleClickColumn1(item)"
                 :class="{ activeBtn: item.id === idChoose, activeTimeBtn: item.status == 1 }"
               >
@@ -61,9 +60,7 @@
               <button
                 class="btn"
                 @click="handleClickColumn2(time)"
-
                 :class="{ activeBtn: time.id === idChoose, activeTimeBtn: time.status == 1 }"
-
               >
                 {{ time.time }}
               </button>
@@ -99,10 +96,15 @@
     </up-popup>
   </view>
   <template>
-	<view >
-		<up-modal :show="isShowMsg" title="温馨提示" content='该时间段已被预约' @confirm="isShowMsg = false"></up-modal>
-	</view>
-</template>
+    <view>
+      <up-modal
+        :show="isShowMsg"
+        title="温馨提示"
+        content="该时间段已被预约"
+        @confirm="isShowMsg = false"
+      ></up-modal>
+    </view>
+  </template>
 </template>
 <script setup lang="ts">
 import { ref, toRefs } from 'vue'
@@ -115,52 +117,45 @@ import dayjs from 'dayjs'
 import { getTimeListAll, getTargets, saveTargets, getDirectionTime } from '@/api/reservation'
 import { watch } from 'vue'
 
-
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-let { timeList, timeKeys, chooseDirection, idChoose, userStatus,hasReserved } = toRefs(useDirectionStore())
-const isShowMsg=ref(false)
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus, hasReserved } =
+  toRefs(useDirectionStore())
+const isShowMsg = ref(false)
 
 // 预约过的时间段不可被预约
-const isShowPopValue=ref<number>(0)
-const isShowMsgValue=ref<number>(0)
-const handleClickColumn1=(item:any)=>{
+const isShowPopValue = ref<number>(0)
+const isShowMsgValue = ref<number>(0)
+const handleClickColumn1 = (item: any) => {
   idChoose = item.id
-  console.log(item.status);
-  
-  if(item.status ===1){
-    isShowMsgValue.value=1
-    isShowPopValue.value=0
+  console.log(item.status)
 
-  }
-  else{
-    isShowPopValue.value=1
-    isShowMsgValue.value=0
-
+  if (item.status === 1) {
+    isShowMsgValue.value = 1
+    isShowPopValue.value = 0
+  } else {
+    isShowPopValue.value = 1
+    isShowMsgValue.value = 0
   }
 }
 
-const handleClickColumn2=(time:any)=>{
+const handleClickColumn2 = (time: any) => {
   idChoose = time.id
-  if(time.status == 1){
-    isShowMsgValue.value=1
-    isShowPopValue.value=0
-
-  }
-  else{
-    isShowPopValue.value=1
-    isShowMsgValue.value=0
-
+  if (time.status == 1) {
+    isShowMsgValue.value = 1
+    isShowPopValue.value = 0
+  } else {
+    isShowPopValue.value = 1
+    isShowMsgValue.value = 0
   }
 }
 // 创建响应式数据
 const isShowPop = ref(false)
 const popUp = () => {
-  if(isShowPopValue.value===1){
-  isShowPop.value = true
-  }
-  else{
-    isShowMsg.value=true
+  if (isShowPopValue.value === 1) {
+    isShowPop.value = true
+  } else {
+    isShowMsg.value = true
   }
 }
 const popCancel = () => {
@@ -170,13 +165,12 @@ const popSure = () => {
   isShowPop.value = false
   userStatus.value = 1
   saveTargets(userDirectionStore.idChoose)
- 
 }
 
 //进页面先显示第一个方向的所有时间
 onLoad(() => {
-  if(uni.getStorageSync('directionNum')){
-    hasReserved.value=true
+  if (uni.getStorageSync('directionNum')) {
+    hasReserved.value = true
     userDirectionStore.getDirectionName()
     userDirectionStore.firstdirectionTimeListAll()
   }
@@ -407,39 +401,39 @@ const directionTimeList = async () => {
   border: 2rpx solid #aeb4c2;
 }
 
-::v-deep .u-modal__content.data-v-12b77a26{
+::v-deep .u-modal__content.data-v-12b77a26 {
   margin-top: 26rpx;
   text-align: center;
 }
 
-::v-deep .u-modal__title.data-v-12b77a26{
+::v-deep .u-modal__title.data-v-12b77a26 {
   margin-left: 72rpx;
 }
 
-::v-deep .u-modal__content.data-v-12b77a26{
+::v-deep .u-modal__content.data-v-12b77a26 {
   margin-left: 66rpx;
 }
 
 ::v-deep .u-modal__button-group.data-v-12b77a26 {
-    border-radius: 26rpx;
-    margin-left: 258rpx;
-    width: 196rpx;
-    margin-top: 76rpx;
-    
-    height: 96rpx;
-    height: 81rpx;
-    background-color: #7f52ff;
+  border-radius: 26rpx;
+  margin-left: 258rpx;
+  width: 196rpx;
+  margin-top: 76rpx;
+
+  height: 96rpx;
+  height: 81rpx;
+  background-color: #7f52ff;
 }
 
 ::v-deep .u-modal__button-group__wrapper__text.data-v-12b77a26 {
-    color: white !important;
-    margin-top: -10rpx;
+  color: white !important;
+  margin-top: -10rpx;
 }
 
 ::v-deep .u-line.data-v-bbd9963c {
   border: 0rpx !important;
 }
 
-                // @click="idChoose = time.id"
-                // @click="idChoose = item.id"  
+// @click="idChoose = time.id"
+// @click="idChoose = item.id"
 </style>

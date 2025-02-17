@@ -17,6 +17,7 @@ export const useUserDetailStore = defineStore('registration', () => {
     deeplearn: false,
     headend: false,
     uidesign: false,
+    hardware: false,
     plan: '',
     committed: true
   })

@@ -3,15 +3,14 @@ import { ref } from 'vue'
 import { useDirectionStore } from '../../stores/modules/reservation'
 import { onLoad } from '@dcloudio/uni-app'
 import { useUserDetailStore } from '@/stores/modules/registration'
-import {watch} from 'vue' 
-import { getDirectionTime, getSignIn  } from '@/api/reservation'
-
+import { watch } from 'vue'
+import { getDirectionTime, getSignIn } from '@/api/reservation'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
 const attendColorArr = ['ongoing', 'will', 'finish']
 const attendArr = ['签到', '未开启', '已签到']
-const chooseDirectionArr=ref<number[]>([])
+const chooseDirectionArr = ref<number[]>([])
 
 // 签到弹出框确定
 const show = ref(false)
@@ -33,46 +32,44 @@ const confirmSignIn = () => {
 // 温馨提示语
 let showcase = 0
 
-const showReservedDirection=async()=>{
-  userDirectionStore.getReservedDirectionName() 
+const showReservedDirection = async () => {
+  userDirectionStore.getReservedDirectionName()
   for (const item of userDetailStore.hasReservedDirectionArr) {
     userDirectionStore.chooseDirection = item + 1
     userDirectionStore.getItemDirectionTime(item)
     const resTime = await getDirectionTime(item)
     userDirectionStore.attend = resTime.data.attendAble
+    userDirectionStore.alreadyChooseTime = true
     return
   }
 }
 
-
 //点进来就要显示第一个方向
 onLoad(async () => {
-  userDetailStore.hasReservedDirectionArr=[]
-  console.log(userDetailStore.hasReservedDirectionArr);
-  
-      if(uni.getStorageSync('directionNum')){
-      chooseDirectionArr.value=uni.getStorageSync('directionNum')
-      console.log(chooseDirectionArr.value);
-      
-      for(const item of chooseDirectionArr.value){
-        console.log(chooseDirectionArr.value);
-        
-          const res=await getDirectionTime(item)
-          if(res.code!='500'){
-              // userDetailStore.hasReservedDirectionArr.push(res.data.target)
-              userDetailStore.pushReservedDirection(res.data.target)
-          }
-      }
-      console.log(userDetailStore.hasReservedDirectionArr);
-      showReservedDirection()
-    }
-})
+  userDetailStore.hasReservedDirectionArr = []
+  console.log(userDetailStore.hasReservedDirectionArr)
 
+  if (uni.getStorageSync('directionNum')) {
+    chooseDirectionArr.value = uni.getStorageSync('directionNum')
+    console.log(chooseDirectionArr.value)
+
+    for (const item of chooseDirectionArr.value) {
+      console.log(chooseDirectionArr.value)
+
+      const res = await getDirectionTime(item)
+      if (res.code != '500') {
+        // userDetailStore.hasReservedDirectionArr.push(res.data.target)
+        userDetailStore.pushReservedDirection(res.data.target)
+      }
+    }
+    console.log(userDetailStore.hasReservedDirectionArr)
+    showReservedDirection()
+  }
+})
 
 //切换导航方向之后显示的
 const directionTimeClick = async () => {
   userDirectionStore.directionTime()
-
 }
 </script>
 
@@ -140,6 +137,7 @@ const directionTimeClick = async () => {
         @confirm="confirmSignIn"
         confirmColor="#fff"
         cancelColor="#7f52ff"
+        v-if="userDirectionStore.attend === 0"
       ></up-modal>
     </view>
   </view>

@@ -16,15 +16,15 @@ onLoad(async () => {
   const res = await getAnnouncement()
   //截取公告前几位字显示
   announcementContent.value = `${res.data.content.replace(/\s*/g, '').substring(0, 15)}...`
-  // 
-  const response=await getDetail()
-  userDetailStore.directionNum=[]
-  if(response.data.headend) userDetailStore.directionNum.push(0)
-  if(response.data.backend) userDetailStore.directionNum.push(1)
-  if(response.data.android) userDetailStore.directionNum.push(2)
-  if(response.data.uidesign) userDetailStore.directionNum.push(3)
-  if(response.data.deeplearn) userDetailStore.directionNum.push(4)
-  uni.setStorageSync('directionNum',userDetailStore.directionNum)
+  //
+  const response = await getDetail()
+  userDetailStore.directionNum = []
+  if (response.data.headend) userDetailStore.directionNum.push(0)
+  if (response.data.backend) userDetailStore.directionNum.push(1)
+  if (response.data.android) userDetailStore.directionNum.push(2)
+  if (response.data.uidesign) userDetailStore.directionNum.push(3)
+  if (response.data.deeplearn) userDetailStore.directionNum.push(4)
+  uni.setStorageSync('directionNum', userDetailStore.directionNum)
 })
 
 // 发请求
@@ -46,7 +46,8 @@ const list = reactive([
   { name: '前端' },
   { name: '后台' },
   { name: '安卓' },
-  { name: '深度学习' }
+  { name: '深度学习' },
+  { name: '硬件' }
 ])
 
 // 工作室介绍内容
@@ -55,7 +56,7 @@ const homeStudioContent = ref<string>(
 )
 
 // 方向介绍
-let index=ref(0)
+let index = ref(0)
 const directionContentArr = ref<string[]>([
   '工作室的UI组包含UI设计和产品经理两个工作内容...（省略详细内容）',
   '前端是产品的门面担当，也是离用户最近的一部分...（省略详细内容）',
@@ -71,17 +72,12 @@ const changeContent = (index: number) => {
     directionContentArr.value[0] = directionContentArr.value[index]
   }
 }
-
-
 </script>
 <template>
   <view class="home">
     <!-- 背景图 -->
     <view class="home_title">
-      <image
-        src="../../static/layoutHome/background.png"
-        alt=""
-      ></image>
+      <image src="../../static/layoutHome/background.png" alt=""></image>
     </view>
     <!-- 公告 -->
     <view class="home_announcement">
@@ -91,27 +87,18 @@ const changeContent = (index: number) => {
         <text>公告</text>
         <text class="home_announcement_line"></text>
         <text class="home_announcement_content">{{ announcementContent }}</text>
-        <text
-          class="home_announcement_view"
-          @click="showAnnouncement"
-        >查看 ></text>
+        <text class="home_announcement_view" @click="showAnnouncement">查看 ></text>
       </view>
     </view>
     <!-- 公告弹框 -->
-    <up-popup
-      :show="show"
-      mode="center"
-    >
+    <up-popup :show="show" mode="center">
       <view class="announcement-detail-box">
         <text>公告</text>
         <view class="announcement-detail">
           {{ newAnnouncement }}
         </view>
       </view>
-      <up-button
-        @click="show = false"
-        text="确认"
-      ></up-button>
+      <up-button @click="show = false" text="确认"></up-button>
     </up-popup>
     <!-- 工作室介绍和方向介绍-大盒子 -->
     <view class="home_content">
@@ -119,10 +106,7 @@ const changeContent = (index: number) => {
       <view class="home_studio">
         <!-- 图标 -->
         <view class="home_studio_title">
-          <image
-            src="../../static/layoutHome/studio_introduction.png"
-            alt=""
-          ></image>
+          <image src="../../static/layoutHome/studio_introduction.png" alt=""></image>
           <text class="home_studio_introduce">工作室介绍</text>
         </view>
 
@@ -135,10 +119,7 @@ const changeContent = (index: number) => {
       <view class="home_direction">
         <view class="direction-box">
           <!-- 图标 -->
-          <image
-            src="../../static/layoutHome/direction_introduce.png"
-            alt=""
-          ></image>
+          <image src="../../static/layoutHome/direction_introduce.png" alt=""></image>
           <text class="home_direction_introduce">方向介绍</text>
         </view>
         <!-- 五个方向tag标签 -->
@@ -153,7 +134,7 @@ const changeContent = (index: number) => {
         </view>
         <!-- 方向介绍文本框 -->
         <view class="direction_details">
-            {{ directionContentArr[index] }}
+          {{ directionContentArr[index] }}
         </view>
       </view>
     </view>
@@ -374,7 +355,7 @@ const changeContent = (index: number) => {
   border: none !important;
 }
 ::v-deep .u-subsection__bar {
-  width: 136rpx !important;
+  width: 115rpx !important;
   margin-top: 48rpx;
   margin-left: 0rpx;
 }
@@ -390,7 +371,7 @@ const changeContent = (index: number) => {
 ::v-deep .u-subsection__item__text {
   font-weight: 500;
   color: #1a1a1a;
-  font-size: 31rpx !important;
+  font-size: 28rpx !important;
 }
 ::v-deep .u-subsection__item {
   width: 156rpx;

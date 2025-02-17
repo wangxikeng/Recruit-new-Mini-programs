@@ -110,19 +110,8 @@ export const useDirectionStore = defineStore('reservation', () => {
 
   //获取+显示时间
   const directionTimeListAll = async () => {
-    if (userDetailStore.directionNum.length === 0) {
-      directionNone.value = true
-    } else {
-      directionNone.value = false
-    }
     for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
-        const resTimeChoose = await getDirectionTime(item)
-        if (resTimeChoose.data.id !== 0) {
-          alreadyChooseTime.value = true
-        } else {
-          alreadyChooseTime.value = false
-        }
         idChoose.value = 0
         const resTime = await getTimeListAll(item)
         // timeData(resTime.data)
@@ -165,24 +154,18 @@ export const useDirectionStore = defineStore('reservation', () => {
 
   //刚刚点进页面时
   const firstdirectionTimeListAll = async () => {
-    if (userDetailStore.directionNum.length === 0) {
-      directionNone.value = true
-    } else {
-      directionNone.value = false
-    }
     for (const item of userDetailStore.directionNum) {
-      const resTimeChoose = await getDirectionTime(item)
-      if (resTimeChoose.data.id !== 0) {
-        alreadyChooseTime.value = true
-      } else {
-        alreadyChooseTime.value = false
-      }
       chooseDirection.value = item + 1
       idChoose.value = 0
       const resTime = await getTimeListAll(item)
       console.log(resTime)
-
-      timeData(resTime.data)
+      if (resTime.code == '200') {
+        timeData(resTime.data)
+        successPut.value = 0
+      } else {
+        successPut.value = 1
+      }
+      // timeData(resTime.data)
       const resStatus = await getDirectionTime(item)
       if (resStatus.code != '500') {
         userStatus.value = resStatus.data.status

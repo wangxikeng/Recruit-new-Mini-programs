@@ -86,19 +86,9 @@
       <view class="filechoose">
         <view class="filechoose_btn" v-if="file_btn">
           <up-button type="primary" text="选择文件" size="small" @click="Upload"></up-button>
-          <view class="filechoose_btn" v-if="file_btn">
-            <up-button type="primary" text="选择文件" size="small" @click="Upload"></up-button>
-          </view>
         </view>
-      </view>
-    </view>
 
-    <view class="file-desc" v-if="false">未选择文件</view>
-    <view class="file-desc" v-else>
-      <view :class="file_btn ? classArr[0] : classArr[1]" v-if="isShowFile"
-        >{{ uploadFileName }}
-        <up-icon name="close" @click="DeleteFile" customStyle="margin-left:5rpx"></up-icon>
-        <view :class="change_part ? classArray[1] : classArray[0]" v-if="isShowFile"
+        <view :class="change_part ? classArray[1] : classArray[0]" v-if="isShowFile == false"
           >未选择文件</view
         >
         <view class="file-desc" v-else>
@@ -108,71 +98,54 @@
           </view>
         </view>
       </view>
-    </view>
-    <up-overlay
-      :show="show"
-      @click="show = false"
-      duration="0"
-      :opacity="0.2"
-      :z-index="999"
-    ></up-overlay>
-    <view class="filebutton" v-if="file_btn">
-      <view class="save_btn" @click="save_suc">
-        <up-button type="primary" text="保存"></up-button>
-        <view class="filebutton" v-if="saveSubmit_btn">
-          <view class="save_btn" @click="save_suc">
-            <up-button type="primary" text="保存"></up-button>
-          </view>
-          <view class="submit_btn" @click="submit_suc">
-            <up-button type="primary" text="提交"></up-button>
-          </view>
-          <view class="footer_1"></view>
+      <up-overlay
+        :show="show"
+        @click="show = false"
+        duration="0"
+        :opacity="0.2"
+        :z-index="999"
+      ></up-overlay>
+      <view class="filebutton" v-if="saveSubmit_btn">
+        <view class="save_btn" @click="save_suc">
+          <up-button type="primary" text="保存"></up-button>
         </view>
+        <view class="submit_btn" @click="submit_suc">
+          <up-button type="primary" text="提交"></up-button>
+        </view>
+        <view class="footer_1"></view>
       </view>
+    </view>
 
-      <view class="submit_pop" v-if="submit_pop">
-        <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
-        <view class="submit_desc">保存成功</view>
-      </view>
-      <view class="submit_pop" v-if="submit_pop_1">
-        <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
-        <view class="submit_desc">提交成功</view>
-      </view>
-      <view
-        class="change_part"
-        v-if="change_part && userDirectionStore.alreadyChooseTime == false"
-        @click="changedet"
-      >
-        <view class="change_detail">信息错误？点击重新提交</view>
-        <view class="footer_2"></view>
-      </view>
-      <view
-        class="change_part"
-        v-if="change_part && userDirectionStore.alreadyChooseTime"
-        @click="changedet"
-      >
-        <view class="change_detail">预约后不可修改报名信息~</view>
-        <view class="footer_2"></view>
-      </view>
-      <view
-        class="change_part"
-        v-if="change_part && userDirectionStore.alreadyChooseTime"
-        @click="changedet"
-      >
-        <view class="change_detail">预约后不可修改报名信息~</view>
-        <view class="footer_2"></view>
-      </view>
+    <view class="submit_pop" v-if="submit_pop">
+      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+      <view class="submit_desc">保存成功</view>
+    </view>
+    <view class="submit_pop" v-if="submit_pop_1">
+      <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
+      <view class="submit_desc">提交成功</view>
+    </view>
+    <view class="change_part" v-if="change_part" @click="changedet">
+      <view class="change_detail">信息错误？点击重新提交</view>
+      <view class="footer_2"></view>
+    </view>
+    <!-- <view
+    class="change_part"
+    v-if="change_part"
+    @click="changedet"
+  >
+    <view class="change_detail">预约后不可修改报名信息~</view>
+    <view class="footer_2"></view>
+  </view> -->
 
-      <view class="save_pop" v-if="save_pop">
-        <view class="save_pop">
-          <view class="save_decs">是否确认重新填写信息</view>
-          <view class="pop_btn">
-            <view class="sure_btn" @click="sure_btn">
-              <up-button type="primary" text="确认" size="small"></up-button>
-            </view>
-            <view class="cancel_btn" @click="cancel_btn">
-              <up-button type="primary" text="取消" size="small"></up-button>
-            </view>
+    <view class="save_pop" v-if="save_pop">
+      <view class="save_pop">
+        <view class="save_decs">是否确认重新填写信息</view>
+        <view class="pop_btn">
+          <view class="sure_btn" @click="sure_btn">
+            <up-button type="primary" text="确认" size="small"></up-button>
+          </view>
+          <view class="cancel_btn" @click="cancel_btn">
+            <up-button type="primary" text="取消" size="small"></up-button>
           </view>
         </view>
       </view>
@@ -292,6 +265,7 @@ const plan = ref<string>('')
 const checkboxChange1 = (n: any) => {
   const selectedIndices = n.map((name: any) => nameToIndexMap.get(name))
   userDetailStore.directionNum = selectedIndices
+  console.log(userDetailStore.directionNum)
 }
 const checkboxChange2 = (n: any) => {
   userDetailStore.user.plan = n.join('-')
@@ -331,6 +305,7 @@ const save_suc = async () => {
 const submit_pop_1 = ref(false)
 const submitsuccess = async () => {
   // 确认之前先进行校验  新加的
+  console.log(userDetailStore.directionNum)
   const isValid = userDetailStore.validate()
   if (!isValid) {
     return
@@ -389,6 +364,7 @@ onLoad(async () => {
     checkboxList1[2].checked = userDetailStore.user.android
     checkboxList1[3].checked = userDetailStore.user.uidesign
     checkboxList1[4].checked = userDetailStore.user.deeplearn
+    checkboxList1[5].checked = userDetailStore.user.hardware
 
     // 方向数组
     checkboxValue1.length = 0
@@ -397,6 +373,7 @@ onLoad(async () => {
     if (res.data.deeplearn) checkboxValue1.push('深度学习')
     if (res.data.headend) checkboxValue1.push('前端')
     if (res.data.uidesign) checkboxValue1.push('UI')
+    if (res.data.hardware) checkboxValue1.push('硬件')
 
     // 规划数组
     checkboxValue2.length = 0

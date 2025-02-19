@@ -24,7 +24,8 @@ onLoad(async () => {
   if (response.data.android) userDetailStore.directionNum.push(2)
   if (response.data.uidesign) userDetailStore.directionNum.push(3)
   if (response.data.deeplearn) userDetailStore.directionNum.push(4)
-  uni.setStorageSync('directionNum', userDetailStore.directionNum)
+  if (response.data.hardware) userDetailStore.directionNum.push(5)
+  // uni.setStorageSync('directionNum', userDetailStore.directionNum)
 })
 
 // 发请求

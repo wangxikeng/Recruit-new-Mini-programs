@@ -70,14 +70,17 @@
       </view>
     </view>
 
-    <view class="make_sure" v-if="userStatus == 0 && userDirectionStore.successPut == 0">
-      <up-button text="确认预约" @click="popUp"></up-button>
-    </view>
-    <view class="make_sure" v-if="userDirectionStore.successPut == 1">
-      <up-button text="预约暂未开放~"></up-button>
-    </view>
-    <view class="have_sure" v-if="userStatus == 1 && userDirectionStore.successPut == 0">
-      <up-button text="您已预约"></up-button>
+    <view class="wholebox">
+      <view class="attention">请谨慎预约~预约后不可重新提交报名信息</view>
+      <view class="make_sure" v-if="userStatus == 0 && userDirectionStore.successPut == 0">
+        <up-button text="确认预约" @click="popUp"></up-button>
+      </view>
+      <view class="make_sure" v-if="userDirectionStore.successPut == 1">
+        <up-button text="预约暂未开放~"></up-button>
+      </view>
+      <view class="have_sure" v-if="userStatus == 1 && userDirectionStore.successPut == 0">
+        <up-button text="您已预约"></up-button>
+      </view>
     </view>
 
     <up-popup :show="isShowPop" mode="center" overlay="false">
@@ -122,7 +125,7 @@ import { watch } from 'vue'
 
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
-let { timeList, timeKeys, chooseDirection, idChoose, userStatus, hasReserved } =
+let { timeList, timeKeys, chooseDirection, idChoose, userStatus, hasReserved, alreadyChooseTime } =
   toRefs(useDirectionStore())
 const isShowMsg = ref(false)
 
@@ -168,17 +171,19 @@ const popSure = () => {
   isShowPop.value = false
   userStatus.value = 1
   saveTargets(userDirectionStore.idChoose)
+  alreadyChooseTime.value = true
 }
 
 //进页面先显示第一个方向的所有时间
 onLoad(() => {
-  if (uni.getStorageSync('directionNum')) {
-    hasReserved.value = true
-    userDirectionStore.getDirectionName()
-    userDirectionStore.firstdirectionTimeListAll()
-  }
-  // userDirectionStore.getDirectionName()
-  // userDirectionStore.firstdirectionTimeListAll()
+  // if (uni.getStorageSync('directionNum')) {
+  // if (userDetailStore.directionNum) {
+  //   hasReserved.value = true
+  //   userDirectionStore.getDirectionName()
+  //   userDirectionStore.firstdirectionTimeListAll()
+  // }
+  userDirectionStore.getDirectionName()
+  userDirectionStore.firstdirectionTimeListAll()
 })
 
 const directionTimeList = async () => {
@@ -437,6 +442,11 @@ const directionTimeList = async () => {
   border: 0rpx !important;
 }
 
-// @click="idChoose = time.id"
-// @click="idChoose = item.id"
+.attention {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #7f52ff;
+  font-size: 24rpx;
+}
 </style>

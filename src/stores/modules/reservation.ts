@@ -73,25 +73,28 @@ export const useDirectionStore = defineStore('reservation', () => {
   }
 
   //在预约页面展示方向
-  const getDirectionName = () => {
-    // 如果之前有报名信息
-    if (hasReserved.value == true) {
-      userDetailStore.directionNum = uni.getStorageSync('directionNum')
-    }
+  const getDirectionName = async () => {
     console.log(userDetailStore.directionNum)
+    // 如果之前有报名信息
+    // if (hasReserved.value == true) {
+    //   userDetailStore.directionNum = uni.getStorageSync('directionNum')
+    // }
+    // console.log(userDetailStore.directionNum)
 
     //只选择了一个方向时
-    if (list.value.length === userDetailStore.directionNum.length) {
-      list.value = list.value
-      console.log(list.value)
-    } else {
-      //选择多个方向时
-      list.value = []
-      for (const item of userDetailStore.directionNum) {
-        list.value.push(directionList.value[item])
-      }
-      console.log(list.value)
+    // if (list.value.length === userDetailStore.directionNum.length) {
+    //   list.value = list.value
+    //   console.log(list.value)
+    // } else {
+    //选择多个方向时
+
+    userDetailStore.getDirectionNum()
+
+    list.value = []
+    for (const item of userDetailStore.directionNum) {
+      list.value.push(directionList.value[item])
     }
+    console.log(list.value)
   }
 
   // 在签到页面
@@ -156,6 +159,7 @@ export const useDirectionStore = defineStore('reservation', () => {
   const firstdirectionTimeListAll = async () => {
     for (const item of userDetailStore.directionNum) {
       chooseDirection.value = item + 1
+      console.log(chooseDirection)
       idChoose.value = 0
       const resTime = await getTimeListAll(item)
       console.log(resTime)
@@ -179,6 +183,7 @@ export const useDirectionStore = defineStore('reservation', () => {
   //显示时间的格式
   const getItemDirectionTime = async (item: number) => {
     const resTime = await getDirectionTime(item)
+    console.log(resTime)
     if (resTime.msg != '200') {
       signInTime.value = '请先预约~'
       attend.value = 1
@@ -207,7 +212,8 @@ export const useDirectionStore = defineStore('reservation', () => {
   }
   let alreadyChooseTime = ref(false)
   const directionTime = async () => {
-    for (const item of userDetailStore.hasReservedDirectionArr) {
+    // for (const item of userDetailStore.hasReservedDirectionArr) {
+    for (const item of userDetailStore.directionNum) {
       if (chooseDirection.value === item + 1) {
         getItemDirectionTime(item)
         const resTime = await getDirectionTime(item)
@@ -250,6 +256,7 @@ export const useDirectionStore = defineStore('reservation', () => {
     reservedList,
     successPut,
     directionNone,
-    alreadyChooseTime
+    alreadyChooseTime,
+    firstDirectionTime
   }
 })

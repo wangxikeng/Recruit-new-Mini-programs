@@ -44,13 +44,15 @@ const showReservedDirection = async () => {
   }
 }
 
-//点进来就要显示第一个方向
+// //点进来就要显示第一个方向
 onLoad(async () => {
   userDetailStore.hasReservedDirectionArr = []
   console.log(userDetailStore.hasReservedDirectionArr)
 
-  if (uni.getStorageSync('directionNum')) {
-    chooseDirectionArr.value = uni.getStorageSync('directionNum')
+  // if (uni.getStorageSync('directionNum')) {
+  if (userDetailStore.directionNum) {
+    // chooseDirectionArr.value = uni.getStorageSync('directionNum')
+    chooseDirectionArr.value = userDetailStore.directionNum
     console.log(chooseDirectionArr.value)
 
     for (const item of chooseDirectionArr.value) {
@@ -66,9 +68,30 @@ onLoad(async () => {
     showReservedDirection()
   }
 })
+onLoad(async () => {
+  if (userDetailStore.directionNum.length === 0) {
+    userDirectionStore.signInTime = '请先选择考核方向~'
+    userDirectionStore.attend = 1
+  } else {
+    userDirectionStore.getDirectionName()
+    for (const item of userDetailStore.directionNum) {
+      userDirectionStore.chooseDirection = item + 1
+      userDirectionStore.getItemDirectionTime(item)
+      const resTime = await getDirectionTime(item)
+      if (resTime.msg != '200') {
+        userDirectionStore.signInTime = '请先预约~'
+        userDirectionStore.attend = 1
+      } else {
+        userDirectionStore.attend = resTime.data.attendAble
+        userDirectionStore.alreadyChooseTime = true
+      }
+      return
+    }
+  }
+})
 
 //切换导航方向之后显示的
-const directionTimeClick = async () => {
+const directionTimeClick = () => {
   userDirectionStore.directionTime()
 }
 </script>
@@ -96,7 +119,7 @@ const directionTimeClick = async () => {
       <!-- <view class="nav_box"> </view> -->
       <view class="nav">
         <view
-          v-for="item in userDirectionStore.reservedList"
+          v-for="item in userDirectionStore.list"
           :key="item.id"
           class="direction"
           @click="directionTimeClick"

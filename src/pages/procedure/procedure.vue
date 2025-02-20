@@ -76,8 +76,10 @@ import { useProcedureStore } from '@/stores/modules/procedure'
 const userDetailStore = useUserDetailStore()
 const userDirectionStore = useDirectionStore()
 const userProcedureStore = useProcedureStore()
-const colorArr = ['will', 'ongoing', 'finish']
-const nameArr = ['未开始', '进行中', '已完成']
+// const colorArr = ['will', 'ongoing', 'finish']
+// const nameArr = ['未开始', '进行中', '已完成']
+const colorArr = ['will', 'ongoing', 'pass', 'fail']
+const nameArr = ['未开始', '进行中', '已通过', '未通过']
 
 const directionDetail = () => {
   for (const item of userDetailStore.directionNum) {
@@ -229,13 +231,16 @@ onLoad(async () => {
   border-radius: 24px;
   font-weight: 700;
 }
-.finish {
+.pass {
   background-color: #aeb4c2;
 }
 .ongoing {
   background-color: #7f52ff;
 }
 .will {
+  background-color: #9773ff;
+}
+.fail {
   background-color: #9773ff;
 }
 </style>

@@ -105,7 +105,7 @@
         :opacity="0.2"
         :z-index="999"
       ></up-overlay>
-      <view class="filebutton" v-if="saveSubmit_btn">
+      <view class="filebutton" v-if="saveSubmit_btn && !change_part">
         <view class="save_btn" @click="save_suc">
           <up-button type="primary" text="保存"></up-button>
         </view>
@@ -116,11 +116,11 @@
       </view>
     </view>
 
-    <view class="submit_pop" v-if="submit_pop">
+    <view class="submit_pop" v-if="userDetailStore.submit_pop">
       <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
       <view class="submit_desc">保存成功</view>
     </view>
-    <view class="submit_pop" v-if="submit_pop_1">
+    <view class="submit_pop" v-if="userDetailStore.submit_pop_1">
       <up-icon name="checkmark-circle-fill" size="100px" color="#9773FFE5"></up-icon>
       <view class="submit_desc">提交成功</view>
     </view>
@@ -138,13 +138,24 @@
   </view> -->
 
     <view class="save_pop" v-if="save_pop">
-      <view class="save_pop">
+      <view class="save_pop" v-if="userDirectionStore.alreadyChooseTime == false">
         <view class="save_decs">是否确认重新填写信息</view>
         <view class="pop_btn">
           <view class="sure_btn" @click="sure_btn">
             <up-button type="primary" text="确认" size="small"></up-button>
           </view>
           <view class="cancel_btn" @click="cancel_btn">
+            <up-button type="primary" text="取消" size="small"></up-button>
+          </view>
+        </view>
+      </view>
+      <view class="save_pop" v-if="userDirectionStore.alreadyChooseTime">
+        <view class="save_decs">预约后不可重新提交报名信息</view>
+        <view class="pop_btn">
+          <view class="sure_btn" @click="sure_btnAlreadyChooseTime">
+            <up-button type="primary" text="确认" size="small"></up-button>
+          </view>
+          <view class="cancel_btn" @click="cancel_btnAlreadyChooseTime">
             <up-button type="primary" text="取消" size="small"></up-button>
           </view>
         </view>
@@ -262,10 +273,21 @@ const checkboxList2 = reactive([
 ])
 
 const plan = ref<string>('')
+// const checkboxChange1 = (n: any) => {
+//   const selectedIndices = n.map((name: any) => nameToIndexMap.get(name))
+//   userDetailStore.directionNum = selectedIndices
+//   console.log(userDetailStore.directionNum)
+// }
 const checkboxChange1 = (n: any) => {
-  const selectedIndices = n.map((name: any) => nameToIndexMap.get(name))
-  userDetailStore.directionNum = selectedIndices
-  console.log(userDetailStore.directionNum)
+  console.log('change', n)
+  userDetailStore.directionName = n
+  console.log(userDetailStore.directionName)
+  // userDetailStore.directionNum = userDetailStore.directionName
+  //   .map((item) => {
+  //     const foundItem = checkboxList1.find((checkbox) => checkbox.name === item)
+  //     return foundItem ? checkboxList1.indexOf(foundItem) : -1 // 如果未找到，返回 -1
+  //   })
+  //   .filter((index) => index !== -1) // 过滤掉未找到的结果
 }
 const checkboxChange2 = (n: any) => {
   userDetailStore.user.plan = n.join('-')
@@ -283,53 +305,81 @@ const workvalue = ref('')
 
 //保存弹窗
 const blurpage = ref()
-const submit_pop = ref(false)
+// const submit_pop = ref(false)
 const file_btn = ref(true)
 const saveSubmit_btn = ref(true)
 const change_part = ref(false)
 const savesuccess = () => {
-  submit_pop.value = true
   show.value = true
   setTimeout(function () {
-    submit_pop.value = false
     show.value = false
   }, 2000)
 }
 const save_suc = async () => {
-  savesuccess()
-  // 保存的时候committed不是false吗
   userDetailStore.setUerDetailInfo()
+  if (!userDetailStore.showError) {
+    savesuccess()
+  } else {
+    show.value = false
+  }
+  // 保存的时候committed不是false吗
+  // userDetailStore.setUerDetailInfo()
 }
 
 //确认弹窗
-const submit_pop_1 = ref(false)
+// const submit_pop_1 = ref(false)
+
 const submitsuccess = async () => {
-  // 确认之前先进行校验  新加的
-  console.log(userDetailStore.directionNum)
-  const isValid = userDetailStore.validate()
-  if (!isValid) {
-    return
-  }
-  await userDetailStore.setUerDetailInfo()
-  if (userDetailStore.showError === false) {
-    submit_pop_1.value = true
+  userDetailStore.setUerDetailInfo()
+  if (!userDetailStore.showError) {
+    // submit_pop_1.value = true
     show.value = true
+    change_part.value = true
     setTimeout(function () {
-      submit_pop_1.value = false
-      if (isShowFile.value == true) {
-        file_btn.value = false
-      } else {
-        file_btn.value = true
-      }
-      saveSubmit_btn.value = false
-      change_part.value = true
+      // submit_pop_1.value = false
       show.value = false
     }, 2000)
-    // userDetailStore.setUerDetailInfo()
+  } else {
+    // submit_pop_1.value = false
+    show.value = false
   }
 }
+// const submitsuccess = async () => {
+//   // 确认之前先进行校验  新加的
+//   console.log(userDetailStore.directionNum)
+//   const isValid = userDetailStore.validate()
+//   if (!isValid) {
+//     // submit_pop_1.value = false
+//     show.value = false
+//     return
+//   }
+//   // await userDetailStore.setUerDetailInfo()
+//   userDetailStore.setUerDetailInfo()
+//   if (userDetailStore.showError === false) {
+//     // submit_pop_1.value = true
+//     show.value = true
+//     setTimeout(function () {
+//       // submit_pop_1.value = false
+//       if (isShowFile.value == true) {
+//         file_btn.value = false
+//       } else {
+//         file_btn.value = true
+//       }
+//       saveSubmit_btn.value = false
+//       change_part.value = true
+//       show.value = false
+//     }, 2000)
+//     // userDetailStore.setUerDetailInfo()
+//   }
+// }
 
 const submit_suc = () => {
+  userDetailStore.directionNum = userDetailStore.directionName
+    .map((item) => {
+      const foundItem = checkboxList1.find((checkbox) => checkbox.name === item)
+      return foundItem ? checkboxList1.indexOf(foundItem) : -1 // 如果未找到，返回 -1
+    })
+    .filter((index) => index !== -1) // 过滤掉未找到的结果
   submitsuccess()
 }
 const closeErrorBox = () => {
@@ -338,16 +388,40 @@ const closeErrorBox = () => {
 
 //修改弹窗
 const save_pop = ref(false)
-const changedet = () => {
+import { getDirectionTime } from '@/api/reservation'
+const changedet = async () => {
+  for (const item of userDetailStore.directionNum) {
+    const res = await getDirectionTime(item)
+    if (res.code == '200') {
+      userDirectionStore.alreadyChooseTime = true
+      break
+    } else {
+      userDirectionStore.alreadyChooseTime = false
+    }
+  }
   show.value = true
   save_pop.value = true
 }
 const sure_btn = () => {
+  userDetailStore.directionNum = userDetailStore.directionName
+    .map((item) => {
+      const foundItem = checkboxList1.find((checkbox) => checkbox.name === item)
+      return foundItem ? checkboxList1.indexOf(foundItem) : -1 // 如果未找到，返回 -1
+    })
+    .filter((index) => index !== -1) // 过滤掉未找到的结果
   save_pop.value = false
   submitsuccess()
   console.log(userDirectionStore.alreadyChooseTime)
 }
 const cancel_btn = () => {
+  save_pop.value = false
+  show.value = false
+}
+const sure_btnAlreadyChooseTime = () => {
+  save_pop.value = false
+  show.value = false
+}
+const cancel_btnAlreadyChooseTime = () => {
   save_pop.value = false
   show.value = false
 }
